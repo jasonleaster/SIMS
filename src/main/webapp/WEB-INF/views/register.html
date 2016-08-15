@@ -1,0 +1,48 @@
+<!--
+!!!!!!!!!!!!!!!!!!!!!!!!!!
+https://github.com/NamPNQ/You-Dont-Need-Javascript-->
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content="jasonleaster"/>
+
+    <!-- Custom CSS -->
+    <link href="/css/simple-sidebar.css" rel="stylesheet"/>
+    <link href="/css/login.css" rel="stylesheet"/>
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <script src="/js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+
+    <title>图书信息管理系统</title>
+
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="login-page">
+    <div class="form">
+        <form class="register-form" action="/register/" method="post">
+            <input type="text"      placeholder="name"                  name ="username"/>
+            <input type="text"      placeholder="email address"         name = "email"/>
+            <input type="password"  placeholder="password"              name = "password"/>
+            <input type="password"  placeholder="confirm your password" name="confirmedPassword"/>
+            <button>create</button>
+            <p>Already registered? <a href="/login/">Sign In</a></p>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>
