@@ -3,6 +3,8 @@ package sims.form;
 import sims.model.User;
 
 public class RegisterForm extends User {
+
+
     private String confirmedPassword;
 
     public RegisterForm(){}

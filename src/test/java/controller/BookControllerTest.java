@@ -21,10 +21,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import sims.controller.BookController;
+import org.springframework.web.context.WebApplicationContext;
 import sims.model.Book;
+import sims.service.BookService;
+import sims.util.MsgAndContext;
 import sims.util.URLs;
 import sims.util.Views;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -32,16 +35,24 @@ import sims.util.Views;
 public class BookControllerTest {
 
     @Autowired
-    BookController controller;
+    WebApplicationContext ctx;
+
+    @Autowired
+    BookService bookService;
 
     @Autowired
     DriverManagerDataSource dataSource;
 
     MockMvc mockMvc;
 
+    Book bookExisted;
+    Book bookNotExisted;
+
+    private static final String ISBN_USED   = "978-7-5086-4363-1";
+    private static final String ISBN_UNUSED = "978-7-5086-4363-2";
 
     private void initDB(){
-        Resource resource = new ClassPathResource("schema.sql");
+        Resource resource = new ClassPathResource("SQL/schema.sql");
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
         databasePopulator.addScript(resource);
         DatabasePopulatorUtils.execute(databasePopulator, dataSource);
@@ -49,44 +60,68 @@ public class BookControllerTest {
 
     @Before
     public void before(){
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
 
         initDB();
 
-        Book bookExisted = new Book();
-        bookExisted.setIsbn("978-7-5086-4363-2");
+        bookExisted = new Book();
+        bookExisted.setIsbn(ISBN_USED);
         bookExisted.setAuthor("小林章");
         bookExisted.setBookname("西文字体");
 
-        controller.getBookService().add(bookExisted);
+        bookNotExisted = new Book();
+        bookNotExisted.setIsbn(ISBN_UNUSED);
+        bookNotExisted.setAuthor("Jason");
+        bookNotExisted.setBookname("Java Cook Book");
+
+        bookService.add(bookExisted);
     }
 
     @Test
     public void registerBookTest() throws Exception{
 
+        /**
+         * 控制器逻辑:
+         *   1.用户通过 url = URLs.BOOKS + URLs.CREATE 向服务器发出GET请求
+         *   2.服务端返回对应的视图 view = Views.BOOK_CREATE
+         * */
         String url = URLs.BOOKS + URLs.CREATE;
 
-        mockMvc.perform(MockMvcRequestBuilders.get( url ))
-        .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_CREATE))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_CREATE))
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
-        // Register a book which does not exist in DB.
+
+        /**
+         * ## 向系统注册一本书，但是这本书的ISBN与数据库中数据的ISBN冲突
+         * 控制器逻辑
+         * 1. 向服务端发送POST请求
+         * 2. 服务端截获这个HTTP请求，判断书籍的ISBN是否存在于数据库中
+         * 3. 如果书籍的ISBN于数据库中已有书籍的ISBN重复，则认为该类书籍已经注册过了
+         *     将error变量添加到Spring MVC模型中， 将HTTP请求重定向到书籍注册页面，
+         *     提示用户ISBN冲突。
+         * 4. 返回视图 Views.BOOK_CREATE 提示用户重新修改之前的错误参数
+         */
         mockMvc.perform(MockMvcRequestBuilders.post(url)
-                    .param("isbn",          "182-788-12")
-                    .param("bookname",      "Thinking in Java")
-                    .param("author",        "jason")
-                    .param("publisher",     "机械工业出版社")
-                    .param("publisheddate", "2014-10-10")
-                    .param("booktype", "programming")
-                    .param("codeinlib",     "4332")
-                    .param("locationinlib", "二楼")
-                    .param("description",   "好书啊")
-                    .param("price",         "88.8"))
-                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SHOW))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+                .param("isbn",      bookExisted.getIsbn())
+                .param("bookname", bookExisted.getBookname())
+                .param("author",    bookExisted.getAuthor()))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_CREATE))
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
-        // Register a book which have existed in DB.
-        // TODO XXX
+        /**
+         * ## 向系统注册一本书，该书不存在于数据库中
+         * 正确的展示注册后的书籍信息
+         */
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                .param("isbn",     bookNotExisted.getIsbn())
+                .param("bookname", bookNotExisted.getBookname())
+                .param("author",   bookNotExisted.getAuthor())  )
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
+                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SHOW))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -97,39 +132,71 @@ public class BookControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SEARCH));
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
-                    .param("isbn", "182-788-12"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("book"))
+                .param("isbn", bookExisted.getIsbn()))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SHOW));
+
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                .param("isbn", bookNotExisted.getIsbn()))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SEARCH));
 
     }
 
+
     @Test
     public void deleteBookTest() throws Exception{
+        /**
+         * 1. 以form的形式提供希望删除书籍的ISBN
+         * 2. 依据ISBN删除数据库中的书籍
+         * 3. 再次查询之前删除过的书籍，断言该书籍不存在
+         * */
         String url = URLs.BOOKS + URLs.DELETE;
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_DELETE));
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
-                .param("isbn", "182-788-12"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("book"))
-                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SHOW));
+                .param("isbn", bookExisted.getIsbn()))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.view().name(Views.HOME));
 
+        url = URLs.BOOKS + URLs.QUERY;
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SEARCH));
+
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                .param("isbn", bookExisted.getIsbn()))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SEARCH));
     }
 
     @Test
     public void modifyBookTest() throws Exception{
-        String url = URLs.BOOKS + URLs.DELETE;
+        String url = URLs.BOOKS + URLs.MODIFY;
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_DELETE));
+                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SEARCH));
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
-                .param("isbn", "182-788-12"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("book"))
+                .param("isbn", bookExisted.getIsbn())  )
+                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_MODIFY));
+
+        url += URLs.UPDATE;
+
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                .param("isbn",     bookExisted.getIsbn())
+                .param("bookname", "newBook")
+                .param("author",   "newAuthor") )
+                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SHOW));
 
     }
-
 
 }
