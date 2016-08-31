@@ -88,8 +88,8 @@ public class BookControllerTest {
         String url = URLs.BOOKS + URLs.CREATE;
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_CREATE))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_CREATE))
+        .andExpect(MockMvcResultMatchers.status().isOk());
 
 
         /**
@@ -115,9 +115,9 @@ public class BookControllerTest {
          * 正确的展示注册后的书籍信息
          */
         mockMvc.perform(MockMvcRequestBuilders.post(url)
-                .param("isbn",     bookNotExisted.getIsbn())
-                .param("bookname", bookNotExisted.getBookname())
-                .param("author",   bookNotExisted.getAuthor())  )
+                    .param("isbn",     bookNotExisted.getIsbn())
+                    .param("bookname", bookNotExisted.getBookname())
+                    .param("author",   bookNotExisted.getAuthor())  )
                 .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SHOW))
@@ -132,7 +132,7 @@ public class BookControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SEARCH));
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
-                .param("isbn", bookExisted.getIsbn()))
+                    .param("isbn", bookExisted.getIsbn()))
                 .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
                 .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SHOW));

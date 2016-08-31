@@ -18,7 +18,7 @@
     <h3 class="panel-title">创建新用户</h3>
   </div>
   <div class="panel-body">
-    <form id="loginForm"  class="form-horizontal" method="post"action="/login">
+    <form id="loginForm"  class="form-horizontal" method="post" action="/login">
 
       <div class="form-group">
         <label class="col-sm-4 control-label" for="email">邮箱</label>

@@ -12,6 +12,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.
        <!-- 自动扫描(自动注入) -->
        <context:component-scan base-package="sims.controller" />
        <context:component-scan base-package="sims.service" />
+       <context:component-scan base-package="sims.model" />
 
         <!--Setup a handler for servering static content -->
         <!-- DEMO <mvc:resources mapping="/resources/**" location="/resources/"/>-->
@@ -20,7 +21,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.
         <mvc:resources mapping="/images/**"       location="/WEB-INF/images/"/>
         <mvc:resources mapping="/fonts/**"        location="/WEB-INF/fonts/"/>
 
-        <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <bean name="resolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
             <property name="prefix" value="/WEB-INF/views/jsp/"></property>
             <property name="suffix" value=".jsp"></property>
             <!--

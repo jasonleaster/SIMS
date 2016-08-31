@@ -15,7 +15,8 @@ public class Views {
     public static final String USER_DELETE = "user/delete";
     public static final String USER_SHOW   = "user/show";
 
-    public static final String BOOK_SEARCH = "book/search";
+    public static final String BOOK_QUERY  = "book/query";
+    public static final String BOOK_SEARCH = BOOK_QUERY;
     public static final String BOOK_CREATE = "book/create";
     public static final String BOOK_MODIFY = "book/modify";
     public static final String BOOK_DELETE = "book/delete";

@@ -95,22 +95,22 @@ public class LoginControllerTest {
     public void loginTest() throws Exception{
 
         /**
-         * 控制器逻辑:
-         *   1.用户通过 url = URLs.LOGIN 向服务器发出GET请求
-         *   2.服务端返回对应的视图 view = Views.LOGIN
-         * */
+        * 控制器逻辑:
+        *   1.用户通过 url = URLs.LOGIN 向服务器发出GET请求
+        *   2.服务端返回对应的视图 view = Views.LOGIN
+        * */
         mockMvc.perform(MockMvcRequestBuilders.get(URLs.LOGIN))
                 .andExpect(MockMvcResultMatchers.view().name(Views.LOGIN));
 
 
         /**
-         * 控制器逻辑:
-         *   1.用户通过 form 表单的形式向 url = URLs.LOGIN 发起POST请求
-         *   2.表单的内容与 sims.form.LoginForm 类的各个field相对应
-         *   3.服务端对该用户信息进行必要检查，如果用户不存在于数据库中，
-         *   则返回的相应响应状态应该为 200 (Status OK) 并返回相应的视图
-         *   提示用户注册后再登陆
-         * */
+        * 控制器逻辑:
+        *   1.用户通过 form 表单的形式向 url = URLs.LOGIN 发起POST请求
+        *   2.表单的内容与 sims.form.LoginForm 类的各个field相对应
+        *   3.服务端对该用户信息进行必要检查，如果用户不存在于数据库中，
+        *   则返回的相应响应状态应该为 200 (Status OK) 并返回相应的视图
+        *   提示用户注册后再登陆
+        * */
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.LOGIN)
                         .param("username", userExisted.getUsername())
                         .param("email", userExisted.getEmail())
@@ -123,10 +123,10 @@ public class LoginControllerTest {
 
         // User Not Exist
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.LOGIN)
-                .param("username", userNotExisted.getUsername())
-                .param("email",    userNotExisted.getEmail())
-                .param("password", userNotExisted.getPassword())
-                .param("rememberme", "0") )
+                        .param("username", userNotExisted.getUsername())
+                        .param("email",    userNotExisted.getEmail())
+                        .param("password", userNotExisted.getPassword())
+                        .param("rememberme", "0") )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.LOGIN));
@@ -151,13 +151,13 @@ public class LoginControllerTest {
          * */
         mockMvc.perform( MockMvcRequestBuilders.get(URLs.REGISTER))
                 .andExpect(MockMvcResultMatchers.view().name(Views.REGISTER));
-
+        
         // User already exist.
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.REGISTER)
-                .param("username",          userExisted.getUsername())
-                .param("email",             userExisted.getEmail())
-                .param("password",          userExisted.getPassword())
-                .param("confirmedPassword", userExisted.getPassword()) )
+                        .param("username",          userExisted.getUsername())
+                        .param("email",             userExisted.getEmail())
+                        .param("password",          userExisted.getPassword())
+                        .param("confirmedPassword", userExisted.getPassword()) )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.REGISTER));
@@ -189,10 +189,10 @@ public class LoginControllerTest {
     public void logoutTest() throws Exception{
 
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.LOGIN)
-                .param("username", userExisted.getUsername())
-                .param("email", userExisted.getEmail())
-                .param("password", userExisted.getPassword())
-                .param("rememberMe", "1") )
+                        .param("username", userExisted.getUsername())
+                        .param("email", userExisted.getEmail())
+                        .param("password", userExisted.getPassword())
+                        .param("rememberMe", "1") )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_USER))
                 .andExpect(MockMvcResultMatchers.view().name(Views.HOME));

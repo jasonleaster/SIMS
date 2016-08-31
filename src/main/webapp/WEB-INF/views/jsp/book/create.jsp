@@ -12,7 +12,6 @@
 </head>
 <body>
 
-
 <%@include file="../common/sideBar.jsp"%>
 
 <div id="page-content-wrapper">

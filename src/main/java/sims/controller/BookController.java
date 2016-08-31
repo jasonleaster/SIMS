@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 
 @Controller
 @RequestMapping(value = URLs.BOOKS)
@@ -88,9 +89,16 @@ public class BookController {
     @RequestMapping(value = URLs.QUERY, method = RequestMethod.POST)
     public String queryBookPost(Book book, Model model){
         Book bookInDb = bookService.getById(book.getIsbn());
+        LinkedList<Book> books = new LinkedList<>();
+
         if(bookInDb != null){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, bookInDb);
+            books.add(bookInDb);
+        }
+
+        if(books.size() > 0){
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, books);
             return Views.BOOK_SHOW;
+
         }else {
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "book does not exist!");
             return Views.BOOK_SEARCH;
@@ -144,16 +152,30 @@ public class BookController {
     public String borrowBook(String ISBN, HttpServletRequest request){
         Book book = bookService.getById(ISBN);
         User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
+        Date date = new Date();
         Record record = new Record();
         record.setBookId(book.getIsbn());
         record.setUserId(user.getEmail());
+        record.setDate(date);
+        record.setRecordtype(MsgAndContext.RECORD_TYPE_BORROW);
 
-        //recordService.
+        recordService.add(record);
+
         return "TODO XXX";
     }
 
     @RequestMapping(value = URLs.RETURN)
-    public String returnBook(){
+    public String returnBook(String ISBN, HttpServletRequest request){
+        Book book = bookService.getById(ISBN);
+        User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
+        Date date = new Date();
+        Record record = new Record();
+        record.setBookId(book.getIsbn());
+        record.setUserId(user.getEmail());
+        record.setDate(date);
+        record.setRecordtype(MsgAndContext.RECORD_TYPE_RETURN);
+
+        recordService.add(record);
         return "XXX";
     }
 }

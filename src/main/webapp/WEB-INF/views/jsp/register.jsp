@@ -42,9 +42,9 @@
       </div>
 
       <div class="form-group">
-        <label class="col-sm-4 control-label" for="confirm_password">确认密码</label>
+        <label class="col-sm-4 control-label" for="confirmedPassword">确认密码</label>
         <div class="col-sm-5">
-          <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password" required/>
+          <input type="password" class="form-control" id="confirmedPassword" name="confirmedPassword" placeholder="Confirm password" required/>
         </div>
       </div>
 
@@ -80,7 +80,7 @@
           required: true,
           minlength: 5
         },
-        confirm_password: {
+        confirmedPassword: {
           required: true,
           minlength: 5,
           equalTo: "#password"
@@ -100,7 +100,7 @@
           required: "请输入密码",
           minlength: "你的密码不能少于5个字符"
         },
-        confirm_password: {
+        confirmedPassword: {
           required: "请重新确认您的密码",
           minlength: "你的密码不能少于5个字符",
           equalTo: "Please enter the same password as above"

@@ -16,10 +16,10 @@ CREATE TABLE books (
     author VARCHAR(100) NOT NULL,
     publisher VARCHAR(100),
     publishedDate TIMESTAMP,
-    bookType  VARCHAR(100) NOT NULL,
-    codeInLib VARCHAR(100) NOT NULL,
-    locationInLib VARCHAR(100) NOT NULL,
-    description VARCHAR(100) NOT NULL,
+    bookType  VARCHAR(100),
+    codeInLib VARCHAR(100),
+    locationInLib VARCHAR(100),
+    description VARCHAR(100),
     price DOUBLE
 );
 

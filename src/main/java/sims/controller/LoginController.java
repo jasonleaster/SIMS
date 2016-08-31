@@ -23,6 +23,7 @@ import sims.service.UserService;
 import sims.util.MsgAndContext;
 import sims.util.URLs;
 import sims.util.Views;
+import sims.util.WebCookie;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,6 +65,10 @@ public class LoginController {
         }else if (! userInDB.getPassword().equals(user.getPassword())){
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "The password is not correct! Please try again!");
             return Views.LOGIN;
+        }
+
+        if(form.isRememberMe()){
+            WebCookie.addCookie(response, WebCookie.COOKIE_NAME, userInDB.getEmail(), WebCookie.MAX_AGE);
         }
 
         request.getSession().setAttribute(MsgAndContext.SESSION_CONTEXT_USER, userInDB);

@@ -21,6 +21,8 @@ import sims.service.UserService;
 import sims.util.URLs;
 import sims.util.Views;
 
+import javax.servlet.http.HttpServletRequest;
+
 @EnableWebMvc
 @Controller
 @RequestMapping(value = URLs.USERS)
@@ -80,4 +82,5 @@ public class UserController {
         userService.delete(user.getEmail());
         return Views.HOME;
     }
+
 }

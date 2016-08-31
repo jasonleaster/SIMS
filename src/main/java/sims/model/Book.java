@@ -1,12 +1,16 @@
 package sims.model;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class Book {
+    @NotNull
     private String isbn;
 
+    @NotNull
     private String bookname;
 
+    @NotNull
     private String author;
 
     private Double price;
