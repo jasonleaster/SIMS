@@ -27,6 +27,10 @@ public class Book {
 
     private String description;
 
+    private int    bookRemaining;
+
+    private int    bookCount;
+
     public Book(){
 
     }
@@ -109,5 +113,21 @@ public class Book {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public int getBookRemaining() {
+        return bookRemaining;
+    }
+
+    public void setBookRemaining(int bookRemaining) {
+        this.bookRemaining = bookRemaining;
+    }
+
+    public int getBookCount() {
+        return bookCount;
+    }
+
+    public void setBookCount(int bookCount) {
+        this.bookCount = bookCount;
     }
 }

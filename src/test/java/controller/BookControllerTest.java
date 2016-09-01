@@ -199,4 +199,14 @@ public class BookControllerTest {
 
     }
 
+    @Test
+    public void borrowBookTest(){
+        // TODO XXX
+    }
+
+    @Test
+    public void returnBookTest(){
+        // TODO XXX
+    }
+
 }

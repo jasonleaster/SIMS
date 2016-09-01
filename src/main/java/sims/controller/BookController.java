@@ -7,8 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 import sims.model.Book;
 import sims.model.Record;
 import sims.model.User;
@@ -24,6 +26,7 @@ import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = URLs.BOOKS)
@@ -87,7 +90,7 @@ public class BookController {
     }
 
     @RequestMapping(value = URLs.QUERY, method = RequestMethod.POST)
-    public String queryBookPost(Book book, Model model){
+    public ModelAndView queryBookPost(Book book, Model model){
         Book bookInDb = bookService.getById(book.getIsbn());
         LinkedList<Book> books = new LinkedList<>();
 
@@ -97,11 +100,11 @@ public class BookController {
 
         if(books.size() > 0){
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, books);
-            return Views.BOOK_SHOW;
+            return new ModelAndView(Views.BOOK_SHOW, (Map) model);
 
         }else {
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "book does not exist!");
-            return Views.BOOK_SEARCH;
+            return new ModelAndView(Views.BOOK_SEARCH, (Map) model);
         }
     }
 
@@ -148,10 +151,33 @@ public class BookController {
         return Views.BOOK_SHOW;
     }
 
-    @RequestMapping(value = URLs.BORROW)
-    public String borrowBook(String ISBN, HttpServletRequest request){
+    /**
+     * 借书控制逻辑
+     * 1. 用户根据ISBN来申请借阅图书
+     * 2. 首先查看图书馆内是否有这本书，如果没有返回错误信息. 如果有转到3
+     * 3. 判断当前该书籍在图书馆中是否还有存货，如果没有存货，返回错误信息，
+     *    提示用户，这本书被借完了等待别人归还后再来借阅。
+     *    (这个地方可以在后续加功能，提醒用户有人来还这本书了，或者直接让用户参与电子排队)
+     * 4. 如果图书馆内还有这本书，生成相应的借阅信息，并将图书在馆数量减一。返回正确的借阅信息。
+     *
+     * */
+    @RequestMapping(value = URLs.BORROW + "/{isbn}")
+    public String borrowBook(@PathVariable("isbn") String ISBN, HttpServletRequest request){
         Book book = bookService.getById(ISBN);
+        if(book == null){
+            return "Error";
+        }
+        int bookRemaining = book.getBookRemaining();
+        if(bookRemaining <= 0){
+            return "Error: there is no more book remaining. Try again later";
+        }
+
+        book.setBookRemaining(bookRemaining - 1);
+
+        bookService.modify(book);
+
         User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
+
         Date date = new Date();
         Record record = new Record();
         record.setBookId(book.getIsbn());
@@ -161,12 +187,31 @@ public class BookController {
 
         recordService.add(record);
 
-        return "TODO XXX";
+        return Views.HOME;
     }
 
-    @RequestMapping(value = URLs.RETURN)
-    public String returnBook(String ISBN, HttpServletRequest request){
+    @RequestMapping(value = URLs.RETURN, method = RequestMethod.GET)
+    public String returnBookPost(){
+        return Views.BOOK_SEARCH;
+    }
+
+    /**
+     * 还书控制逻辑
+     * 1. 如果馆内图书数据库发现，没有这本书。提示用户，这本书之前没有注册过，跳转到图书注册页面。
+     * 2. 如果馆内图书数据库有这本书的注册记录，则相应的对在馆数量加一(这个地方要控制好图书总量的逻辑)
+     * 3. 生成相应的图书归还记录。
+     * */
+    @RequestMapping(value = URLs.RETURN, method = RequestMethod.GET)
+    public String returnBookPost(String ISBN, HttpServletRequest request){
         Book book = bookService.getById(ISBN);
+        if(book == null){
+            return "Error";
+        }
+        int bookRemaining = book.getBookRemaining();
+        book.setBookRemaining(bookRemaining + 1);
+
+        bookService.modify(book);
+
         User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
         Date date = new Date();
         Record record = new Record();
@@ -176,6 +221,6 @@ public class BookController {
         record.setRecordtype(MsgAndContext.RECORD_TYPE_RETURN);
 
         recordService.add(record);
-        return "XXX";
+        return Views.HOME;
     }
 }

@@ -1,149 +1,174 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="sims.dao.BookMapper" >
-  <resultMap id="BaseResultMap" type="sims.model.Book" >
-    <id column="ISBN" property="isbn" jdbcType="VARCHAR" />
-    <result column="bookName" property="bookname" jdbcType="VARCHAR" />
-    <result column="author" property="author" jdbcType="VARCHAR" />
-    <result column="publisher" property="publisher" jdbcType="VARCHAR" />
-    <result column="publishedDate" property="publisheddate" jdbcType="TIMESTAMP" />
-    <result column="bookType" property="booktype" jdbcType="VARCHAR" />
-    <result column="codeInLib" property="codeinlib" jdbcType="VARCHAR" />
-    <result column="locationInLib" property="locationinlib" jdbcType="VARCHAR" />
-    <result column="description" property="description" jdbcType="VARCHAR" />
-    <result column="price" property="price" jdbcType="DOUBLE" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+    <resultMap id="BaseResultMap" type="sims.model.Book" >
+        <id column="ISBN" property="isbn" jdbcType="VARCHAR" />
+        <result column="bookName" property="bookname" jdbcType="VARCHAR" />
+        <result column="author" property="author" jdbcType="VARCHAR" />
+        <result column="publisher" property="publisher" jdbcType="VARCHAR" />
+        <result column="publishedDate" property="publisheddate" jdbcType="TIMESTAMP" />
+        <result column="bookType" property="booktype" jdbcType="VARCHAR" />
+        <result column="codeInLib" property="codeinlib" jdbcType="VARCHAR" />
+        <result column="locationInLib" property="locationinlib" jdbcType="VARCHAR" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="price" property="price" jdbcType="DOUBLE" />
+
+        <!-- New Column Added -->
+        <result column="bookRemaining" property="bookremaining" jdbcType="INT" />
+        <result column="bookCount" property="bookcount" jdbcType="INT" />
+    </resultMap>
+    <sql id="Base_Column_List" >
     ISBN, bookName, author, publisher, publishedDate, bookType, codeInLib, locationInLib, 
-    description, price
+    description, price, bookRemaining, bookCount
   </sql>
 
-  <!-- 我自定义的SQL语句 -->
-  <select id="selectAll" resultMap="BaseResultMap">
+    <!-- 我自定义的SQL语句 -->
+    <select id="selectAll" resultMap="BaseResultMap">
     select * from books
   </select>
 
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from books
-    where ISBN = #{isbn,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from books
+        where ISBN = #{isbn,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from books
     where ISBN = #{isbn,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="sims.model.Book" >
+    <insert id="insert" parameterType="sims.model.Book" >
     insert into books (ISBN, bookName, author, 
       publisher, publishedDate, bookType, 
       codeInLib, locationInLib, description, 
-      price)
+      price, bookRemaining, bookCount)
     values (#{isbn,jdbcType=VARCHAR}, #{bookname,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
       #{publisher,jdbcType=VARCHAR}, #{publisheddate,jdbcType=TIMESTAMP}, #{booktype,jdbcType=VARCHAR}, 
       #{codeinlib,jdbcType=VARCHAR}, #{locationinlib,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
-      #{price,jdbcType=DOUBLE})
+      #{price,jdbcType=DOUBLE}, #{bookremaining, jdbcType=INT }, #{bookcount, jdbcType=INT})
   </insert>
-  <insert id="insertSelective" parameterType="sims.model.Book" >
-    insert into books
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="isbn != null" >
-        ISBN,
-      </if>
-      <if test="bookname != null" >
-        bookName,
-      </if>
-      <if test="author != null" >
-        author,
-      </if>
-      <if test="publisher != null" >
-        publisher,
-      </if>
-      <if test="publisheddate != null" >
-        publishedDate,
-      </if>
-      <if test="booktype != null" >
-        bookType,
-      </if>
-      <if test="codeinlib != null" >
-        codeInLib,
-      </if>
-      <if test="locationinlib != null" >
-        locationInLib,
-      </if>
-      <if test="description != null" >
-        description,
-      </if>
-      <if test="price != null" >
-        price,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="isbn != null" >
-        #{isbn,jdbcType=VARCHAR},
-      </if>
-      <if test="bookname != null" >
-        #{bookname,jdbcType=VARCHAR},
-      </if>
-      <if test="author != null" >
-        #{author,jdbcType=VARCHAR},
-      </if>
-      <if test="publisher != null" >
-        #{publisher,jdbcType=VARCHAR},
-      </if>
-      <if test="publisheddate != null" >
-        #{publisheddate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="booktype != null" >
-        #{booktype,jdbcType=VARCHAR},
-      </if>
-      <if test="codeinlib != null" >
-        #{codeinlib,jdbcType=VARCHAR},
-      </if>
-      <if test="locationinlib != null" >
-        #{locationinlib,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null" >
-        #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null" >
-        #{price,jdbcType=DOUBLE},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="sims.model.Book" >
-    update books
-    <set >
-      <if test="bookname != null" >
-        bookName = #{bookname,jdbcType=VARCHAR},
-      </if>
-      <if test="author != null" >
-        author = #{author,jdbcType=VARCHAR},
-      </if>
-      <if test="publisher != null" >
-        publisher = #{publisher,jdbcType=VARCHAR},
-      </if>
-      <if test="publisheddate != null" >
-        publishedDate = #{publisheddate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="booktype != null" >
-        bookType = #{booktype,jdbcType=VARCHAR},
-      </if>
-      <if test="codeinlib != null" >
-        codeInLib = #{codeinlib,jdbcType=VARCHAR},
-      </if>
-      <if test="locationinlib != null" >
-        locationInLib = #{locationinlib,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null" >
-        description = #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="price != null" >
-        price = #{price,jdbcType=DOUBLE},
-      </if>
-    </set>
-    where ISBN = #{isbn,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="sims.model.Book" >
+    <insert id="insertSelective" parameterType="sims.model.Book" >
+        insert into books
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="isbn != null" >
+                ISBN,
+            </if>
+            <if test="bookname != null" >
+                bookName,
+            </if>
+            <if test="author != null" >
+                author,
+            </if>
+            <if test="publisher != null" >
+                publisher,
+            </if>
+            <if test="publisheddate != null" >
+                publishedDate,
+            </if>
+            <if test="booktype != null" >
+                bookType,
+            </if>
+            <if test="codeinlib != null" >
+                codeInLib,
+            </if>
+            <if test="locationinlib != null" >
+                locationInLib,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="price != null" >
+                price,
+            </if>
+            <if test="bookremaining != null" >
+                bookremaining,
+            </if>
+            <if test="bookcount != null" >
+                bookcount,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="isbn != null" >
+                #{isbn,jdbcType=VARCHAR},
+            </if>
+            <if test="bookname != null" >
+                #{bookname,jdbcType=VARCHAR},
+            </if>
+            <if test="author != null" >
+                #{author,jdbcType=VARCHAR},
+            </if>
+            <if test="publisher != null" >
+                #{publisher,jdbcType=VARCHAR},
+            </if>
+            <if test="publisheddate != null" >
+                #{publisheddate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="booktype != null" >
+                #{booktype,jdbcType=VARCHAR},
+            </if>
+            <if test="codeinlib != null" >
+                #{codeinlib,jdbcType=VARCHAR},
+            </if>
+            <if test="locationinlib != null" >
+                #{locationinlib,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null" >
+                #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="bookremaining != null" >
+                #{bookremaining,jdbcType=INT},
+            </if>
+            <if test="bookcount != null" >
+                #{bookcount,jdbcType=INT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="sims.model.Book" >
+        update books
+        <set >
+            <if test="bookname != null" >
+                bookName = #{bookname,jdbcType=VARCHAR},
+            </if>
+            <if test="author != null" >
+                author = #{author,jdbcType=VARCHAR},
+            </if>
+            <if test="publisher != null" >
+                publisher = #{publisher,jdbcType=VARCHAR},
+            </if>
+            <if test="publisheddate != null" >
+                publishedDate = #{publisheddate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="booktype != null" >
+                bookType = #{booktype,jdbcType=VARCHAR},
+            </if>
+            <if test="codeinlib != null" >
+                codeInLib = #{codeinlib,jdbcType=VARCHAR},
+            </if>
+            <if test="locationinlib != null" >
+                locationInLib = #{locationinlib,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null" >
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+
+            <if test="bookremaining != null" >
+                bookRemaining = #{bookremaining,jdbcType=INT},
+            </if>
+            <if test="bookcount != null" >
+                bookCount = #{bookcount,jdbcType=INT},
+            </if>
+
+        </set>
+        where ISBN = #{isbn,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="sims.model.Book" >
     update books
     set bookName = #{bookname,jdbcType=VARCHAR},
       author = #{author,jdbcType=VARCHAR},
@@ -153,7 +178,9 @@
       codeInLib = #{codeinlib,jdbcType=VARCHAR},
       locationInLib = #{locationinlib,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DOUBLE}
+      price = #{price,jdbcType=DOUBLE},
+      bookRemaining = #{bookremaining,jdbcType=INT},
+      bookCount = #{bookcount,jdbcType=INT}
     where ISBN = #{isbn,jdbcType=VARCHAR}
   </update>
 </mapper>

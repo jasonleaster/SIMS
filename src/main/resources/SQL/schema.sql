@@ -20,7 +20,9 @@ CREATE TABLE books (
     codeInLib VARCHAR(100),
     locationInLib VARCHAR(100),
     description VARCHAR(100),
-    price DOUBLE
+    price DOUBLE,
+    bookRemaining INT NOT NULL ,
+    bookCount INT NOT NULL
 );
 
 CREATE TABLE records(
