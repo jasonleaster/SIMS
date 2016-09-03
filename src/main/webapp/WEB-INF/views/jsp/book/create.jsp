@@ -5,7 +5,11 @@
   Time: 23:30
   To change this template use File | Settings | File Templates.
 --%>
+<!-- Don't for get the @pageEncoding option in JSP, otherwise, chinese character will be shown correctly -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@page isELIgnored="false" %> <!--Don't for get This !! Otherwise, you can use the extention language in JSP ! -->
 <html>
 <head>
     <%@include file="../common/common-header.jsp"%>
@@ -23,7 +27,7 @@
                 <h3 class="panel-title">新图书录入</h3>
             </div>
             <div class="panel-body">
-                <form id="bookForm" method="post" class="form-horizontal" action="/books/create">
+                <form id="bookForm" enctype="multipart/form-data" method="post" class="form-horizontal" action="/books/create">
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="isbn">ISBN</label>
                         <div class="col-sm-5">
@@ -99,6 +103,14 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="col-sm-4 control-label" for="file">上传对应的pdf文件</label>
+                        <div class="col-sm-5">
+                            <input type="file" class="form-control" id="file" name="file" placeholder="file" required/>
+                        </div>
+                        <small class="text-muted">注意上传文件小于1M</small>
+                    </div>
+
+                    <div class="form-group">
                         <div class="col-sm-9 col-sm-offset-4">
                             <button type="submit" class="btn btn-primary" name="bookCreate" value="CreateBook">Create This Book</button>
                         </div>
@@ -107,17 +119,6 @@
             </div>
         </div>
 
-        <div class="col-lg-6">
-            <h3>书籍封面</h3>
-            <img src="D:/pic3.jpg" class="img-thumbnail" alt="Cinque Terre" width="304" height="236"/>
-            <div class = "caption">
-                <div class="form-group">
-                    <label for="exampleInputFile">上传书籍封面</label>
-                    <input type="file" class="form-control-file" id="exampleInputFile"/>
-                    <small class="text-muted">注意上传文件小于1M</small>
-                </div>
-            </div>
-        </div>
     </div>
 
 
@@ -170,6 +171,9 @@
                 description:{
                     required:true
                 },
+                file:{
+                    required:true
+                },
                 agree: "required"
             },
             messages: {
@@ -181,6 +185,9 @@
                     required: "书籍的名称必须填写",
                     minlength: "长度不能少于2个字符"
                 },
+                file:{
+                    required: "必须上传相应的pdf文件"
+                }
                // wait to complete.
             },
             errorElement: "em",

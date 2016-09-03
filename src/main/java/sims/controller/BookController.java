@@ -6,10 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ModelAndView;
 import sims.model.Book;
 import sims.model.Record;
@@ -22,11 +23,15 @@ import sims.util.Views;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = URLs.BOOKS)
@@ -58,7 +63,7 @@ public class BookController {
     }
 
     @RequestMapping(value = URLs.CREATE, method = RequestMethod.POST)
-    public String registerBookPost(Book book, BindingResult bindingResult, Model model, HttpServletRequest request){
+    public String registerBookPost(Book book, BindingResult bindingResult, Model model, HttpServletRequest request) throws IOException{
 
         if(bindingResult.hasErrors()){
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "data binding error!");
@@ -71,6 +76,15 @@ public class BookController {
         }
 
         User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
+
+        //Authorized user will download the file
+        String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/books/pdf/");
+
+        String path  = dataDirectory + book.getFile().getOriginalFilename();
+
+        File newFile = new File(path);
+        //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
+        book.getFile().transferTo(newFile);
 
         //System.out.println("User: " + user.getEmail());
         bookService.add(book);
@@ -151,30 +165,28 @@ public class BookController {
         return Views.BOOK_SHOW;
     }
 
+    @RequestMapping(value = URLs.UPLOAD, method = RequestMethod.GET)
+    public String uploadBookGet(){
+        return Views.BOOK_UPLOAD;
+    }
+
     /**
      * 借书控制逻辑
      * 1. 用户根据ISBN来申请借阅图书
-     * 2. 首先查看图书馆内是否有这本书，如果没有返回错误信息. 如果有转到3
-     * 3. 判断当前该书籍在图书馆中是否还有存货，如果没有存货，返回错误信息，
-     *    提示用户，这本书被借完了等待别人归还后再来借阅。
-     *    (这个地方可以在后续加功能，提醒用户有人来还这本书了，或者直接让用户参与电子排队)
-     * 4. 如果图书馆内还有这本书，生成相应的借阅信息，并将图书在馆数量减一。返回正确的借阅信息。
+     * 2. 首先查看服务器内是否有这本书，如果没有返回错误信息. 如果有转到3
+     * 3. 打开新的tab，下载这本书，并生成record日志
      *
      * */
-    @RequestMapping(value = URLs.BORROW + "/{isbn}")
-    public String borrowBook(@PathVariable("isbn") String ISBN, HttpServletRequest request){
+    @RequestMapping(value = URLs.DOWNLOAD + "/{isbn}")
+    public String downloadBook(@PathVariable("isbn") String ISBN, Model model,
+                               HttpServletRequest request,
+                               HttpServletResponse response){
+
         Book book = bookService.getById(ISBN);
         if(book == null){
-            return "Error";
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "ISBN requested!");
+            return Views.BOOK_QUERY;
         }
-        int bookRemaining = book.getBookRemaining();
-        if(bookRemaining <= 0){
-            return "Error: there is no more book remaining. Try again later";
-        }
-
-        book.setBookRemaining(bookRemaining - 1);
-
-        bookService.modify(book);
 
         User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
 
@@ -187,40 +199,26 @@ public class BookController {
 
         recordService.add(record);
 
-        return Views.HOME;
-    }
+        //@PathVariable("fileName") String fileName)
+        String fileName = book.getBookname();
+        //If user is not authorized - he should be thrown out from here itself
 
-    @RequestMapping(value = URLs.RETURN, method = RequestMethod.GET)
-    public String returnBookPost(){
-        return Views.BOOK_SEARCH;
-    }
-
-    /**
-     * 还书控制逻辑
-     * 1. 如果馆内图书数据库发现，没有这本书。提示用户，这本书之前没有注册过，跳转到图书注册页面。
-     * 2. 如果馆内图书数据库有这本书的注册记录，则相应的对在馆数量加一(这个地方要控制好图书总量的逻辑)
-     * 3. 生成相应的图书归还记录。
-     * */
-    @RequestMapping(value = URLs.RETURN, method = RequestMethod.GET)
-    public String returnBookPost(String ISBN, HttpServletRequest request){
-        Book book = bookService.getById(ISBN);
-        if(book == null){
-            return "Error";
+        //Authorized user will download the file
+        String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/books/pdf/");
+        Path file = Paths.get(dataDirectory, fileName + ".pdf");
+        if (Files.exists(file))
+        {
+            response.setContentType("application/pdf");
+            response.addHeader("Content-Disposition", "attachment; filename="+fileName);
+            try
+            {
+                Files.copy(file, response.getOutputStream());
+                response.getOutputStream().flush();
+            }
+            catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
-        int bookRemaining = book.getBookRemaining();
-        book.setBookRemaining(bookRemaining + 1);
-
-        bookService.modify(book);
-
-        User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
-        Date date = new Date();
-        Record record = new Record();
-        record.setBookId(book.getIsbn());
-        record.setUserId(user.getEmail());
-        record.setDate(date);
-        record.setRecordtype(MsgAndContext.RECORD_TYPE_RETURN);
-
-        recordService.add(record);
-        return Views.HOME;
+        return Views.BOOK_SHOW;
     }
 }

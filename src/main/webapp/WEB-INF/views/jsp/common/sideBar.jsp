@@ -1,13 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@page isELIgnored="false" %>
+
 <div id="sidebar-wrapper">
   <ul class="sidebar-nav">
     <li class="sidebar-brand">
       <a href="#">
         图书信息管理系统
       </a>
+
+        当前用户:
+        <c:if test="${not empty user}">
+            <c:out value="${user.username}"/>
+        </c:if>
+
+
     </li>
     <li>
-      <button type="button" class="btn btn-default">馆藏图书查询</button>
+      <button type="button" class="btn btn-default" >
+        <a href="/books/query">馆藏图书查询</a>
+      </button>
     </li>
     <li>
       <div class="btn-group">

@@ -1,36 +1,41 @@
 package sims.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sims.dao.RecordMapper;
 import sims.model.Record;
 import sims.service.RecordService;
+
 
 @Service("recordService")
 public class RecordServiceImpl implements RecordService {
 
-    RecordService service;
+    @Autowired
+    RecordMapper mapper;
+    
     @Override
     public Record getById(int id) {
-        Record record = service.getById(id);
+        Record record = mapper.selectByPrimaryKey(id);
         return record;
     }
 
     @Override
     public void add(Record record) {
-        service.add(record);
+        mapper.insert(record);
     }
 
     @Override
     public void delete(int id) {
-        service.delete(id);
+        mapper.deleteByPrimaryKey(id);
     }
 
     @Override
     public void modify(Record record) {
-        service.modify(record);
+        mapper.updateByPrimaryKey(record);
     }
 
     @Override
     public int countRecords() {
-        return service.countRecords();
+        return -1;
     }
 }

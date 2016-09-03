@@ -12,14 +12,10 @@
         <result column="locationInLib" property="locationinlib" jdbcType="VARCHAR" />
         <result column="description" property="description" jdbcType="VARCHAR" />
         <result column="price" property="price" jdbcType="DOUBLE" />
-
-        <!-- New Column Added -->
-        <result column="bookRemaining" property="bookremaining" jdbcType="INT" />
-        <result column="bookCount" property="bookcount" jdbcType="INT" />
     </resultMap>
     <sql id="Base_Column_List" >
     ISBN, bookName, author, publisher, publishedDate, bookType, codeInLib, locationInLib, 
-    description, price, bookRemaining, bookCount
+    description, price
   </sql>
 
     <!-- 我自定义的SQL语句 -->
@@ -41,11 +37,11 @@
     insert into books (ISBN, bookName, author, 
       publisher, publishedDate, bookType, 
       codeInLib, locationInLib, description, 
-      price, bookRemaining, bookCount)
+      price)
     values (#{isbn,jdbcType=VARCHAR}, #{bookname,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
       #{publisher,jdbcType=VARCHAR}, #{publisheddate,jdbcType=TIMESTAMP}, #{booktype,jdbcType=VARCHAR}, 
       #{codeinlib,jdbcType=VARCHAR}, #{locationinlib,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
-      #{price,jdbcType=DOUBLE}, #{bookremaining, jdbcType=INT }, #{bookcount, jdbcType=INT})
+      #{price,jdbcType=DOUBLE} )
   </insert>
     <insert id="insertSelective" parameterType="sims.model.Book" >
         insert into books
@@ -80,12 +76,6 @@
             <if test="price != null" >
                 price,
             </if>
-            <if test="bookremaining != null" >
-                bookremaining,
-            </if>
-            <if test="bookcount != null" >
-                bookcount,
-            </if>
 
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -119,12 +109,6 @@
             <if test="price != null" >
                 #{price,jdbcType=DOUBLE},
             </if>
-            <if test="bookremaining != null" >
-                #{bookremaining,jdbcType=INT},
-            </if>
-            <if test="bookcount != null" >
-                #{bookcount,jdbcType=INT},
-            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="sims.model.Book" >
@@ -157,14 +141,6 @@
             <if test="price != null" >
                 price = #{price,jdbcType=DOUBLE},
             </if>
-
-            <if test="bookremaining != null" >
-                bookRemaining = #{bookremaining,jdbcType=INT},
-            </if>
-            <if test="bookcount != null" >
-                bookCount = #{bookcount,jdbcType=INT},
-            </if>
-
         </set>
         where ISBN = #{isbn,jdbcType=VARCHAR}
     </update>
@@ -178,9 +154,7 @@
       codeInLib = #{codeinlib,jdbcType=VARCHAR},
       locationInLib = #{locationinlib,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DOUBLE},
-      bookRemaining = #{bookremaining,jdbcType=INT},
-      bookCount = #{bookcount,jdbcType=INT}
+      price = #{price,jdbcType=DOUBLE}
     where ISBN = #{isbn,jdbcType=VARCHAR}
   </update>
 </mapper>

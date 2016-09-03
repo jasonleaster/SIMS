@@ -40,7 +40,10 @@
                 <td><c:out value="${book.price}"/> </td>
                 <td><c:out value="${book.author}"/> </td>
                 <td>
-                    <a href="/books/borrow/${book.isbn}" class="btn btn-info" role="button">Link Button</a>
+                    <a href="/books/download/${book.isbn}" class="btn btn-info" role="button">Download</a>
+                </td>
+                <td>
+                    <a href="/books/delete/${book.isbn}" class="btn btn-info" role="button">Delete</a>
                 </td>
             </tr>
         </c:forEach>

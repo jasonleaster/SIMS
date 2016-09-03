@@ -26,8 +26,8 @@ public class URLs {
     public final static String UPDATE = "/update";
 
     // Only for books
-    public final static String BORROW = "/borrow";
-    public final static String RETURN = "/return";
+    public final static String DOWNLOAD = "/download";
+    public final static String UPLOAD   = "/upload";
 
     // static resources
     public final static String PATH_IMG  = "/images/";

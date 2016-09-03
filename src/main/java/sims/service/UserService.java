@@ -1,6 +1,7 @@
 package sims.service;
 
 import sims.model.User;
+import java.util.List;
 
 public interface UserService {
     public User getById(String id);

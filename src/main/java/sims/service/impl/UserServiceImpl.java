@@ -13,15 +13,11 @@ import sims.service.UserService;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private UserMapper userMapper;
 
     public UserMapper getUserMapper() {
         return userMapper;
-    }
-
-    @Autowired
-    public void setUserMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
     }
 
     @Override
@@ -37,16 +33,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(String id) {
-
+        userMapper.deleteByPrimaryKey(id);
     }
 
     @Override
     public void modify(User user) {
-
+        userMapper.updateByPrimaryKey(user);
     }
 
     @Override
     public int countUser() {
-        return 0;
+        return -1;
     }
 }

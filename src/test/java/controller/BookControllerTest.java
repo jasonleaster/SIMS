@@ -200,13 +200,33 @@ public class BookControllerTest {
     }
 
     @Test
-    public void borrowBookTest(){
-        // TODO XXX
-    }
+    public void downloadBookTest() throws Exception{
+        /**
+         * 缺省没有对应的ISBN
+         * */
+        String url = URLs.BOOKS + URLs.DOWNLOAD + "/";
 
-    @Test
-    public void returnBookTest(){
-        // TODO XXX
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_QUERY))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG));
+
+        /**
+         * ISBN对应的书籍在数据库中不存在
+         * */
+        url = URLs.BOOKS + URLs.DOWNLOAD + "/" + bookNotExisted.getIsbn();
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_QUERY))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG));
+
+        /**
+         * ISBN对应的书籍存在于数据库中
+         * */
+        url = URLs.BOOKS + URLs.DOWNLOAD + "/" + bookExisted.getIsbn();
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.view().name(Views.HOME))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG));
     }
 
 }

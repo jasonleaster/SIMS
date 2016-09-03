@@ -1,5 +1,7 @@
 package sims.model;
 
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -27,9 +29,7 @@ public class Book {
 
     private String description;
 
-    private int    bookRemaining;
-
-    private int    bookCount;
+    private CommonsMultipartFile file;
 
     public Book(){
 
@@ -115,19 +115,11 @@ public class Book {
         this.price = price;
     }
 
-    public int getBookRemaining() {
-        return bookRemaining;
+    public CommonsMultipartFile getFile() {
+        return file;
     }
 
-    public void setBookRemaining(int bookRemaining) {
-        this.bookRemaining = bookRemaining;
-    }
-
-    public int getBookCount() {
-        return bookCount;
-    }
-
-    public void setBookCount(int bookCount) {
-        this.bookCount = bookCount;
+    public void setFile(CommonsMultipartFile file) {
+        this.file = file;
     }
 }

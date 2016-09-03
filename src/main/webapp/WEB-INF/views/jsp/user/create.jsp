@@ -5,13 +5,17 @@
   Time: 16:43
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@page isELIgnored="false" %>
+<html>
 <head>
-  <%@include file="../common/common-header.jsp"%>
+    <%@include file="../common/common-header.jsp"%>
 </head>
-
 <body>
+
+<%@include file="../common/sideBar.jsp"%>
 
 <div class="panel panel-default">
     <div class="panel-heading">
