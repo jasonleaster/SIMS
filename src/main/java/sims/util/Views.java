@@ -23,4 +23,6 @@ public class Views {
     public static final String BOOK_DELETE = "book/delete";
     public static final String BOOK_SHOW   = "book/show";
 
+    public static final String RECORD_SHOW = "record/show";
+
 }

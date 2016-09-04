@@ -8,7 +8,7 @@ http://www.springframework.org/schema/aop
 http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 ">
 
-	<!-- Datasource bean -->
+	<!-- Datasource bean for production -->
 	<bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="url" value="${jdbc_url}" />
 		<property name="username" value="${jdbc_username}" />

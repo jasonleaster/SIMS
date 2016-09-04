@@ -29,6 +29,9 @@ public class URLs {
     public final static String DOWNLOAD = "/download";
     public final static String UPLOAD   = "/upload";
 
+    // URL for RESTful API.
+    public final static String API = "/API";
+
     // static resources
     public final static String PATH_IMG  = "/images/";
     public final static String PATH_JS   = "/js/";

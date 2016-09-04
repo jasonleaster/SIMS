@@ -2,9 +2,11 @@ package sims.form;
 
 import sims.model.User;
 
+import javax.validation.constraints.NotNull;
+
 public class RegisterForm extends User {
 
-
+    @NotNull
     private String confirmedPassword;
 
     public RegisterForm(){}

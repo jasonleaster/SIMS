@@ -27,7 +27,9 @@
       <tr>
         <td><c:out value="${user.username}"/> </td>
         <td><c:out value="${user.email}"/> </td>
-
+        <td>
+          <a href="/users/modify/${user.email}" class="btn btn-info" role="button">Modify User's Information</a>
+        </td>
         <td>
           <a href="/users/delete/${user.email}" class="btn btn-info" role="button">Delete User</a>
         </td>

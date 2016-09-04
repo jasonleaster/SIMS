@@ -6,6 +6,8 @@ import sims.dao.RecordMapper;
 import sims.model.Record;
 import sims.service.RecordService;
 
+import java.util.List;
+
 
 @Service("recordService")
 public class RecordServiceImpl implements RecordService {
@@ -17,6 +19,18 @@ public class RecordServiceImpl implements RecordService {
     public Record getById(int id) {
         Record record = mapper.selectByPrimaryKey(id);
         return record;
+    }
+
+    @Override
+    public List<Record> getByUserId(String userId) {
+        List<Record> records = mapper.selectByUserId(userId);
+        return records;
+    }
+
+    @Override
+    public List<Record> getByBookId(String isbn) {
+        List<Record> records = mapper.selectByBookId(isbn);
+        return records;
     }
 
     @Override

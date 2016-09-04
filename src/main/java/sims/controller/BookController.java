@@ -7,10 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ModelAndView;
 import sims.model.Book;
 import sims.model.Record;
@@ -208,6 +204,7 @@ public class BookController {
         Path file = Paths.get(dataDirectory, fileName + ".pdf");
         if (Files.exists(file))
         {
+
             response.setContentType("application/pdf");
             response.addHeader("Content-Disposition", "attachment; filename="+fileName);
             try
