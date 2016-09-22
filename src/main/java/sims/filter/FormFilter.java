@@ -13,8 +13,7 @@ import java.io.IOException;
 
 public class FormFilter extends OncePerRequestFilter {
 
-    String[] NOT_FILTER = new String[] {URLs.LOGIN, URLs.REGISTER,
-            URLs.PATH_JS, URLs.PATH_CSS, URLs.PATH_IMG, URLs.PATH_FONT};
+    String[] NOT_FILTER = new String[] {URLs.LOGIN, URLs.REGISTER, URLs.PATH_STATIC};
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

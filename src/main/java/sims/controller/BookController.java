@@ -47,13 +47,7 @@ public class BookController {
                 new CustomDateEditor(dateFormatter, true));
     }
 
-    /**
-     * 注册新的书籍
-     *
-     * @param
-     * @return String
-     */
-    @RequestMapping(value = URLs.CREATE, method = RequestMethod.GET)
+    @RequestMapping(value = {URLs.CREATE, URLs.UPLOAD}, method = RequestMethod.GET)
     public String registerBookGet(){
         return Views.BOOK_CREATE;
     }
@@ -74,26 +68,26 @@ public class BookController {
         User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
 
         //Authorized user will download the file
-        String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/books/pdf/");
+        String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/static/books/pdf/");
 
-        String path  = dataDirectory + book.getFile().getOriginalFilename();
+        String path  = dataDirectory + book.getIsbn() + ".pdf";
 
-        File newFile = new File(path);
+        File newFilePdf = new File(path);
+        newFilePdf.createNewFile();
         //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
-        book.getFile().transferTo(newFile);
+        book.getPdfFile().transferTo(newFilePdf);
+
+        path = dataDirectory + book.getIsbn() + ".png";
+        File newFileImage = new File(path);
+        newFileImage.createNewFile();
+        book.getPreface().transferTo(newFileImage);
 
         //System.out.println("User: " + user.getEmail());
         bookService.add(book);
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, book);
-        return Views.BOOK_SHOW;
+        return Views.BOOK_PROFILE;
     }
 
-    /**
-     * 查询书籍
-     *
-     * @param
-     * @return String
-     */
     @RequestMapping(value = URLs.QUERY, method = RequestMethod.GET)
     public String queryBookGet(){
         return Views.BOOK_SEARCH;
@@ -110,12 +104,35 @@ public class BookController {
 
         if(books.size() > 0){
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, books);
-            return new ModelAndView(Views.BOOK_SHOW, (Map) model);
+            return new ModelAndView(Views.BOOK_PROFILE, (Map) model);
 
         }else {
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "book does not exist!");
             return new ModelAndView(Views.BOOK_SEARCH, (Map) model);
         }
+    }
+
+    @RequestMapping(value = URLs.QUERY + "/{isbn}")
+    public String queryBookByISBN(@PathVariable("isbn")String ISBN, Model model){
+        Book bookInDb = bookService.getById(ISBN);
+
+        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, bookInDb);
+
+        return Views.BOOK_PROFILE;
+    }
+
+    @RequestMapping(value = URLs.QUERY + "/type/{booktype}")
+    public String queryBookByBookType(@PathVariable("booktype")int bookType, Model model){
+
+        List<Book> books = bookService.getByType(bookType);
+
+        if(books == null){
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "No such type book!");
+        }else {
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, books);
+        }
+
+        return Views.BOOK_RESULT_TABLE;
     }
 
     @RequestMapping(value = URLs.DELETE, method = RequestMethod.GET)
@@ -158,12 +175,7 @@ public class BookController {
         }
         bookService.modify(book);
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, book);
-        return Views.BOOK_SHOW;
-    }
-
-    @RequestMapping(value = URLs.UPLOAD, method = RequestMethod.GET)
-    public String uploadBookGet(){
-        return Views.BOOK_UPLOAD;
+        return Views.BOOK_PROFILE;
     }
 
     /**
@@ -195,18 +207,16 @@ public class BookController {
 
         recordService.add(record);
 
-        //@PathVariable("fileName") String fileName)
-        String fileName = book.getBookname();
-        //If user is not authorized - he should be thrown out from here itself
+        String fileNameInDisk = book.getIsbn() + ".pdf";
 
         //Authorized user will download the file
-        String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/books/pdf/");
-        Path file = Paths.get(dataDirectory, fileName + ".pdf");
+        String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/static/books/pdf/");
+        Path file = Paths.get(dataDirectory, fileNameInDisk);
         if (Files.exists(file))
         {
 
             response.setContentType("application/pdf");
-            response.addHeader("Content-Disposition", "attachment; filename="+fileName);
+            response.addHeader("Content-Disposition", "attachment; filename="+ book.getBookname() + ".pdf");
             try
             {
                 Files.copy(file, response.getOutputStream());
@@ -216,6 +226,7 @@ public class BookController {
                 ex.printStackTrace();
             }
         }
-        return Views.BOOK_SHOW;
+        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, book);
+        return Views.BOOK_PROFILE;
     }
 }

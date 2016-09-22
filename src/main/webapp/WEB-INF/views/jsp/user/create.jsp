@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<%@include file="../common/sideBar.jsp"%>
+<%@include file="../common/navBar.jsp"%>
 
 <div class="panel panel-default">
     <div class="panel-heading">

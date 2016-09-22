@@ -14,6 +14,8 @@ public interface BookMapper {
 
     Book selectByPrimaryKey(String isbn);
 
+    List<Book> selectByBookType(int bookType);
+
     int updateByPrimaryKeySelective(Book book);
 
     int updateByPrimaryKey(Book book);

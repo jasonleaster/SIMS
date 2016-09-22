@@ -41,7 +41,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import sims.controller.LoginController;
 import sims.filter.FormFilter;
-import sims.form.LoginForm;
 import sims.model.User;
 import sims.service.UserService;
 import sims.util.MsgAndContext;
@@ -190,7 +189,7 @@ public class LoginControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.LOGIN)
                         .param("username", userExisted.getUsername())
-                        .param("email", userExisted.getEmail())
+                        .param("email",    userExisted.getEmail())
                         .param("password", userExisted.getPassword())
                         .param("rememberMe", "1") )
                 .andExpect(MockMvcResultMatchers.status().isOk())

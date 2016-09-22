@@ -15,13 +15,14 @@ public class Views {
     public static final String USER_DELETE = "user/delete";
     public static final String USER_SHOW   = "user/show";
 
-    public static final String BOOK_QUERY  = "book/query";
-    public static final String BOOK_SEARCH = BOOK_QUERY;
-    public static final String BOOK_CREATE = "book/create";
-    public static final String BOOK_UPLOAD = "book/upload";
-    public static final String BOOK_MODIFY = "book/modify";
-    public static final String BOOK_DELETE = "book/delete";
-    public static final String BOOK_SHOW   = "book/show";
+    public static final String BOOK_QUERY   = "book/query";
+    public static final String BOOK_SEARCH  = BOOK_QUERY;
+    public static final String BOOK_CREATE  = "book/create";
+    public static final String BOOK_UPLOAD  = "book/upload";
+    public static final String BOOK_MODIFY  = "book/modify";
+    public static final String BOOK_DELETE  = "book/delete";
+    public static final String BOOK_PROFILE = "book/profile";
+    public static final String BOOK_RESULT_TABLE  = "book/resultTable";
 
     public static final String RECORD_SHOW = "record/show";
 

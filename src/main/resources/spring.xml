@@ -16,11 +16,12 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.
 
     <!--Setup a handler for servering static content -->
     <!-- DEMO <mvc:resources mapping="/resources/**" location="/resources/"/>-->
-    <mvc:resources mapping="/css/**"          location="/WEB-INF/css/"/>
-    <mvc:resources mapping="/js/**"           location="/WEB-INF/js/"/>
-    <mvc:resources mapping="/images/**"       location="/WEB-INF/images/"/>
-    <mvc:resources mapping="/fonts/**"        location="/WEB-INF/fonts/"/>
-    <mvc:resources mapping="/books/pdf/**"        location="/WEB-INF/books/pdf/"/>
+    <!--<mvc:resources mapping="/css/**"          location="/WEB-INF/css/"/>-->
+    <!--<mvc:resources mapping="/js/**"           location="/WEB-INF/js/"/>-->
+    <!--<mvc:resources mapping="/images/**"       location="/WEB-INF/images/"/>-->
+    <!--<mvc:resources mapping="/fonts/**"        location="/WEB-INF/fonts/"/>-->
+    <!--<mvc:resources mapping="/books/pdf/**"    location="/WEB-INF/books/pdf/"/>-->
+    <mvc:resources mapping="/static/**"       location="/WEB-INF/static/"/>
 
     <bean name="resolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/jsp/"/>

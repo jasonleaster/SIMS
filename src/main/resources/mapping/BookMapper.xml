@@ -7,7 +7,7 @@
         <result column="author" property="author" jdbcType="VARCHAR" />
         <result column="publisher" property="publisher" jdbcType="VARCHAR" />
         <result column="publishedDate" property="publisheddate" jdbcType="TIMESTAMP" />
-        <result column="bookType" property="booktype" jdbcType="VARCHAR" />
+        <result column="bookType" property="booktype" jdbcType="INTEGER" />
         <result column="codeInLib" property="codeinlib" jdbcType="VARCHAR" />
         <result column="locationInLib" property="locationinlib" jdbcType="VARCHAR" />
         <result column="description" property="description" jdbcType="VARCHAR" />
@@ -29,17 +29,26 @@
         from books
         where ISBN = #{isbn,jdbcType=VARCHAR}
     </select>
+
+    <select id="selectByBookType" resultMap="BaseResultMap" parameterType="int" >
+        select
+        <include refid="Base_Column_List" />
+        from books
+        where booktype = #{booktype,jdbcType=INTEGER}
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from books
     where ISBN = #{isbn,jdbcType=VARCHAR}
-  </delete>
+    </delete>
+
     <insert id="insert" parameterType="sims.model.Book" >
     insert into books (ISBN, bookName, author, 
       publisher, publishedDate, bookType, 
       codeInLib, locationInLib, description, 
       price)
     values (#{isbn,jdbcType=VARCHAR}, #{bookname,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
-      #{publisher,jdbcType=VARCHAR}, #{publisheddate,jdbcType=TIMESTAMP}, #{booktype,jdbcType=VARCHAR}, 
+      #{publisher,jdbcType=VARCHAR}, #{publisheddate,jdbcType=TIMESTAMP}, #{booktype,jdbcType=INTEGER},
       #{codeinlib,jdbcType=VARCHAR}, #{locationinlib,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{price,jdbcType=DOUBLE} )
   </insert>
@@ -94,8 +103,8 @@
             <if test="publisheddate != null" >
                 #{publisheddate,jdbcType=TIMESTAMP},
             </if>
-            <if test="booktype != null" >
-                #{booktype,jdbcType=VARCHAR},
+            <if test="!= null" >
+                #{booktype,jdbcType=INTEGER},
             </if>
             <if test="codeinlib != null" >
                 #{codeinlib,jdbcType=VARCHAR},
@@ -127,7 +136,7 @@
                 publishedDate = #{publisheddate,jdbcType=TIMESTAMP},
             </if>
             <if test="booktype != null" >
-                bookType = #{booktype,jdbcType=VARCHAR},
+                bookType = #{booktype,jdbcType=INTEGER},
             </if>
             <if test="codeinlib != null" >
                 codeInLib = #{codeinlib,jdbcType=VARCHAR},
@@ -150,7 +159,7 @@
       author = #{author,jdbcType=VARCHAR},
       publisher = #{publisher,jdbcType=VARCHAR},
       publishedDate = #{publisheddate,jdbcType=TIMESTAMP},
-      bookType = #{booktype,jdbcType=VARCHAR},
+      bookType = #{booktype,jdbcType=INTEGER},
       codeInLib = #{codeinlib,jdbcType=VARCHAR},
       locationInLib = #{locationinlib,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},

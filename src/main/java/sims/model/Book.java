@@ -21,7 +21,7 @@ public class Book {
 
     private Date   publisheddate;
 
-    private String booktype;
+    private int booktype;
 
     private String codeinlib;
 
@@ -29,7 +29,13 @@ public class Book {
 
     private String description;
 
-    private CommonsMultipartFile file;
+    private CommonsMultipartFile preface;
+
+    private CommonsMultipartFile pdfFile;
+
+    public enum BookType{
+        CS, MACHINELEARING, NOVEL, OTHERS
+    }
 
     public Book(){
 
@@ -75,12 +81,12 @@ public class Book {
         this.publisheddate = publisheddate;
     }
 
-    public String getBooktype() {
+    public int getBooktype() {
         return booktype;
     }
 
-    public void setBooktype(String booktype) {
-        this.booktype = booktype == null ? null : booktype.trim();
+    public void setBooktype(int booktype) {
+        this.booktype = booktype;
     }
 
     public String getCodeinlib() {
@@ -115,11 +121,19 @@ public class Book {
         this.price = price;
     }
 
-    public CommonsMultipartFile getFile() {
-        return file;
+    public CommonsMultipartFile getPreface() {
+        return preface;
     }
 
-    public void setFile(CommonsMultipartFile file) {
-        this.file = file;
+    public void setPreface(CommonsMultipartFile preface) {
+        this.preface = preface;
+    }
+
+    public CommonsMultipartFile getPdfFile() {
+        return pdfFile;
+    }
+
+    public void setPdfFile(CommonsMultipartFile pdfFile) {
+        this.pdfFile = pdfFile;
     }
 }

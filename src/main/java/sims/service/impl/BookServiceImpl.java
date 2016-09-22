@@ -28,6 +28,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<Book> getByType(int bookType) {
+        List<Book> books = bookMapper.selectByBookType(bookType);
+        return books;
+    }
+
+    @Override
     public void add(Book book) {
         bookMapper.insert(book);
     }

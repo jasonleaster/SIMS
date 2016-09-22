@@ -7,21 +7,39 @@
 <meta name="description" content="XXXXXX"/>
 <meta name="author" content="刘子健"/>
 
-<title>图书管理系统</title>
-<!-- Custom CSS -->
-<link href="/css/simple-sidebar.css" rel="stylesheet"/>
-<link href="/css/login.css" rel="stylesheet"/>
-<!-- Bootstrap Core CSS -->
-<link href="/css/bootstrap.min.css" rel="stylesheet"/>
-
-<script src="/js/jquery.js"></script>
+<title>Book Ocean</title>
 
 <!-- For check inputted form -->
-<script src="/js/jquery.validate.js"></script>
+<script src="/static/bootstrap/js/jquery.js"></script>
+<script src="/static/bootstrap/js/jquery.validate.js"></script>
 
-<!-- Bootstrap Core JavaScript -->
-<script src="/js/bootstrap.min.js"></script>
+<!-- Javascript -->
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<script src="/static/js/jquery.backstretch.min.js"></script>
+<script src="/static/js/scripts.js"></script>
 
 <!-- 日期选择的插件 CSS和JS -->
-<script src="/js/bootstrap-datepicker.js"></script>
-<script src="/css/bootstrap-datepicker.css" rel="stylesheet"></script>
+<script src="/static/bootstrap/js/bootstrap-datepicker.js"></script>
+<script src="/static/bootstrap/css/bootstrap-datepicker.css" rel="stylesheet"></script>
+
+
+<!-- CSS -->
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/css/form-elements.css">
+<link rel="stylesheet" href="/static/css/style.css">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Favicon and touch icons -->
+<link rel="shortcut icon"                                href="/static/ico/favicon.png">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/static/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72"   href="/static/ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed"                 href="/static/ico/apple-touch-icon-57-precomposed.png">

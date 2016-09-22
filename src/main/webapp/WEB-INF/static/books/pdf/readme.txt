@@ -1,0 +1,1 @@
+This directory store the pdf files of book and it's preface image.
