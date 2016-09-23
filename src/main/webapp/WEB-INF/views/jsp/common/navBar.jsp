@@ -20,7 +20,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="#">Search Book(Unsupported)</a>
+                    <a href="/books/query">Search Book(Unsupported)</a>
                 </li>
                 <li>
                     <a href="/books/create">UpLoad Your Book</a>

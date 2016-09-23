@@ -27,7 +27,6 @@ public class URLs {
 
     // Only for books
     public final static String DOWNLOAD = "/download";
-    public final static String UPLOAD   = "/upload";
 
     // URL for RESTful API.
     public final static String API = "/API";

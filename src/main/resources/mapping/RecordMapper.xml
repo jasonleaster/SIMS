@@ -32,6 +32,13 @@
     where book_id = #{book_id,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectByRecordType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from records
+    where recordType = #{recordType,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from records
     where id = #{id,jdbcType=INTEGER}

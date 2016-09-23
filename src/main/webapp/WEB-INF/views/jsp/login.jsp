@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="form-bottom">
-                        <form id="loginForm" role="form" action="" method="post" class="login-form">
+                        <form id="loginForm" role="form" action="/login" method="post" class="login-form">
                             <div class="form-group">
                                 <label class="sr-only" for="email">UserID</label>
                                 <input type="email" name="email" placeholder="UserID/Email..." class="form-username form-control" id="email" required/>

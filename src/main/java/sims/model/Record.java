@@ -3,6 +3,14 @@ package sims.model;
 import java.util.Date;
 
 public class Record {
+
+    public class Type{
+        public static final String BORROW = "borrow";
+        public static final String RETURN = "return";
+    }
+
+    public Record(){}
+
     private Integer id;
 
     private Date date;

@@ -17,6 +17,8 @@ public interface RecordMapper {
 
     List<Record> selectByBookId(String bookId);
 
+    List<Record> selectByRecordType(String type);
+
     int updateByPrimaryKeySelective(Record record);
 
     int updateByPrimaryKey(Record record);

@@ -1,3 +1,12 @@
+/**************************************************************
+ * File name    : Filter.java
+ * Author       : Jason Leaster
+ * Date         : 2016.09.22
+ *
+ * Description  :
+ *     For every HTTP request, #FormFilter works like a filter to
+ * redirect un-login user to the login page.
+ *****************************************************************/
 package sims.filter;
 
 import org.springframework.web.filter.OncePerRequestFilter;

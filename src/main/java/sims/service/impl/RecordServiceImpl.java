@@ -34,6 +34,17 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
+    public List<Record> getByRecordType(String recordType) {
+        if(recordType.equalsIgnoreCase(Record.Type.BORROW) ||
+                recordType.equalsIgnoreCase(Record.Type.RETURN)){
+            List<Record> records = mapper.selectByRecordType(recordType);
+            return records;
+        }else{
+            return null;
+        }
+    }
+
+    @Override
     public void add(Record record) {
         mapper.insert(record);
     }

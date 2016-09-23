@@ -39,6 +39,7 @@ public class BookController {
     @Autowired
     private RecordService recordService;
 
+    /*Help to translate the date time string like "yyyy-mm-dd" into Date object in Java */
     @InitBinder
     protected void initBinder(WebDataBinder binder) throws ServletException {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -47,7 +48,7 @@ public class BookController {
                 new CustomDateEditor(dateFormatter, true));
     }
 
-    @RequestMapping(value = {URLs.CREATE, URLs.UPLOAD}, method = RequestMethod.GET)
+    @RequestMapping(value = {URLs.CREATE}, method = RequestMethod.GET)
     public String registerBookGet(){
         return Views.BOOK_CREATE;
     }

@@ -24,6 +24,6 @@ public class Views {
     public static final String BOOK_PROFILE = "book/profile";
     public static final String BOOK_RESULT_TABLE  = "book/resultTable";
 
-    public static final String RECORD_SHOW = "record/show";
+    public static final String RECORD_RESULT_TABLE = "record/resultTable";
 
 }

@@ -12,6 +12,8 @@ public interface RecordService {
 
     public List<Record> getByBookId(String isbn);
 
+    public List<Record> getByRecordType(String recordType);
+
     public void add(Record record);
 
     public void delete(int id);
