@@ -16,6 +16,8 @@ public interface BookMapper {
 
     List<Book> selectByBookType(int bookType);
 
+    List<Book> selectPopularBooks(int topNum);
+
     int updateByPrimaryKeySelective(Book book);
 
     int updateByPrimaryKey(Book book);

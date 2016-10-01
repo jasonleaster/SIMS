@@ -29,9 +29,13 @@ public class Book {
 
     private String description;
 
-    private CommonsMultipartFile preface;
+    private CommonsMultipartFile preface; // A image file for the preface of the book
 
-    private CommonsMultipartFile pdfFile;
+    private CommonsMultipartFile pdfFile; // The pdf file of this book
+
+    private int downloadTimes;  // How many user have downloaded this book
+
+    private int viewTimes;      // How many user have seen the profile of this book
 
     public enum BookType{
         CS, MACHINELEARING, NOVEL, OTHERS
@@ -135,5 +139,21 @@ public class Book {
 
     public void setPdfFile(CommonsMultipartFile pdfFile) {
         this.pdfFile = pdfFile;
+    }
+
+    public int getDownloadTimes() {
+        return downloadTimes;
+    }
+
+    public void setDownloadTimes(int downloadTimes) {
+        this.downloadTimes = downloadTimes;
+    }
+
+    public int getViewTimes() {
+        return viewTimes;
+    }
+
+    public void setViewTimes(int viewTimes) {
+        this.viewTimes = viewTimes;
     }
 }

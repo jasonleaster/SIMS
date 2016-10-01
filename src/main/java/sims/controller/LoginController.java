@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import sims.form.LoginForm;
 import sims.form.RegisterForm;
+import sims.model.Book;
 import sims.model.User;
+import sims.service.BookService;
 import sims.service.UserService;
 import sims.util.MsgAndContext;
 import sims.util.URLs;
@@ -26,12 +28,16 @@ import sims.util.WebCookie;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @Controller
 public class LoginController {
 
     private UserService userService;
+    private BookService bookService;
+
+    private static final int BOOK_SHOW_IN_HOMEPAGE = 6;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -41,6 +47,17 @@ public class LoginController {
     public UserService getUserService() {
         return userService;
     }
+
+    @Autowired
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+
+    public BookService getBookService() {
+        return bookService;
+    }
+
 
     @RequestMapping(value = {URLs.LOGIN, URLs.ROOT}, method = RequestMethod.GET)
     public String loginGet(){
@@ -60,7 +77,7 @@ public class LoginController {
 
         if (userInDB == null){
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "The user does not exist.");
-            return Views.LOGIN;
+            return Views.REGISTER;
         }else if (! userInDB.getPassword().equals(user.getPassword())){
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "The password is not correct! Please try again!");
             return Views.LOGIN;
@@ -72,6 +89,11 @@ public class LoginController {
 
         request.getSession().setAttribute(MsgAndContext.SESSION_CONTEXT_USER, userInDB);
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_USER, userInDB);
+
+        List<Book> books = bookService.getPopularBook(BOOK_SHOW_IN_HOMEPAGE);
+
+        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, books);
+
         return Views.HOME;
     }
 

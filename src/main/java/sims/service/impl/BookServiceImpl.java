@@ -11,7 +11,9 @@ import java.util.List;
 @Service("bookService")
 public class BookServiceImpl implements BookService {
 
-    private BookMapper bookMapper;
+    static private BookMapper bookMapper;
+
+    static private int booksNumInDB;
 
     public BookMapper getBookMapper() {
         return bookMapper;
@@ -20,6 +22,8 @@ public class BookServiceImpl implements BookService {
     @Autowired
     public void setBookMapper(BookMapper bookMapper) {
         this.bookMapper = bookMapper;
+        List<Book> books = bookMapper.selectAll();
+        booksNumInDB = books.size();
     }
 
     @Override
@@ -49,8 +53,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public int countBook() {
-        List<Book> books = bookMapper.selectAll();
-        return books.size();
+    public List<Book> getPopularBook(int bookNum) {
+        if(bookNum > booksNumInDB){
+            bookNum = booksNumInDB;
+        }
+
+        List<Book> books = bookMapper.selectPopularBooks(bookNum);
+        return books;
     }
 }

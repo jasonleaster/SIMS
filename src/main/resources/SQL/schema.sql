@@ -20,7 +20,9 @@ CREATE TABLE books (
     codeInLib VARCHAR(100),
     locationInLib VARCHAR(100),
     description VARCHAR(100),
-    price DOUBLE
+    price DOUBLE,
+    downloadTimes INT ,
+    viewTimes INT
 );
 
 CREATE TABLE records(

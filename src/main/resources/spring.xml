@@ -10,6 +10,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.
     <context:property-placeholder location="classpath:config.properties" />
 
     <!-- 自动扫描(自动注入) -->
+    <context:component-scan base-package="sims.web" />
     <context:component-scan base-package="sims.controller" />
     <context:component-scan base-package="sims.service" />
     <context:component-scan base-package="sims.model" />
@@ -40,12 +41,12 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="UTF-8"/>
         <property name="maxInMemorySize" value="5400000"/>
-        <property name="uploadTempDir"  value="WEB-INF/books/pdf"/>
+        <property name="uploadTempDir"  value="/WEB-INF/books/pdf"/>
     </bean>
 
 
     <!-- For Sending Email -->
-    <!-- My Account bookocean@yeah.net sims123456-->
+    <!-- My Account bookocean@yeah.net  password :sims123456 authorized code: sims123456789-->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <!-- 服务器 -->
         <property name="host" value="smtp.yeah.net" />
@@ -54,7 +55,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.
         <!-- 用户名 -->
         <property name="username" value="bookocean@yeah.net" />
         <!--  密码   -->
-        <property name="password" value="sims123456" />
+        <property name="password" value="sims123456789" />
         <!-- SMTP服务器验证 -->
         <property name="javaMailProperties">
             <props>
@@ -73,7 +74,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.
 
     <bean id="simpleMailMessage" class="org.springframework.mail.SimpleMailMessage">
         <!-- 发件人email -->
-        <property name="from" value="fancydeepin@yeah.net" />
+        <property name="from" value="bookocean@yeah.net" />
         <!--
          收件人email
         <property name="to" value="to@yeah.net" />

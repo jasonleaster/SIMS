@@ -38,42 +38,7 @@
 </head>
 <body>
 
-
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-  <div class="container">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Book Ocean</a>
-    </div>
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="#">About</a>
-        </li>
-        <li>
-          <a href="#">Services</a>
-        </li>
-        <li>
-          <a href="#">Contact</a>
-        </li>
-      </ul>
-    </div>
-    <!-- /.navbar-collapse -->
-  </div>
-  <!-- /.container -->
-</nav>
-
-<div class="row">
-
-</div>
-
+<%@include file="../common/navBar.jsp"%>
 
 <div class="container">
   <h2>Search Results </h2>
@@ -90,15 +55,15 @@
     </thead>
     <tbody>
     <c:if test="${not empty books}">
-        <c:forEach var="book" items="${books}">
+      <c:forEach var="book" items="${books}">
         <tr>
-            <td><c:out value="${book.isbn}"></c:out></td>
-            <td><c:out value="${book.bookname}"></c:out></td>
-            <td><c:out value="${book.author}"></c:out></td>
-            <td><a href="/books/query/${book.isbn}"    class="btn btn-info" role="button">View Detail</a></td>
-            <td><a href="/books/download/${book.isbn}" class="btn btn-info" role="button">Download The PDF</a></td>
+          <td><c:out value="${book.isbn}"></c:out></td>
+          <td><c:out value="${book.bookname}"></c:out></td>
+          <td><c:out value="${book.author}"></c:out></td>
+          <td><a href="/books/query/${book.isbn}"    class="btn btn-info" role="button">View Detail</a></td>
+          <td><a href="/books/download/${book.isbn}" class="btn btn-info" role="button">Download The PDF</a></td>
         </tr>
-        </c:forEach>
+      </c:forEach>
     </c:if>
     </tbody>
   </table>

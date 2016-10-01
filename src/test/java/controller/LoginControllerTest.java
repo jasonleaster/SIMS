@@ -40,7 +40,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import org.springframework.web.context.WebApplicationContext;
 import sims.controller.LoginController;
-import sims.filter.FormFilter;
+import sims.web.filter.FormFilter;
 import sims.model.User;
 import sims.service.UserService;
 import sims.util.MsgAndContext;

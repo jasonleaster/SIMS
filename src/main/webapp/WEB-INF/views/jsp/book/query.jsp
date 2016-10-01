@@ -12,6 +12,8 @@
 </head>
 <body>
 
+<%@include file="../common/navBar.jsp"%>
+
 <div class="panel-body">
     <form id="bookSearch" method="post" class="form-horizontal" action="/books/query">
         <div class="form-group">

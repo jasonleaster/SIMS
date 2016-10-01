@@ -7,7 +7,7 @@
  *     For every HTTP request, #FormFilter works like a filter to
  * redirect un-login user to the login page.
  *****************************************************************/
-package sims.filter;
+package sims.web.filter;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 import sims.model.User;

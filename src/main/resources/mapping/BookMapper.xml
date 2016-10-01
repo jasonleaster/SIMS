@@ -12,10 +12,12 @@
         <result column="locationInLib" property="locationinlib" jdbcType="VARCHAR" />
         <result column="description" property="description" jdbcType="VARCHAR" />
         <result column="price" property="price" jdbcType="DOUBLE" />
+        <result column="downloadTimes" property="downloadtimes" jdbcType="INTEGER" />
+        <result column="viewTimes"     property="viewtimes" jdbcType="INTEGER" />
     </resultMap>
     <sql id="Base_Column_List" >
     ISBN, bookName, author, publisher, publishedDate, bookType, codeInLib, locationInLib, 
-    description, price
+    description, price, downloadTimes, viewTimes
   </sql>
 
     <!-- 我自定义的SQL语句 -->
@@ -35,6 +37,13 @@
         <include refid="Base_Column_List" />
         from books
         where booktype = #{booktype,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectPopularBooks" resultMap="BaseResultMap" parameterType="int">
+        select
+        <include refid="Base_Column_List" />
+        from books
+        ORDER BY downloadTimes limit #{topNum,jdbcType=INTEGER}
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
