@@ -5,11 +5,19 @@ import java.util.Date;
 public class Record {
 
     public class Type{
-        public static final String BORROW = "borrow";
-        public static final String RETURN = "return";
+        public static final String UPLOAD   = "upload";
+        public static final String DOWNLOAD = "download";
     }
 
     public Record(){}
+
+    public Record(Date date, String bookId, String userId, String recordtype) {
+        this.id = null; //increase automatically
+        this.date = date;
+        this.bookId = bookId;
+        this.userId = userId;
+        this.recordtype = recordtype;
+    }
 
     private Integer id;
 

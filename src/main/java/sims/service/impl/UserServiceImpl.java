@@ -16,19 +16,31 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    static private long usersNumInDB;
+
     public UserMapper getUserMapper() {
         return userMapper;
     }
 
     @Override
     public User getById(String id) {
-        User user = userMapper.selectByPrimaryKey(id);
+        if(id == null){
+            return null;
+        }
+
+        User user = null;
+        try{
+            user = userMapper.selectByPrimaryKey(id);
+        }catch (Exception ignore){}
+
         return user;
     }
 
     @Override
     public void add(User user) {
-        userMapper.insert(user);
+        if(getById(user.getEmail()) == null){
+            userMapper.insert(user);
+        }
     }
 
     @Override
@@ -44,5 +56,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public int countUser() {
         return -1;
+    }
+
+    public static long getUsersNumInDB() {
+        return usersNumInDB;
+    }
+
+    public static void setUsersNumInDB(long usersNumInDB) {
+        UserServiceImpl.usersNumInDB = usersNumInDB;
     }
 }

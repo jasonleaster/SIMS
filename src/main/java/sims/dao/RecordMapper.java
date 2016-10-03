@@ -3,6 +3,7 @@ package sims.dao;
 import sims.model.Record;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RecordMapper {
     int deleteByPrimaryKey(Integer id);
@@ -13,11 +14,11 @@ public interface RecordMapper {
 
     Record selectByPrimaryKey(Integer id);
 
-    List<Record> selectByUserId(String userId);
+    List<Record> selectFuzzy(Map map);
 
-    List<Record> selectByBookId(String bookId);
+    int selectItemCount(Map map);
 
-    List<Record> selectByRecordType(String type);
+    int countAll();
 
     int updateByPrimaryKeySelective(Record record);
 

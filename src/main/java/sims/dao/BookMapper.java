@@ -3,6 +3,7 @@ package sims.dao;
 import sims.model.Book;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BookMapper {
 
@@ -14,7 +15,11 @@ public interface BookMapper {
 
     Book selectByPrimaryKey(String isbn);
 
-    List<Book> selectByBookType(int bookType);
+    List<Book> selectFuzzy(Map map);
+
+    int        selectItemCount(Map map);
+
+    int        countAll();
 
     List<Book> selectPopularBooks(int topNum);
 

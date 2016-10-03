@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import sims.dao.BookMapper;
 import sims.model.Book;
-import util.BooksGenerator;
+import sims.util.SupplementaryDataFactory;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class BookMapperTest {
 
         initDB();
 
-        Book[] books = BooksGenerator.getBooks();
+        Book[] books = SupplementaryDataFactory.getBooks();
 
         TOP = books.length/2;
 

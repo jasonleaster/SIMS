@@ -8,6 +8,8 @@ public interface UserMapper {
 
     int insert(User user);
 
+    int countAll();
+
     int insertSelective(User user);
 
     User selectByPrimaryKey(String email);

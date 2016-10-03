@@ -95,9 +95,9 @@ public class RecordControllerTest {
             records[i].setUserId(userExisted.getEmail());
             records[i].setBookId(bookExisted.getIsbn());
             if(i % 2 == 0){
-                records[i].setRecordtype(Record.Type.BORROW);
+                records[i].setRecordtype(Record.Type.DOWNLOAD);
             }else{
-                records[i].setRecordtype(Record.Type.RETURN);
+                records[i].setRecordtype(Record.Type.UPLOAD);
             }
 
             recordService.add(records[i]);

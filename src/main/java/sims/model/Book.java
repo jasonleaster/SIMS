@@ -37,6 +37,10 @@ public class Book {
 
     private int viewTimes;      // How many user have seen the profile of this book
 
+    private String prefacePath;
+
+    private String pdfFilePath;
+
     public enum BookType{
         CS, MACHINELEARING, NOVEL, OTHERS
     }
@@ -50,7 +54,7 @@ public class Book {
     }
 
     public void setIsbn(String isbn) {
-        this.isbn = isbn == null ? null : isbn.trim();
+        this.isbn = isbn;
     }
 
     public String getBookname() {
@@ -58,7 +62,7 @@ public class Book {
     }
 
     public void setBookname(String bookname) {
-        this.bookname = bookname == null ? null : bookname.trim();
+        this.bookname = bookname;
     }
 
     public String getAuthor() {
@@ -66,7 +70,15 @@ public class Book {
     }
 
     public void setAuthor(String author) {
-        this.author = author == null ? null : author.trim();
+        this.author = author;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public String getPublisher() {
@@ -74,7 +86,7 @@ public class Book {
     }
 
     public void setPublisher(String publisher) {
-        this.publisher = publisher == null ? null : publisher.trim();
+        this.publisher = publisher;
     }
 
     public Date getPublisheddate() {
@@ -98,7 +110,7 @@ public class Book {
     }
 
     public void setCodeinlib(String codeinlib) {
-        this.codeinlib = codeinlib == null ? null : codeinlib.trim();
+        this.codeinlib = codeinlib;
     }
 
     public String getLocationinlib() {
@@ -106,7 +118,7 @@ public class Book {
     }
 
     public void setLocationinlib(String locationinlib) {
-        this.locationinlib = locationinlib == null ? null : locationinlib.trim();
+        this.locationinlib = locationinlib;
     }
 
     public String getDescription() {
@@ -114,15 +126,7 @@ public class Book {
     }
 
     public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
+        this.description = description;
     }
 
     public CommonsMultipartFile getPreface() {
@@ -155,5 +159,21 @@ public class Book {
 
     public void setViewTimes(int viewTimes) {
         this.viewTimes = viewTimes;
+    }
+
+    public String getPrefacePath() {
+        return prefacePath;
+    }
+
+    public void setPrefacePath(String prefacePath) {
+        this.prefacePath = prefacePath;
+    }
+
+    public String getPdfFilePath() {
+        return pdfFilePath;
+    }
+
+    public void setPdfFilePath(String pdfFilePath) {
+        this.pdfFilePath = pdfFilePath;
     }
 }

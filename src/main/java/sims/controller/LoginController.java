@@ -28,6 +28,7 @@ import sims.util.WebCookie;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -87,8 +88,15 @@ public class LoginController {
             WebCookie.addCookie(response, WebCookie.COOKIE_NAME, userInDB.getEmail(), WebCookie.MAX_AGE);
         }
 
-        request.getSession().setAttribute(MsgAndContext.SESSION_CONTEXT_USER, userInDB);
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_USER, userInDB);
+        HttpSession session = request.getSession();
+        
+        session.setAttribute(MsgAndContext.SESSION_CONTEXT_USER, userInDB);
+
+        if(userInDB.isAdministrator()){
+            session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_ADMIN, userInDB);
+        }else{
+            session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_ADMIN, null);
+        }
 
         List<Book> books = bookService.getPopularBook(BOOK_SHOW_IN_HOMEPAGE);
 
@@ -124,14 +132,18 @@ public class LoginController {
         }else{
             User user = form.toUser();
             userService.add(user);
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_USER, user);
+            model.addAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER, user);
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, null);
             return "redirect:" + URLs.LOGIN;
         }
     }
 
     @RequestMapping(value = URLs.HOMEPAGE)
-    public String home(){
+    public String home(Model model){
+
+        List<Book> books = bookService.getPopularBook(BOOK_SHOW_IN_HOMEPAGE);
+
+        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, books);
         return Views.HOME;
     }
 }

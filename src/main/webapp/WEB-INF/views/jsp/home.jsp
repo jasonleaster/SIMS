@@ -53,33 +53,34 @@
         </div>
 
         <div class="col-md-9">
-            <c:if test="${not empty books}">
-                <c:forEach var="book" items="${books}">
-                <div class="row">
-                    <div class="col-sm-4 col-lg-4 col-md-4">
-                        <div class="thumbnail">
-                            <img src="/static/books/pdf/${book.isbn}.png" alt="" width="320" height="150">
-                            <div class="caption">
-                                <h4 class="pull-right">${book.price}</h4>
-                                <h4><a href="/books/query/${book.isbn}"><c:out value="${book.name}"></c:out></a>
-                                </h4>
-                                <p>${book.description}</p>
-                            </div>
-                            <div class="ratings">
-                                <p class="pull-right">15 reviews</p>
-                                <p>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                    <span class="glyphicon glyphicon-star"></span>
-                                </p>
+            <div class="row">
+                <c:if test="${not empty books}">
+                    <c:forEach var="book" items="${books}">
+                        <div class="col-sm-4 col-lg-4 col-md-4">
+                            <div class="thumbnail">
+                                <img src="/static/books/pdf/${book.isbn}.png" alt="" width="320" height="150">
+                                <div class="caption">
+                                    <h4 class="pull-right">${book.price}</h4>
+                                    <h4><a href="/books/query/${book.isbn}"><c:out value="${book.bookname}"></c:out></a>
+                                    </h4>
+                                    <p>${book.description}</p>
+                                </div>
+                                <div class="ratings">
+                                    <p class="pull-right">15 reviews</p>
+                                    <p>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                        <span class="glyphicon glyphicon-star"></span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                </c:forEach>
-            </c:if>
+
+                    </c:forEach>
+                </c:if>
+            </div>
         </div>
     </div>
 

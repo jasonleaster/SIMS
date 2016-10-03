@@ -11,6 +11,16 @@
   <sql id="Base_Column_List" >
     id, date, book_id, user_id, recordType
   </sql>
+
+    <!-- Custom defined SQL statements  -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from records;
+    </select>
+
+    <select id="countAll" resultType="int">
+        select COUNT(*) as total from records;
+    </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -39,6 +49,56 @@
     where recordType = #{recordType,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectFuzzy"  resultMap="BaseResultMap" parameterType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from records
+    where TRUE
+    <if test="isbn != null" >
+      AND records.id = #{id}
+    </if>
+    <if test="bookId != null" >
+      AND records.bookid = #{bookId}
+    </if>
+    <if test="userId != null" >
+      AND records.userid = #{userId}
+    </if>
+    <if test="recordtype != null" >
+      AND records.recordtype = #{reocrdtype}
+    </if>
+
+    <if test="pageSize != null" >
+      limit #{pageSize}
+    </if>
+    <if test="start != null" >
+      offset #{start}
+    </if>
+
+  </select>
+
+  <select id="selectItemCount" resultType="int" parameterType="java.util.Map">
+    SELECT COUNT(*) AS total
+    FROM (
+      select <include refid="Base_Column_List" />
+      from records
+      where TRUE
+      <if test="isbn != null" >
+          AND records.id = #{id}
+      </if>
+      <if test="bookId != null" >
+          AND records.bookid = #{bookId}
+      </if>
+      <if test="userId != null" >
+          AND records.userid = #{userId}
+      </if>
+      <if test="recordtype != null" >
+          AND records.recordtype = #{reocrdtype}
+      </if>
+    ) AS totalResult;
+  </select>
+
+  
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from records
     where id = #{id,jdbcType=INTEGER}

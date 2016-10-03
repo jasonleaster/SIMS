@@ -46,6 +46,12 @@ public class UserController {
         return Views.USER_SHOW;
     }
 
+    @RequestMapping(value = URLs.QUERY + "/all")
+    public String query(Model model){
+        // TODO xxxx
+        return Views.USER_CREATE;
+    }
+
     @RequestMapping(value = URLs.CREATE, method = RequestMethod.GET)
     public String createGet(Model model){
         model.addAttribute(new User());

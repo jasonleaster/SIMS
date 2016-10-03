@@ -7,13 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import sims.form.BookSearchForm;
 import sims.model.Book;
 import sims.model.Record;
 import sims.model.User;
 import sims.service.BookService;
 import sims.service.RecordService;
 import sims.util.MsgAndContext;
+import sims.util.PageInfo;
 import sims.util.URLs;
 import sims.util.Views;
 
@@ -73,19 +74,41 @@ public class BookController {
 
         String path  = dataDirectory + book.getIsbn() + ".pdf";
 
-        File newFilePdf = new File(path);
-        newFilePdf.createNewFile();
-        //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
-        book.getPdfFile().transferTo(newFilePdf);
+        book.setPdfFilePath(path);
 
-        path = dataDirectory + book.getIsbn() + ".png";
-        File newFileImage = new File(path);
-        newFileImage.createNewFile();
-        book.getPreface().transferTo(newFileImage);
+        if(book.getPdfFile() != null){
+            File newFilePdf = new File(path);
+            newFilePdf.createNewFile();
+            //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
+            book.getPdfFile().transferTo(newFilePdf);
+        }
+
+        if(book.getPreface() != null){
+            path = dataDirectory + book.getIsbn() + ".png";
+            book.setPdfFilePath(path);
+            File newFileImage = new File(path);
+            newFileImage.createNewFile();
+            book.getPreface().transferTo(newFileImage);
+        }
+
+        /*
+        * Generate a new record
+        * */
+        Date date = new Date();
+        Record record = new Record();
+        record.setBookId(book.getIsbn());
+        record.setUserId(user.getEmail());
+        record.setDate(date);
+        record.setRecordtype(Record.Type.UPLOAD);
+
+        recordService.add(record);
 
         //System.out.println("User: " + user.getEmail());
         bookService.add(book);
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, book);
+
+        book.setViewTimes(book.getViewTimes() + 1);
+        bookService.modify(book);
         return Views.BOOK_PROFILE;
     }
 
@@ -95,89 +118,130 @@ public class BookController {
     }
 
     @RequestMapping(value = URLs.QUERY, method = RequestMethod.POST)
-    public ModelAndView queryBookPost(Book book, Model model){
-        Book bookInDb = bookService.getById(book.getIsbn());
-        LinkedList<Book> books = new LinkedList<>();
+    public String queryBookPost(BookSearchForm form, Model model,
+                                @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                HttpServletRequest request){
 
-        if(bookInDb != null){
-            books.add(bookInDb);
+        if(form.getIsbn() != null){
+            return queryBookByISBN(form.getIsbn(), model);
         }
 
-        if(books.size() > 0){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, books);
-            return new ModelAndView(Views.BOOK_PROFILE, (Map) model);
+        PageInfo pageInfo;
 
-        }else {
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "book does not exist!");
-            return new ModelAndView(Views.BOOK_SEARCH, (Map) model);
+        int pageSize = 1;
+        if(pageNum == null){
+            pageInfo = new PageInfo(0, pageSize, new ArrayList());
+        }else{
+            pageInfo = new PageInfo((pageNum.intValue() - 1) * pageSize, pageSize, new ArrayList());
         }
-    }
 
-    @RequestMapping(value = URLs.QUERY + "/{isbn}")
-    public String queryBookByISBN(@PathVariable("isbn")String ISBN, Model model){
-        Book bookInDb = bookService.getById(ISBN);
+        pageInfo.setURL(request.getRequestURI());
 
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, bookInDb);
+        try {
+            List<Book> booksInDB = bookService.pagedFuzzyQuery(form, pageInfo);
 
-        return Views.BOOK_PROFILE;
-    }
-
-    @RequestMapping(value = URLs.QUERY + "/type/{booktype}")
-    public String queryBookByBookType(@PathVariable("booktype")int bookType, Model model){
-
-        List<Book> books = bookService.getByType(bookType);
-
-        if(books == null){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "No such type book!");
-        }else {
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, books);
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, booksInDB);
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_PAGEINFO, pageInfo);
+        }catch (Exception ignore){
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "search Exception");
+            return Views.BOOK_QUERY;
         }
 
         return Views.BOOK_RESULT_TABLE;
     }
 
-    @RequestMapping(value = URLs.DELETE, method = RequestMethod.GET)
-    public String deleteBookGet(){
-        return Views.BOOK_DELETE;
+    @RequestMapping(value = URLs.QUERY + "/{isbn}")
+    public String queryBookByISBN(@PathVariable("isbn")String ISBN, Model model){
+
+        Book bookInDb = bookService.getById(ISBN);
+
+        if(bookInDb == null){
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "Book does not exist!");
+            return Views.BOOK_SEARCH;
+        }
+        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, bookInDb);
+
+        bookInDb.setViewTimes(bookInDb.getViewTimes() + 1);
+        bookService.modify(bookInDb);
+
+        return Views.BOOK_PROFILE;
     }
 
-    @RequestMapping(value = URLs.DELETE, method = RequestMethod.POST)
-    public String deleteBookPost(Book book, BindingResult bindingResult, Model model){
-        if(bindingResult.hasFieldErrors("isbn")){
-            return deleteBookGet();
-        }
-        bookService.delete(book.getIsbn());
+    @RequestMapping(value = URLs.QUERY + "/type/{booktype}")
+    public String queryBookByBookType(@PathVariable("booktype")int bookType,
+                                      @RequestParam(name = "pageNum", required = false) Integer pageNum,
+                                      Model model, HttpServletRequest request){
+
+        BookSearchForm form = new BookSearchForm();
+        form.setBooktype(bookType);
+        return this.queryBookPost(form, model, pageNum, request);
+    }
+
+
+    @RequestMapping(value = URLs.DELETE + "/{isbn}")
+    public String deleteBookPost(@PathVariable("isbn")String ISBN, Model model){
+
+        bookService.delete(ISBN);
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, null);
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, null);
+
         return Views.HOME;
     }
 
-    @RequestMapping(value = URLs.MODIFY, method = RequestMethod.GET)
-    public String modifyBookSearchGet(){
-        return Views.BOOK_SEARCH;
-    }
+    @RequestMapping(value = URLs.MODIFY + "/{isbn}")
+    public String modifyBook(@PathVariable("isbn")String ISBN, Model model){
 
-    @RequestMapping(value = URLs.MODIFY, method = RequestMethod.POST)
-    public String modifyBookSearchPost(@Valid Book book, BindingResult bindingResult, Model model){
-        if(bindingResult.hasFieldErrors("isbn")){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "ISBN can not be NULL");
-            return modifyBookSearchGet();
-        }
-        Book bookInDb = bookService.getById(book.getIsbn());
+        Book bookInDb = bookService.getById(ISBN);
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, bookInDb);
         return Views.BOOK_MODIFY;
+
     }
 
     @RequestMapping(value = URLs.MODIFY + URLs.UPDATE, method = RequestMethod.POST)
-    public String modifyBookUpdatePost(@Valid Book book, BindingResult bindingResult, Model model){
+    public String modifyBookUpdatePost(@Valid Book book, BindingResult bindingResult, Model model, HttpServletRequest request) throws IOException{
+
         if(bindingResult.hasErrors()){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "form error!");
-            return modifyBookSearchPost(book, bindingResult, model);
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "binding error");
+            return modifyBook(book.getIsbn(), model);
         }
+
+        Book oldBook = bookService.getById(book.getIsbn());
+
+        //Authorized user will download the file
+        String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/static/books/pdf/");
+
+        String path  = dataDirectory + book.getIsbn() + ".pdf";
+
+        if( oldBook.getPdfFilePath()  == null
+            || (! oldBook.getPdfFilePath().equals(book.getPdfFilePath())) ){
+
+            book.setPdfFilePath(path);
+
+            File newFilePdf = new File(path);
+            newFilePdf.createNewFile();
+
+            book.getPdfFile().transferTo(newFilePdf);
+        }
+
+        if( oldBook.getPrefacePath() == null
+            || (! oldBook.getPrefacePath().equals(book.getPrefacePath())) ){
+
+            path = dataDirectory + book.getIsbn() + ".png";
+            book.setPdfFilePath(path);
+
+            File newFileImage = new File(path);
+            newFileImage.createNewFile();
+
+            book.getPreface().transferTo(newFileImage);
+        }
+
         bookService.modify(book);
+
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, book);
+
         return Views.BOOK_PROFILE;
     }
+
 
     /**
      * 借书控制逻辑
@@ -199,12 +263,15 @@ public class BookController {
 
         User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
 
+        /*
+        * Generate a new record
+        * */
         Date date = new Date();
         Record record = new Record();
         record.setBookId(book.getIsbn());
         record.setUserId(user.getEmail());
         record.setDate(date);
-        record.setRecordtype(MsgAndContext.RECORD_TYPE_BORROW);
+        record.setRecordtype(Record.Type.DOWNLOAD);
 
         recordService.add(record);
 
@@ -227,7 +294,14 @@ public class BookController {
                 ex.printStackTrace();
             }
         }
+
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, book);
+
+        book.setDownloadTimes(book.getDownloadTimes() + 1);
+        book.setViewTimes(book.getViewTimes() + 1);
+
+        bookService.modify(book);
+
         return Views.BOOK_PROFILE;
     }
 }

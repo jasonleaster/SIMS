@@ -3,9 +3,14 @@ package sims.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sims.dao.RecordMapper;
+import sims.model.Book;
 import sims.model.Record;
 import sims.service.RecordService;
+import sims.util.PageInfo;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -13,54 +18,75 @@ import java.util.List;
 public class RecordServiceImpl implements RecordService {
 
     @Autowired
-    RecordMapper mapper;
+    RecordMapper recordMapper;
+
+    static private long recordsNumInDB;
     
     @Override
     public Record getById(int id) {
-        Record record = mapper.selectByPrimaryKey(id);
+
+        Record record = null;
+        try{
+            record = recordMapper.selectByPrimaryKey(id);
+        }catch (Exception ignore){
+        }
         return record;
     }
 
     @Override
-    public List<Record> getByUserId(String userId) {
-        List<Record> records = mapper.selectByUserId(userId);
-        return records;
-    }
+    public List<Record> pagedFuzzyQuery(Record record, PageInfo pageInfo) throws Exception {
+        List<Record> records = new ArrayList<>();
 
-    @Override
-    public List<Record> getByBookId(String isbn) {
-        List<Record> records = mapper.selectByBookId(isbn);
-        return records;
-    }
-
-    @Override
-    public List<Record> getByRecordType(String recordType) {
-        if(recordType.equalsIgnoreCase(Record.Type.BORROW) ||
-                recordType.equalsIgnoreCase(Record.Type.RETURN)){
-            List<Record> records = mapper.selectByRecordType(recordType);
+        if(record.getId() != null){
+            records.add(this.getById(record.getId()));
             return records;
-        }else{
-            return null;
         }
+        HashMap map = new HashMap();
+
+        Field[] fields = record.getClass().getDeclaredFields();
+        for(Field field: fields){
+            field.setAccessible(true);
+            map.put(field.getName(), field.get(record));
+        }
+
+        fields = pageInfo.getClass().getDeclaredFields();
+        for(Field field: fields){
+            field.setAccessible(true);
+            map.put(field.getName(), field.get(pageInfo));
+        }
+
+        records = recordMapper.selectFuzzy(map);
+
+        int totalCount = recordMapper.selectItemCount(map);
+        pageInfo.setTotalCount(totalCount);
+        return records;
     }
 
     @Override
     public void add(Record record) {
-        mapper.insert(record);
+        recordMapper.insert(record);
     }
 
     @Override
     public void delete(int id) {
-        mapper.deleteByPrimaryKey(id);
+        recordMapper.deleteByPrimaryKey(id);
     }
 
     @Override
     public void modify(Record record) {
-        mapper.updateByPrimaryKey(record);
+        recordMapper.updateByPrimaryKey(record);
     }
 
     @Override
     public int countRecords() {
         return -1;
+    }
+
+    public static long getRecordsNumInDB() {
+        return recordsNumInDB;
+    }
+
+    public static void setRecordsNumInDB(long recordsNumInDB) {
+        RecordServiceImpl.recordsNumInDB = recordsNumInDB;
     }
 }

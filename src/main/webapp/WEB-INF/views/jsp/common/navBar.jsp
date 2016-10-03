@@ -20,11 +20,26 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="/books/query">Search Book(Unsupported)</a>
+                    <a href="/books/query">Search Book</a>
                 </li>
                 <li>
                     <a href="/books/create">UpLoad Your Book</a>
                 </li>
+                <c:if test="${not empty admin}">
+                    <li>
+                        <a href="/users/query/all">User Management(Unsupported)</a>
+                    </li>
+                    <li>
+                        <a href="/records/query/all">Records Management(Unsupported)</a>
+                    </li>
+                </c:if>
+
+                <c:if test="${not empty user}">
+                    <li>
+                        <a href="/records/query?userId=${user.email}}">My records</a>
+                    </li>
+                </c:if>
+
                 <li>
                     <a href="#">Contact</a>
                 </li>

@@ -5,26 +5,38 @@
     <id column="email" property="email" jdbcType="VARCHAR" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="usertype" property="userType" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    email, username, password
+    email, username, password, userType
   </sql>
+
+    <!-- Custom defined SQL statements  -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from users;
+    </select>
+
+    <select id="countAll" resultType="int">
+        select COUNT(*) as total from users;
+    </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
     from users
     where email = #{email,jdbcType=VARCHAR}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from users
     where email = #{email,jdbcType=VARCHAR}
   </delete>
+
   <insert id="insert" parameterType="sims.model.User" >
-    insert into users (email, username, password
-      )
-    values (#{email,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
-      )
+    insert into users (email, username, password)
+    values (#{email,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR})
   </insert>
+
   <insert id="insertSelective" parameterType="sims.model.User" >
     insert into users
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -50,6 +62,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="sims.model.User" >
     update users
     <set >
@@ -62,10 +75,12 @@
     </set>
     where email = #{email,jdbcType=VARCHAR}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="sims.model.User" >
     update users
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR}
     where email = #{email,jdbcType=VARCHAR}
   </update>
+
 </mapper>

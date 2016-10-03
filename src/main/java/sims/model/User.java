@@ -7,14 +7,27 @@ public class User {
 
     private String password;
 
-    public User(){
+    private int userType;
 
+    public enum UserType{
+        ADMINISTRATOR, NORMAL_USER
+    }
+
+    public User(){
     }
 
     public User(String username, String email, String password) {
         this.username = username;
-        this.email = email;
+        this.email    = email;
         this.password = password;
+        this.userType = UserType.NORMAL_USER.ordinal();
+    }
+
+    public User(String username, String email, String password, int userType) {
+        this.username = username;
+        this.email    = email;
+        this.password = password;
+        this.userType = userType;
     }
 
     public String getEmail() {
@@ -41,4 +54,19 @@ public class User {
         this.password = password == null ? null : password.trim();
     }
 
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
+
+    public boolean isAdministrator(){
+        if (getUserType() == UserType.ADMINISTRATOR.ordinal()){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

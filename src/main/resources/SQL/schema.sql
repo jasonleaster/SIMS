@@ -7,7 +7,8 @@ drop table if exists records;
 CREATE TABLE users (
     username VARCHAR(25) NOT NULL,
     email VARCHAR(50) PRIMARY KEY NOT NULL,
-    password VARCHAR(25) NOT NULL
+    password VARCHAR(25) NOT NULL,
+    userType INTEGER
 );
 
 CREATE TABLE books (
@@ -21,8 +22,10 @@ CREATE TABLE books (
     locationInLib VARCHAR(100),
     description VARCHAR(100),
     price DOUBLE,
-    downloadTimes INT ,
-    viewTimes INT
+    downloadTimes INTEGER ,
+    viewTimes INTEGER ,
+    prefacepath VARCHAR (400),
+    pdffilepath VARCHAR (400)
 );
 
 CREATE TABLE records(

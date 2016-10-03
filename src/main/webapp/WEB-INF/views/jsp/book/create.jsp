@@ -38,23 +38,24 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">新图书录入</h3>
+                <h3 class="panel-title">图书修改</h3>
             </div>
             <div class="panel-body">
-                <form id="bookForm" enctype="multipart/form-data" method="post" class="form-horizontal" action="/books/create">
+
+                <form id="bookForm" enctype="multipart/form-data" method="post" class="form-horizontal" action="/books/modify/update">
 
                     <div class="row">
                         <div class="form-group-inline">
                             <label class="col-sm-2 control-label" for="isbn">ISBN</label>
                             <div class="col-sm-2">
-                                <input type="text" class="form-control" id="isbn" name="isbn" placeholder="ISBN" required/>
+                                <input type="text" class="form-control" id="isbn" name="isbn"  placeholder="ISBN" required/>
                             </div>
                         </div>
 
                         <div class="form-group-inline">
                             <label class="col-sm-2 control-label" for="bookname">书籍名</label>
                             <div class="col-sm-2">
-                                <input type="text" class="form-control" id="bookname" name="bookname" placeholder="bookname" required/>
+                                <input type="text" class="form-control" id="bookname" name="bookname"  placeholder="bookname" required/>
                             </div>
                         </div>
                     </div>
@@ -66,7 +67,7 @@
                         <div class="form-group-inline">
                             <label class="col-sm-2 control-label" for="author">作者</label>
                             <div class="col-sm-2">
-                                <input type="text" class="form-control" id="author" name="author" placeholder="Author" required/>
+                                <input type="text" class="form-control" id="author" name="author"  placeholder="Author" required/>
                             </div>
                         </div>
 
@@ -93,7 +94,7 @@
                             <label class="col-sm-2 control-label">发行日期</label>
                             <div class="col-sm-2">
                                 <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
-                                    <input type="text" name="publisheddate" class="form-control">
+                                    <input type="text" name="publisheddate"  class="form-control">
                                     <div class="input-group-addon">
                                         <span class="glyphicon glyphicon-th"></span>
                                     </div>
@@ -131,7 +132,9 @@
                         <div class="form-group-inline">
                             <label class="col-sm-2 control-label" for="description">书籍描述</label>
                             <div class="col-sm-5">
-                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                    <textarea class="form-control" id="description" name="description" rows="10">
+
+                                    </textarea>
                             </div>
                         </div>
 
@@ -165,6 +168,7 @@
                     </div>
 
                 </form>
+
             </div>
         </div>
     </div>

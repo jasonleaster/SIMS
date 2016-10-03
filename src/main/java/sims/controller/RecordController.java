@@ -3,14 +3,19 @@ package sims.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import sims.model.Record;
+import sims.service.BookService;
 import sims.service.RecordService;
+import sims.service.UserService;
 import sims.util.MsgAndContext;
+import sims.util.PageInfo;
 import sims.util.URLs;
 import sims.util.Views;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -18,30 +23,40 @@ import java.util.List;
 public class RecordController {
 
     @Autowired
-    private RecordService service;
+    private RecordService recordService;
 
-    @RequestMapping(value = URLs.QUERY + "/user/{userId:.+}")
-    public String queryByUserId(@PathVariable("userId") String userId, Model model){
-        List<Record> records = service.getByUserId(userId);
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_RECORDS, records);
-        return Views.RECORD_RESULT_TABLE;
-    }
+    @Autowired
+    private UserService userService;
 
-    @RequestMapping(value = URLs.QUERY + "/book/{bookId:.+}")
-    public String queryByBookId(@PathVariable("bookId") String bookId, Model model){
-        List<Record> records = service.getByBookId(bookId);
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_RECORDS, records);
-        return Views.RECORD_RESULT_TABLE;
-    }
+    @Autowired
+    private BookService bookService;
 
-    @RequestMapping(value = URLs.QUERY + "/type/{recordtype:.+}")
-    public String queryByRecordType(@PathVariable("recordtype") String recordType, Model model){
-        List<Record> records = service.getByRecordType(recordType);
-        if(records != null){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_RECORDS, records);
+    @RequestMapping(value = URLs.QUERY )
+    public String queryByUserId(Record record,
+                                @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                Model model, HttpServletRequest request){
+
+        PageInfo pageInfo;
+
+        int pageSize = 1;
+        if(pageNum == null){
+            pageInfo = new PageInfo(0, pageSize, new ArrayList());
         }else{
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "No such records");
+            pageInfo = new PageInfo((pageNum.intValue() - 1) * pageSize, pageSize, new ArrayList());
         }
+
+        pageInfo.setURL(request.getRequestURI());
+
+        try {
+            List<Record> records = recordService.pagedFuzzyQuery(record, pageInfo);
+
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_RECORDS, records);
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_PAGEINFO, pageInfo);
+        }catch (Exception ignore){
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "search Exception");
+            return Views.HOME;
+        }
+
 
         return Views.RECORD_RESULT_TABLE;
     }
