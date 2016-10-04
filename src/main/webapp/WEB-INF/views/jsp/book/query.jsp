@@ -26,7 +26,7 @@
                 <h3 class="panel-title">Search Unit</h3>
             </div>
             <div class="panel-body">
-                <form id="bookForm" enctype="text/plain" method="post" class="form-horizontal" action="/books/query">
+                <form id="bookForm" method="post" class="form-horizontal" action="/books/query">
 
                     <div class="row">
                         <div class="form-group-inline">

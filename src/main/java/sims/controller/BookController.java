@@ -21,9 +21,11 @@ import sims.util.Views;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -67,7 +69,7 @@ public class BookController {
             return Views.BOOK_CREATE;
         }
 
-        User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
+        User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER);
 
         //Authorized user will download the file
         String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/static/books/pdf/");
@@ -112,15 +114,45 @@ public class BookController {
         return Views.BOOK_PROFILE;
     }
 
-    @RequestMapping(value = URLs.QUERY, method = RequestMethod.GET)
-    public String queryBookGet(){
+    @RequestMapping(value = {URLs.SEARCH})
+    public String searchBook(HttpServletRequest request){
+        request.getSession().setAttribute( MsgAndContext.SESSION_ATTRIBUTES_BOOK_QUERY_FORM, null);
         return Views.BOOK_SEARCH;
     }
 
-    @RequestMapping(value = URLs.QUERY, method = RequestMethod.POST)
+
+    /*
+    * Set all empty String ("") into null for @BookSearchForm;
+    * */
+    private BookSearchForm searchFormPreProcess(BookSearchForm form) throws Exception{
+        Field[] fields = form.getClass().getDeclaredFields();
+        for(Field field: fields){
+            if(field.getType().equals(String.class)){
+                field.setAccessible(true);
+                String string = (String) field.get(form);
+                if(string != null && string.length() == 0){
+                    field.set(form, null);
+                }
+            }
+        }
+        return form;
+    }
+
+    @RequestMapping(value = URLs.QUERY)//, method = RequestMethod.POST)
     public String queryBookPost(BookSearchForm form, Model model,
                                 @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                HttpServletRequest request){
+                                HttpServletRequest request) throws Exception{
+
+        form = searchFormPreProcess(form);
+
+        HttpSession session = request.getSession();
+        BookSearchForm oldForm = (BookSearchForm)session.getAttribute( MsgAndContext.SESSION_ATTRIBUTES_BOOK_QUERY_FORM);
+
+        if(pageNum != null){
+            form = oldForm;
+        }else{
+            session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_BOOK_QUERY_FORM, form);
+        }
 
         if(form.getIsbn() != null){
             return queryBookByISBN(form.getIsbn(), model);
@@ -170,7 +202,7 @@ public class BookController {
     @RequestMapping(value = URLs.QUERY + "/type/{booktype}")
     public String queryBookByBookType(@PathVariable("booktype")int bookType,
                                       @RequestParam(name = "pageNum", required = false) Integer pageNum,
-                                      Model model, HttpServletRequest request){
+                                      Model model, HttpServletRequest request) throws Exception{
 
         BookSearchForm form = new BookSearchForm();
         form.setBooktype(bookType);
@@ -261,7 +293,7 @@ public class BookController {
             return Views.BOOK_QUERY;
         }
 
-        User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
+        User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER);
 
         /*
         * Generate a new record

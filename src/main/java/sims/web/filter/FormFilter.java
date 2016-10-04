@@ -26,7 +26,7 @@ public class FormFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_CONTEXT_USER);
+        User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER);
 
         if(user == null && ! isLoginURL(request.getRequestURL().toString(), request)){
             request.getRequestDispatcher(URLs.LOGIN).forward(request, response);

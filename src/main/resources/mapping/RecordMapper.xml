@@ -28,26 +28,6 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-    <include refid="Base_Column_List" />
-    from records
-    where user_id = #{user_id,jdbcType=VARCHAR}
-  </select>
-
-  <select id="selectByBookId" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-    <include refid="Base_Column_List" />
-    from records
-    where book_id = #{book_id,jdbcType=VARCHAR}
-  </select>
-
-  <select id="selectByRecordType" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-    <include refid="Base_Column_List" />
-    from records
-    where recordType = #{recordType,jdbcType=VARCHAR}
-  </select>
 
   <select id="selectFuzzy"  resultMap="BaseResultMap" parameterType="java.util.Map">
     select <include refid="Base_Column_List" />
@@ -57,10 +37,10 @@
       AND records.id = #{id}
     </if>
     <if test="bookId != null" >
-      AND records.bookid = #{bookId}
+      AND records.book_id = #{bookId}
     </if>
     <if test="userId != null" >
-      AND records.userid = #{userId}
+      AND records.user_id = #{userId}
     </if>
     <if test="recordtype != null" >
       AND records.recordtype = #{reocrdtype}
@@ -85,10 +65,10 @@
           AND records.id = #{id}
       </if>
       <if test="bookId != null" >
-          AND records.bookid = #{bookId}
+          AND records.book_id = #{bookId}
       </if>
       <if test="userId != null" >
-          AND records.userid = #{userId}
+          AND records.user_id = #{userId}
       </if>
       <if test="recordtype != null" >
           AND records.recordtype = #{reocrdtype}
@@ -106,7 +86,7 @@
   <insert id="insert" parameterType="sims.model.Record" >
     insert into records (id, date, book_id, 
       user_id, recordType)
-    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=TIMESTAMP}, #{bookId,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=TIMESTAMP}, #{bookId,jdbcType=VARCHAR},
       #{userId,jdbcType=VARCHAR}, #{recordtype,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="sims.model.Record" >

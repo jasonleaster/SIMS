@@ -90,7 +90,7 @@ public class LoginController {
 
         HttpSession session = request.getSession();
         
-        session.setAttribute(MsgAndContext.SESSION_CONTEXT_USER, userInDB);
+        session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER, userInDB);
 
         if(userInDB.isAdministrator()){
             session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_ADMIN, userInDB);

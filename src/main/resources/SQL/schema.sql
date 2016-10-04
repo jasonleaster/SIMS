@@ -8,7 +8,7 @@ CREATE TABLE users (
     username VARCHAR(25) NOT NULL,
     email VARCHAR(50) PRIMARY KEY NOT NULL,
     password VARCHAR(25) NOT NULL,
-    userType INTEGER
+    userType INTEGER NOT NULL
 );
 
 CREATE TABLE books (

@@ -20,7 +20,7 @@ public class URLs {
     // second level URLs for operation
     public final static String CREATE = "/create";
     public final static String QUERY  = "/query";
-    public final static String SEARCH = QUERY;
+    public final static String SEARCH = "/search";
     public final static String MODIFY = "/modify";
     public final static String DELETE = "/delete";
     public final static String UPDATE = "/update";

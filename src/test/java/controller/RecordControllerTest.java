@@ -105,9 +105,9 @@ public class RecordControllerTest {
     }
 
     @Test
-    public void queryByUserIdTest() throws Exception{
+    public void queryTest() throws Exception{
 
-        String url = URLs.RECORDS + URLs.QUERY + "/user/" + userExisted.getEmail();
+        String url = URLs.RECORDS + URLs.QUERY + "?userId=" + userExisted.getEmail();
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_RECORDS))
@@ -122,17 +122,5 @@ public class RecordControllerTest {
         * */
         List records = (List) ctx.getBean(MsgAndContext.MODEL_ATTRIBUTES_RECORDS);
         Assert.assertTrue(records.size() == RECORDS_NUM);
-    }
-
-    @Test
-    public void queryByBookIdTest() throws Exception{
-        String url = URLs.RECORDS + URLs.QUERY + "/book/" + bookExisted.getIsbn();
-        mockMvc.perform(MockMvcRequestBuilders.get(url));
-    }
-
-    @Test
-    public void queryByRecordTypeTest() throws Exception{
-        String url = URLs.RECORDS + URLs.QUERY + "/type/0";
-        mockMvc.perform(MockMvcRequestBuilders.get(url));
     }
 }

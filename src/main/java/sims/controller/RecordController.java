@@ -3,9 +3,11 @@ package sims.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import sims.model.Record;
+import sims.model.User;
 import sims.service.BookService;
 import sims.service.RecordService;
 import sims.service.UserService;
@@ -15,6 +17,7 @@ import sims.util.URLs;
 import sims.util.Views;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +35,31 @@ public class RecordController {
     private BookService bookService;
 
     @RequestMapping(value = URLs.QUERY )
-    public String queryByUserId(Record record,
+    public String queryByUserId(Record recordForm,
                                 @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                Model model, HttpServletRequest request){
+                                Model model, HttpServletRequest request) throws Exception{
+
+        HttpSession session = request.getSession();
+        Record oldRecordForm = (Record)session.getAttribute( MsgAndContext.SESSION_ATTRIBUTES_RECORD_QUERY_FORM);
+
+        if(pageNum != null){
+            recordForm = oldRecordForm;
+        }else{
+            session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_RECORD_QUERY_FORM, recordForm);
+        }
+
+        /*
+        * Normal user can't access others record information
+        * */
+        if(recordForm != null && recordForm.getUserId() != null){
+            User userLoggedIn = (User)session.getAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER);
+            if( userLoggedIn != null && userLoggedIn.isAdministrator() == false &&
+                    ! userLoggedIn.getEmail().equals(recordForm.getUserId())
+                    )
+            {
+                return Views.HOME;
+            }
+        }
 
         PageInfo pageInfo;
 
@@ -47,18 +72,18 @@ public class RecordController {
 
         pageInfo.setURL(request.getRequestURI());
 
-        try {
-            List<Record> records = recordService.pagedFuzzyQuery(record, pageInfo);
+        List<Record> records = recordService.pagedFuzzyQuery(recordForm, pageInfo);
 
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_RECORDS, records);
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_PAGEINFO, pageInfo);
-        }catch (Exception ignore){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "search Exception");
-            return Views.HOME;
-        }
-
+        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_RECORDS, records);
+        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_RECORDS, records);
+        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_PAGEINFO, pageInfo);
 
         return Views.RECORD_RESULT_TABLE;
     }
-    
+
+    @RequestMapping(value = URLs.DELETE + "/{id}")
+    public String recordDelete(@PathVariable("id") int id){
+        recordService.delete(id);
+        return Views.HOME;
+    }
 }

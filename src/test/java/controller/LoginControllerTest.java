@@ -198,7 +198,7 @@ public class LoginControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get(URLs.LOGOUT))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.SESSION_CONTEXT_USER));
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.SESSION_ATTRIBUTES_USER));
     }
 
 }

@@ -20,7 +20,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="/books/query">Search Book</a>
+                    <a href="/books/search">Search Book</a>
                 </li>
                 <li>
                     <a href="/books/create">UpLoad Your Book</a>
@@ -36,7 +36,7 @@
 
                 <c:if test="${not empty user}">
                     <li>
-                        <a href="/records/query?userId=${user.email}}">My records</a>
+                        <a href="/records/query?userId=${user.email}">My records</a>
                     </li>
                 </c:if>
 

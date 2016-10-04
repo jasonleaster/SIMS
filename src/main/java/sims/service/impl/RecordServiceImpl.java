@@ -65,11 +65,15 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public void add(Record record) {
         recordMapper.insert(record);
+        recordsNumInDB++;
     }
 
     @Override
     public void delete(int id) {
-        recordMapper.deleteByPrimaryKey(id);
+        if(getById(id) != null){
+            recordMapper.deleteByPrimaryKey(id);
+            recordsNumInDB--;
+        }
     }
 
     @Override
