@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 import sims.dao.UserMapper;
 import sims.model.User;
 import sims.service.UserService;
+import sims.web.BaseDomain;
 
 /*
- * This annotation will help to sign a bussiness logic component
+ * This annotation will help to sign a business logic component
  */
 
 @Service("userService")
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends BaseDomain implements UserService {
 
     @Autowired
     private UserMapper userMapper;

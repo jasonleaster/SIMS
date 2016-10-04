@@ -25,109 +25,14 @@
     </sql>
 
     <!-- Custom defined SQL statements  -->
-    <select id="selectAll" resultMap="BaseResultMap">
-      select * from books;
-    </select>
-
-    <select id="countAll" resultType="int">
-        select COUNT(*) as total from books;
-    </select>
-
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-        select
-        <include refid="Base_Column_List" />
-        from books
-        where ISBN = #{isbn,jdbcType=VARCHAR}
-    </select>
-
-    <select id="selectByBookType" resultMap="BaseResultMap" parameterType="int" >
-        select
-        <include refid="Base_Column_List" />
-        from books
-        where booktype = #{booktype,jdbcType=INTEGER}
-    </select>
-
-    <select id="selectPopularBooks" resultMap="BaseResultMap" parameterType="int">
-        select
-        <include refid="Base_Column_List" />
-        from books
-        ORDER BY downloadTimes limit #{topNum,jdbcType=INTEGER}
-    </select>
-
-    <select id="selectFuzzy"  resultMap="BaseResultMap" parameterType="java.util.Map">
-        select <include refid="Base_Column_List" />
-        from books
-        where TRUE
-        <if test="isbn != null" >
-            AND books.isbn = #{isbn}
-        </if>
-        <if test="bookname != null" >
-            AND books.bookname = #{bookname}
-        </if>
-        <if test="author != null" >
-            AND books.author = #{author}
-        </if>
-        <if test="booktype != null" >
-            AND books.booktype = #{booktype}
-        </if>
-        <if test="priceLowBound != null" >
-            <![CDATA[ AND books.price >= #{priceLowBound} ]]>
-        </if>
-        <if test="priceUpBound != null" >
-            <![CDATA[ AND books.price <= #{priceUpBound} ]]>
-        </if>
-        <if test="pageSize != null" >
-            limit #{pageSize}
-        </if>
-        <if test="start != null" >
-            offset #{start}
-        </if>
-    </select>
-
-    <select id="selectItemCount" resultType="int" parameterType="java.util.Map">
-        SELECT COUNT(*) AS total
-        FROM (
-            select <include refid="Base_Column_List" />
-            from books
-            where TRUE
-            <if test="isbn != null" >
-                AND books.isbn = #{isbn}
-            </if>
-            <if test="bookname != null" >
-                AND books.bookname = #{bookname}
-            </if>
-            <if test="author != null" >
-                AND books.author = #{author}
-
-            </if>
-            <if test="booktype != null" >
-                AND books.booktype = #{booktype}
-            </if>
-            <if test="priceLowBound != null" >
-                <![CDATA[ AND books.price >= #{priceLowBound} ]]>
-            </if>
-            <if test="priceUpBound != null" >
-                <![CDATA[ AND books.price <= #{priceUpBound} ]]>
-            </if>
-        ) AS totalResult;
-    </select>
-
-
-
-
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from books
-    where ISBN = #{isbn,jdbcType=VARCHAR}
-    </delete>
-
     <insert id="insert" parameterType="sims.model.Book" >
         INSERT INTO books (  <include refid="Base_Column_List" /> )
         values (#{isbn,jdbcType=VARCHAR},       #{bookname,jdbcType=VARCHAR},        #{author,jdbcType=VARCHAR},
-                #{publisher,jdbcType=VARCHAR},   #{publisheddate,jdbcType=TIMESTAMP}, #{booktype,jdbcType=INTEGER},
-                #{codeinlib,jdbcType=VARCHAR},   #{locationinlib,jdbcType=VARCHAR},   #{description,jdbcType=VARCHAR},
-                #{price,jdbcType=DOUBLE},        #{downloadTimes,jdbcType=INTEGER},   #{viewTimes,jdbcType=INTEGER},
-                #{prefacePath,jdbcType=VARCHAR}, #{pdfFilePath,jdbcType=VARCHAR})
-  </insert>
+        #{publisher,jdbcType=VARCHAR},   #{publisheddate,jdbcType=TIMESTAMP}, #{booktype,jdbcType=INTEGER},
+        #{codeinlib,jdbcType=VARCHAR},   #{locationinlib,jdbcType=VARCHAR},   #{description,jdbcType=VARCHAR},
+        #{price,jdbcType=DOUBLE},        #{downloadTimes,jdbcType=INTEGER},   #{viewTimes,jdbcType=INTEGER},
+        #{prefacePath,jdbcType=VARCHAR}, #{pdfFilePath,jdbcType=VARCHAR})
+    </insert>
 
     <insert id="insertSelective" parameterType="sims.model.Book" >
         insert into books
@@ -221,6 +126,11 @@
         </trim>
     </insert>
 
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from books
+        where ISBN = #{isbn,jdbcType=VARCHAR}
+    </delete>
+
     <update id="updateByPrimaryKeySelective" parameterType="sims.model.Book" >
         update books
         <set >
@@ -267,17 +177,86 @@
         where ISBN = #{isbn,jdbcType=VARCHAR}
     </update>
 
-    <update id="updateByPrimaryKey" parameterType="sims.model.Book" >
-    update books
-    set bookName = #{bookname,jdbcType=VARCHAR},
-      author = #{author,jdbcType=VARCHAR},
-      publisher = #{publisher,jdbcType=VARCHAR},
-      publishedDate = #{publisheddate,jdbcType=TIMESTAMP},
-      bookType = #{booktype,jdbcType=INTEGER},
-      codeInLib = #{codeinlib,jdbcType=VARCHAR},
-      locationInLib = #{locationinlib,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DOUBLE}
-    where ISBN = #{isbn,jdbcType=VARCHAR}
-  </update>
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from books
+        where ISBN = #{isbn,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectPopularBooks" resultMap="BaseResultMap" parameterType="int">
+        select
+        <include refid="Base_Column_List" />
+        from books
+        ORDER BY downloadTimes limit #{topNum,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectFuzzy"  resultMap="BaseResultMap" parameterType="java.util.Map">
+        select <include refid="Base_Column_List" />
+        from books
+        where TRUE
+        <if test="isbn != null" >
+            AND books.isbn = #{isbn}
+        </if>
+        <if test="bookname != null" >
+            AND books.bookname = #{bookname}
+        </if>
+        <if test="author != null" >
+            AND books.author = #{author}
+        </if>
+        <if test="booktype != null" >
+            AND books.booktype = #{booktype}
+        </if>
+        <if test="priceLowBound != null" >
+            <![CDATA[ AND books.price >= #{priceLowBound} ]]>
+        </if>
+        <if test="priceUpBound != null" >
+            <![CDATA[ AND books.price <= #{priceUpBound} ]]>
+        </if>
+        <if test="pageSize != null" >
+            limit #{pageSize}
+        </if>
+        <if test="start != null" >
+            offset #{start}
+        </if>
+    </select>
+
+    <select id="selectItemCount" resultType="int" parameterType="java.util.Map">
+        SELECT COUNT(*) AS total
+        FROM (
+            select <include refid="Base_Column_List" />
+            from books
+            where TRUE
+            <if test="isbn != null" >
+                AND books.isbn = #{isbn}
+            </if>
+            <if test="bookname != null" >
+                AND books.bookname = #{bookname}
+            </if>
+            <if test="author != null" >
+                AND books.author = #{author}
+
+            </if>
+            <if test="booktype != null" >
+                AND books.booktype = #{booktype}
+            </if>
+            <if test="priceLowBound != null" >
+                <![CDATA[ AND books.price >= #{priceLowBound} ]]>
+            </if>
+            <if test="priceUpBound != null" >
+                <![CDATA[ AND books.price <= #{priceUpBound} ]]>
+            </if>
+        ) AS totalResult;
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from books;
+    </select>
+
+    <select id="countAll" resultType="int">
+        select COUNT(*) as total from books;
+    </select>
+
 </mapper>

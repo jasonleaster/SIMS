@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface RecordMapper {
-    int deleteByPrimaryKey(Integer id);
 
     int insert(Record record);
 
-    int insertSelective(Record record);
+    int deleteByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(Record record);
 
     Record selectByPrimaryKey(Integer id);
 
@@ -19,8 +20,4 @@ public interface RecordMapper {
     int selectItemCount(Map map);
 
     int countAll();
-
-    int updateByPrimaryKeySelective(Record record);
-
-    int updateByPrimaryKey(Record record);
 }

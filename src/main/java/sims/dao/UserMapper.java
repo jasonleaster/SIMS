@@ -1,20 +1,26 @@
 package sims.dao;
 
+import sims.model.Record;
 import sims.model.User;
+
+import java.util.List;
+import java.util.Map;
 
 public interface UserMapper {
 
-    int deleteByPrimaryKey(String email);
-
     int insert(User user);
 
-    int countAll();
+    int deleteByPrimaryKey(String email);
+
+    int updateByPrimaryKey(User user);
 
     int insertSelective(User user);
 
     User selectByPrimaryKey(String email);
 
-    int updateByPrimaryKeySelective(User user);
+    List<Record> selectFuzzy(Map map);
 
-    int updateByPrimaryKey(User user);
+    int selectItemCount(Map map);
+
+    int countAll();
 }

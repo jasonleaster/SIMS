@@ -7,6 +7,7 @@ import sims.form.BookSearchForm;
 import sims.model.Book;
 import sims.service.BookService;
 import sims.util.PageInfo;
+import sims.web.BaseDomain;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service("bookService")
-public class BookServiceImpl implements BookService {
+public class BookServiceImpl extends BaseDomain implements BookService {
 
     static private BookMapper bookMapper;
 

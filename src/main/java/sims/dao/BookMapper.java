@@ -7,25 +7,21 @@ import java.util.Map;
 
 public interface BookMapper {
 
-    int deleteByPrimaryKey(String isbn);
-
     int insert(Book book);
 
-    int insertSelective(Book book);
-
-    Book selectByPrimaryKey(String isbn);
-
-    List<Book> selectFuzzy(Map map);
-
-    int        selectItemCount(Map map);
-
-    int        countAll();
-
-    List<Book> selectPopularBooks(int topNum);
+    int deleteByPrimaryKey(String isbn);
 
     int updateByPrimaryKeySelective(Book book);
 
-    int updateByPrimaryKey(Book book);
+    Book selectByPrimaryKey(String isbn);
+
+    List<Book> selectPopularBooks(int topNum);
+
+    List<Book> selectFuzzy(Map map);
+
+    int selectItemCount(Map map);
+
+    int countAll();
 
     List<Book> selectAll();
 }

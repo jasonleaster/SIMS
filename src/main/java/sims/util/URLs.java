@@ -33,8 +33,4 @@ public class URLs {
 
     // static resources
     public final static String PATH_STATIC  = "/static/";
-    public final static String PATH_IMG  = "/images/";
-    public final static String PATH_JS   = "/js/";
-    public final static String PATH_CSS  = "/css/";
-    public final static String PATH_FONT = "/fonts/";
 }

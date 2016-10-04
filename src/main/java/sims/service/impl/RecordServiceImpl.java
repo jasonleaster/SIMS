@@ -7,6 +7,7 @@ import sims.model.Book;
 import sims.model.Record;
 import sims.service.RecordService;
 import sims.util.PageInfo;
+import sims.web.BaseDomain;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
 
 
 @Service("recordService")
-public class RecordServiceImpl implements RecordService {
+public class RecordServiceImpl extends BaseDomain implements RecordService {
 
     @Autowired
     RecordMapper recordMapper;
@@ -78,7 +79,7 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public void modify(Record record) {
-        recordMapper.updateByPrimaryKey(record);
+        recordMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override
