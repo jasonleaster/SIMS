@@ -6,7 +6,9 @@ all the source code you will be able to learn that all.
 * Spring MVC 
 * MyBatis 
 * MySQL 
-
+* log4j
+* RESTful Service and Jackson
+* Maven
 
 -------------
 
@@ -77,6 +79,34 @@ For a building on project, the default mapper files may not be suitable with the
 You can also learn how to write and modify the mapper files to generate the SQL statements which 
 you want.
 
+#### Mapper Interface
+
+MyBatis will generate java interface files and XML files for database tables.
+The XML mapper files will used to instance an java object which implement the java interface
+ when the application is running. The user can use these java object with the interface to 
+ manipulate the database and run the MySQL script statements. *The name of methods in mapper interface must be coincident with the statements id int XML files.*
+
+### Service Layyer and Pagination Query
+
+The Service layyer suppy the API for upper layer application to complete the work which related to the low-layyer implementation. It is as the middle layyer for insulating the upper layyer and low layyer. Keep the whole project with good encapsulation and modularization.
+
+Every service implementation will maintain a `mapper` filed and `countsInDB` filed. The `countsInDB` is the cache value for the number of items of the object in the database table.
+
+eg:
+public class BookServiceImpl extends BaseDomain implements BookService {
+
+    static private BookMapper bookMapper;
+
+    static private long booksNumInDB;
+
+    @Override
+    public List<Book> pagedFuzzyQuery(BookSearchForm form, PageInfo pageInfo) throws Exception{
+    	...
+    }
+}
+
+What is the one of the important thing to declare is that the service will also supply a method to get items in the database with *Pagination*, which means query with pagination that is very helpful for the performance and user friendly.
+
 
 ### URL entrance design
 
@@ -94,13 +124,20 @@ The others service like the same.
 I think it's important and helpful to build an management unit for URL in your system.
 
 
-
 ### Simple login validation with `OncePerRequestFilter`
-
-
-### Pagination Query
 
 ### File upload and Download
 
-### Data binding with Spring MVC
+### Spring MVC
 
+Data binding and HTTP request dispather.
+
+
+
+### Add object and attributes into model and session
+
+### Developer friendly.
+
+1. Many unit test to make sure the function run correctly.
+
+2. Website integerated test data injection.

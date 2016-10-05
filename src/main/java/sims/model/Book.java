@@ -1,7 +1,7 @@
 package sims.model;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -45,8 +45,16 @@ public class Book {
         CS, MACHINELEARING, NOVEL, OTHERS
     }
 
-    public Book(){
+    public Book(){}
 
+    @Override
+    public boolean equals(Object obj) {
+        Book book = (Book)obj;
+        return new EqualsBuilder()
+                .append(isbn,       book.isbn)
+                .append(bookname,   book.bookname)
+                .append(author,     book.author)
+                .isEquals();
     }
 
     public String getIsbn() {

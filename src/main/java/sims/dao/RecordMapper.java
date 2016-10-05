@@ -11,7 +11,15 @@ public interface RecordMapper {
 
     int deleteByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(Record record);
+    /**
+     * Upper Layyer will never use these method.
+     *
+     * int updateByPrimaryKeySelective(Record record);
+     *
+     *  Unimplemented method
+     *
+     *  int deleteFuzzy(Map map);
+     */
 
     Record selectByPrimaryKey(Integer id);
 

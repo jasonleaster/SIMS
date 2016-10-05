@@ -16,19 +16,18 @@ import sims.util.PageInfo;
 import sims.web.config.DataConfig;
 import sims.util.SupplementaryDataFactory;
 
+import javax.sql.DataSource;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring.xml", "classpath:spring-mybatis-test.xml"})
 public class BookServiceTest {
 
     @Autowired
+    private DataSource dataSource;
+
+    @Autowired
     private BookService bookService;
-
-    @Autowired
-    private DriverManagerDataSource dataSource;
-
-    @Autowired
-    private BookMapper bookMapper;
 
     @Before
     public void before(){
@@ -36,7 +35,7 @@ public class BookServiceTest {
         Book[] books = SupplementaryDataFactory.getBooks();
 
         for(int i = 0; i < books.length; i++){
-            bookMapper.insert(books[i]);
+            bookService.add(books[i]);
         }
     }
 

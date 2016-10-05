@@ -67,16 +67,16 @@
             <if test="price != null" >
                 price,
             </if>
-            <if test="downloadtimes != null">
+            <if test="downloadTimes != null">
                 downloadTimes,
             </if>
-            <if test="viewtimes != null">
+            <if test="viewTimes != null">
                 viewTimes,
             </if>
-            <if test="prefacepath != null">
+            <if test="prefacePath != null">
                 prefacePath,
             </if>
-            <if test="pdffilepath != null">
+            <if test="pdfFilePath != null">
                 pdfFilePath
             </if>
         </trim>
@@ -96,7 +96,7 @@
             <if test="publisheddate != null" >
                 #{publisheddate,jdbcType=TIMESTAMP},
             </if>
-            <if test="!= null" >
+            <if test="booktype != null" >
                 #{booktype,jdbcType=INTEGER},
             </if>
             <if test="codeinlib != null" >
@@ -111,16 +111,16 @@
             <if test="price != null" >
                 #{price,jdbcType=DOUBLE},
             </if>
-            <if test="downloadtimes != null">
+            <if test="downloadTimes != null">
                 #{downloadTimes, jdbcType=INTEGER},
             </if>
-            <if test="viewtimes != null">
+            <if test="viewTimes != null">
                 #{viewTimes, jdbcType=INTEGER},
             </if>
-            <if test="prefacepath != null">
+            <if test="prefacePath != null">
                 #{prefacePath, jdbcType=INTEGER},
             </if>
-            <if test="pdffilepath != null">
+            <if test="pdfFilePath != null">
                 #{pdfFilePath,jdbcType=INTEGER}
             </if>
         </trim>
@@ -190,7 +190,7 @@
         select
         <include refid="Base_Column_List" />
         from books
-        ORDER BY downloadTimes limit #{topNum,jdbcType=INTEGER}
+        ORDER BY downloadTimes DESC limit #{topNum,jdbcType=INTEGER}
     </select>
 
     <select id="selectFuzzy"  resultMap="BaseResultMap" parameterType="java.util.Map">

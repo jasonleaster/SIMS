@@ -33,9 +33,15 @@ public class Record {
         return id;
     }
 
+    /*
+    Should not supply a setter method for Record#id.
+    In database, the primary key(Record#id) will increase automatically.
+
     public void setId(Integer id) {
         this.id = id;
     }
+    */
+
 
     public Date getDate() {
         return date;

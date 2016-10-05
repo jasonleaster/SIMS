@@ -79,7 +79,7 @@ public class RecordServiceImpl extends BaseDomain implements RecordService {
 
     @Override
     public void modify(Record record) {
-        recordMapper.updateByPrimaryKeySelective(record);
+        //recordMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override

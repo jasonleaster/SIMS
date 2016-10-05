@@ -52,7 +52,11 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
     public void onApplicationEvent(ContextRefreshedEvent event) {
         ApplicationContext context = event.getApplicationContext();
 
-        if(Project.DEBUG){
+        if(Project.UNIT_TEST){
+            return;
+        }
+
+        if(Project.WEB_INTEGRATED_DEBUG){
             DataConfig.initDB(dataSource);
             Book[] books = SupplementaryDataFactory.getBooks();
             User[] users = SupplementaryDataFactory.getUsers();
@@ -69,7 +73,9 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
             for (int i = 0; i < records.length; i++){
                 recordService.add(records[i]);
             }
-        }else{
+        }
+
+        if(Project.RELEASE){
             /*
              * Just image that, what if the website crashed for some reasons.
              * You fix the bug quickly and restart the server to run this project.
