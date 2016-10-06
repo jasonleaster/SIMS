@@ -209,10 +209,10 @@
         <if test="booktype != null" >
             AND books.booktype = #{booktype}
         </if>
-        <if test="priceLowBound != null" >
+        <if test="priceLowBound != null and priceLowBound > 0" >
             <![CDATA[ AND books.price >= #{priceLowBound} ]]>
         </if>
-        <if test="priceUpBound != null" >
+        <if test="priceUpBound != null and priceLowBound > 0" >
             <![CDATA[ AND books.price <= #{priceUpBound} ]]>
         </if>
         <if test="pageSize != null" >

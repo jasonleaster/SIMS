@@ -9,6 +9,7 @@ import sims.service.RecordService;
 import sims.util.PageInfo;
 import sims.web.BaseDomain;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +23,12 @@ public class RecordServiceImpl extends BaseDomain implements RecordService {
     RecordMapper recordMapper;
 
     static private long recordsNumInDB;
-    
+
+    @Override
+    public void init() {
+        recordsNumInDB = recordMapper.countAll();
+    }
+
     @Override
     public Record getById(int id) {
 
@@ -35,8 +41,40 @@ public class RecordServiceImpl extends BaseDomain implements RecordService {
     }
 
     @Override
-    public List<Record> pagedFuzzyQuery(Record record, PageInfo pageInfo) throws Exception {
+    public void add(Record record) {
+        if(record == null){
+            return;
+        }
+
+        recordMapper.insert(record);
+        recordsNumInDB++;
+    }
+
+    @Override
+    public void delete(int id) {
+        if(getById(id) != null){
+            recordMapper.deleteByPrimaryKey(id);
+            recordsNumInDB--;
+        }
+    }
+
+    @Override
+    public void modify(Record record) {
+        //recordMapper.updateByPrimaryKeySelective(record);
+    }
+
+
+    @Override
+    public List<Record> pagedFuzzyQuery(Record record, PageInfo pageInfo) throws Exception{
         List<Record> records = new ArrayList<>();
+
+        if(record == null){
+            record = new Record();
+        }
+
+        if(pageInfo == null){
+            pageInfo = new PageInfo();
+        }
 
         if(record.getId() != null){
             records.add(this.getById(record.getId()));
@@ -64,34 +102,7 @@ public class RecordServiceImpl extends BaseDomain implements RecordService {
     }
 
     @Override
-    public void add(Record record) {
-        recordMapper.insert(record);
-        recordsNumInDB++;
-    }
-
-    @Override
-    public void delete(int id) {
-        if(getById(id) != null){
-            recordMapper.deleteByPrimaryKey(id);
-            recordsNumInDB--;
-        }
-    }
-
-    @Override
-    public void modify(Record record) {
-        //recordMapper.updateByPrimaryKeySelective(record);
-    }
-
-    @Override
-    public int countRecords() {
-        return -1;
-    }
-
-    public static long getRecordsNumInDB() {
+    public long totalCountInDB(){
         return recordsNumInDB;
-    }
-
-    public static void setRecordsNumInDB(long recordsNumInDB) {
-        RecordServiceImpl.recordsNumInDB = recordsNumInDB;
     }
 }

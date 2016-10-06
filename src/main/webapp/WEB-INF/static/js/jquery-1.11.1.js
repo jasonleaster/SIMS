@@ -1266,7 +1266,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 			// on a disconnected node (IE 9)
 			support.disconnectedMatch = matches.call( div, "div" );
 
-			// This should fail with an exception
+			// This should fail with an sims.exception
 			// Gecko does not error, returns false instead
 			matches.call( div, "[s!='']:x" );
 			rbuggyMatches.push( "!=", pseudos );
@@ -5847,7 +5847,7 @@ jQuery.fn.extend({
 
 					elem = 0;
 
-				// If using innerHTML throws an exception, use the fallback method
+				// If using innerHTML throws an sims.exception, use the fallback method
 				} catch(e) {}
 			}
 
@@ -8577,7 +8577,7 @@ var
 	// Avoid comment-prolog char sequence (#10098); must appease lint and evade compression
 	allTypes = "*/".concat("*");
 
-// #8138, IE may throw an exception when accessing
+// #8138, IE may throw an sims.exception when accessing
 // a field from window.location if document.domain has been set
 try {
 	ajaxLocation = location.href;
@@ -9175,7 +9175,7 @@ jQuery.extend({
 				state = 1;
 				transport.send( requestHeaders, done );
 			} catch ( e ) {
-				// Propagate exception as error if not done
+				// Propagate sims.exception as error if not done
 				if ( state < 2 ) {
 					done( -1, e );
 				// Simply rethrow otherwise
@@ -9615,7 +9615,7 @@ if ( xhrSupported ) {
 					// Set headers
 					for ( i in headers ) {
 						// Support: IE<9
-						// IE's ActiveXObject throws a 'Type Mismatch' exception when setting
+						// IE's ActiveXObject throws a 'Type Mismatch' sims.exception when setting
 						// request header to a null-value.
 						//
 						// To keep consistent with other XHR implementations, cast the value
@@ -9626,7 +9626,7 @@ if ( xhrSupported ) {
 					}
 
 					// Do send the request
-					// This may raise an exception which is actually
+					// This may raise an sims.exception which is actually
 					// handled in jQuery.ajax (so no try/catch here)
 					xhr.send( ( options.hasContent && options.data ) || null );
 
@@ -9651,13 +9651,13 @@ if ( xhrSupported ) {
 								status = xhr.status;
 
 								// Support: IE<10
-								// Accessing binary-data responseText throws an exception
+								// Accessing binary-data responseText throws an sims.exception
 								// (#11426)
 								if ( typeof xhr.responseText === "string" ) {
 									responses.text = xhr.responseText;
 								}
 
-								// Firefox throws an exception when accessing
+								// Firefox throws an sims.exception when accessing
 								// statusText for faulty cross-domain requests
 								try {
 									statusText = xhr.statusText;

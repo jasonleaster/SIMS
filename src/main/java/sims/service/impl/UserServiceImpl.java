@@ -3,7 +3,7 @@ package sims.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sims.dao.UserMapper;
-import sims.model.Book;
+import sims.exception.DuplicatedPrimaryKeyException;
 import sims.model.User;
 import sims.service.UserService;
 import sims.util.PageInfo;
@@ -31,6 +31,11 @@ public class UserServiceImpl extends BaseDomain implements UserService {
     }
 
     @Override
+    public void init() {
+        usersNumInDB = userMapper.countAll();
+    }
+
+    @Override
     public User getById(String id) {
         if(id == null){
             return null;
@@ -45,9 +50,18 @@ public class UserServiceImpl extends BaseDomain implements UserService {
     }
 
     @Override
-    public void add(User user) {
+    public void add(User user) throws DuplicatedPrimaryKeyException{
+        if(user == null){
+            return;
+        }
+
+        if(getById(user.getEmail()) != null){
+            throw new DuplicatedPrimaryKeyException();
+        }
+
         if(getById(user.getEmail()) == null){
             userMapper.insert(user);
+            usersNumInDB++;
         }
     }
 
@@ -56,7 +70,11 @@ public class UserServiceImpl extends BaseDomain implements UserService {
         List<User> users = new ArrayList<>();
 
         if(user == null){
-            return users;
+            user = new User(); // empty search form
+        }
+
+        if(pageInfo == null){
+            pageInfo = new PageInfo();
         }
 
         if(user.getEmail() != null){
@@ -88,24 +106,23 @@ public class UserServiceImpl extends BaseDomain implements UserService {
 
     @Override
     public void delete(String id) {
+        if(id == null || getById(id) == null){
+            return;
+        }
         userMapper.deleteByPrimaryKey(id);
+        usersNumInDB--;
     }
 
     @Override
     public void modify(User user) {
+        if(user == null || getById(user.getEmail()) == null){
+            return;
+        }
         userMapper.updateByPrimaryKey(user);
     }
 
     @Override
-    public int countUser() {
-        return -1;
-    }
-
-    public static long getUsersNumInDB() {
+    public long totalCountInDB() {
         return usersNumInDB;
-    }
-
-    public static void setUsersNumInDB(long usersNumInDB) {
-        UserServiceImpl.usersNumInDB = usersNumInDB;
     }
 }

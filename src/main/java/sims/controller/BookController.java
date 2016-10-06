@@ -57,7 +57,7 @@ public class BookController {
     }
 
     @RequestMapping(value = URLs.CREATE, method = RequestMethod.POST)
-    public String registerBookPost(Book book, BindingResult bindingResult, Model model, HttpServletRequest request) throws IOException{
+    public String registerBookPost(Book book, BindingResult bindingResult, Model model, HttpServletRequest request) throws Exception{
 
         if(bindingResult.hasErrors()){
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "data binding error!");
@@ -106,7 +106,13 @@ public class BookController {
         recordService.add(record);
 
         //System.out.println("User: " + user.getEmail());
-        bookService.add(book);
+        try {
+            bookService.add(book);
+        }catch (DuplicateFormatFlagsException e){
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, e.toString());
+            return Views.BOOK_CREATE;
+        }
+
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOK, book);
 
         book.setViewTimes(book.getViewTimes() + 1);
@@ -121,29 +127,12 @@ public class BookController {
     }
 
 
-    /*
-    * Set all empty String ("") into null for @BookSearchForm;
-    * */
-    private BookSearchForm searchFormPreProcess(BookSearchForm form) throws Exception{
-        Field[] fields = form.getClass().getDeclaredFields();
-        for(Field field: fields){
-            if(field.getType().equals(String.class)){
-                field.setAccessible(true);
-                String string = (String) field.get(form);
-                if(string != null && string.length() == 0){
-                    field.set(form, null);
-                }
-            }
-        }
-        return form;
-    }
-
     @RequestMapping(value = URLs.QUERY)//, method = RequestMethod.POST)
     public String queryBookPost(BookSearchForm form, Model model,
                                 @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                 HttpServletRequest request) throws Exception{
 
-        form = searchFormPreProcess(form);
+        form = BookSearchForm.searchFormPreProcess(form);
 
         HttpSession session = request.getSession();
         BookSearchForm oldForm = (BookSearchForm)session.getAttribute( MsgAndContext.SESSION_ATTRIBUTES_BOOK_QUERY_FORM);

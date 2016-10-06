@@ -1,4 +1,4 @@
-package dao;
+package sims.dao;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import sims.dao.BookMapper;
+import sims.exception.DaoExceptionChecker;
 import sims.model.Book;
 import sims.util.SupplementaryDataFactory;
 import sims.web.config.DataConfig;
@@ -21,7 +21,7 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring.xml", "classpath:spring-mybatis-test.xml"})
-public class BookMapperTest extends DaoExceptionChecker{
+public class BookMapperTest extends DaoExceptionChecker {
 
     @Autowired
     private DataSource dataSource;
@@ -71,7 +71,7 @@ public class BookMapperTest extends DaoExceptionChecker{
         try{
             bookMapper.insert(null);
         }catch (Exception ignore){
-            exceptionHappened = true;
+            this.setExceptionHappened(true);
         }
 
         exceptionHappenedChecker();
@@ -80,7 +80,7 @@ public class BookMapperTest extends DaoExceptionChecker{
         try{
             bookMapper.insert(bookExisted);
         }catch (Exception e){
-            exceptionHappened = true;
+            this.setExceptionHappened(true);
         }
         exceptionHappenedChecker();
 
@@ -94,7 +94,7 @@ public class BookMapperTest extends DaoExceptionChecker{
         try{
             bookMapper.insertSelective(null);
         }catch (Exception ignore){
-            exceptionHappened = true;
+            this.setExceptionHappened(true);
         }
 
         exceptionHappenedChecker();
@@ -138,6 +138,8 @@ public class BookMapperTest extends DaoExceptionChecker{
     public void selectByPrimaryKeyTest(){
 
         Book book = bookMapper.selectByPrimaryKey(null);
+
+        Assert.assertTrue(book == null);
 
         book = bookMapper.selectByPrimaryKey(bookNotExisted.getIsbn());
 

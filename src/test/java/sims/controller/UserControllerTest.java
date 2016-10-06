@@ -1,4 +1,4 @@
-package controller;
+package sims.controller;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -55,7 +55,7 @@ public class UserControllerTest {
     }
 
     @Before
-    public void before(){
+    public void before() throws Exception{
         mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
 
         initDB();
@@ -75,7 +75,7 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.view().name(Views.USER_SEARCH));
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
-                        .param("email", userExisted.getEmail()))
+                        .param("sims/email", userExisted.getEmail()))
                 .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_USER))
                 .andExpect(MockMvcResultMatchers.view().name(Views.USER_SHOW))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -94,7 +94,7 @@ public class UserControllerTest {
         // Confirmed password error
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                         .param("username", userNotExisted.getUsername())
-                        .param("email",    userNotExisted.getEmail())
+                        .param("sims/email",    userNotExisted.getEmail())
                         .param("password", userNotExisted.getPassword())
                         .param("confirmedPassword", userNotExisted.getPassword() + "confirmed error")
         )
@@ -105,7 +105,7 @@ public class UserControllerTest {
         // User already existed. Conflict
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                         .param("username", userNotExisted.getUsername())
-                        .param("email",    userExisted.getEmail()) // Look here, ID already exist.
+                        .param("sims/email",    userExisted.getEmail()) // Look here, ID already exist.
                         .param("password", userNotExisted.getPassword())
                         .param("confirmedPassword", userNotExisted.getPassword() + "confirmed error")
         )
@@ -116,7 +116,7 @@ public class UserControllerTest {
         // Create user correctly
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                             .param("username",          userNotExisted.getUsername())
-                            .param("email", userNotExisted.getEmail())
+                            .param("sims/email", userNotExisted.getEmail())
                             .param("password",          userNotExisted.getPassword())
                             .param("confirmedPassword", userNotExisted.getPassword())
                         )
@@ -139,7 +139,7 @@ public class UserControllerTest {
         String newValue = "NewName";
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                         .param("username",          newValue)
-                        .param("email",             userExisted.getEmail())
+                        .param("sims/email",             userExisted.getEmail())
                         .param("password",          userExisted.getPassword())
                         .param("confirmedPassword", userExisted.getPassword())
         )

@@ -8,7 +8,8 @@ all the source code you will be able to learn that all.
 * MySQL 
 * log4j
 * RESTful Service and Jackson
-* Maven
+* Tomcat -- A Java web application container
+* Maven for lib management
 
 -------------
 
@@ -93,6 +94,9 @@ The Service layyer suppy the API for upper layer application to complete the wor
 Every service implementation will maintain a `mapper` filed and `countsInDB` filed. The `countsInDB` is the cache value for the number of items of the object in the database table.
 
 eg:
+
+``` java
+
 public class BookServiceImpl extends BaseDomain implements BookService {
 
     static private BookMapper bookMapper;
@@ -104,6 +108,8 @@ public class BookServiceImpl extends BaseDomain implements BookService {
     	...
     }
 }
+
+```
 
 What is the one of the important thing to declare is that the service will also supply a method to get items in the database with *Pagination*, which means query with pagination that is very helpful for the performance and user friendly.
 
@@ -141,3 +147,9 @@ Data binding and HTTP request dispather.
 1. Many unit test to make sure the function run correctly.
 
 2. Website integerated test data injection.
+
+
+Helpful Reference:
+
+[How to Pretty Print Your JSON With Spring and Jackson](http://springinpractice.com/2013/11/01/how-to-pretty-print-your-json-with-spring-and-jackson)
+

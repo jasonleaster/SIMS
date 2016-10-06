@@ -1,4 +1,4 @@
-package controller;
+package sims.controller;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -71,7 +71,7 @@ public class RecordControllerTest {
     }
 
     @Before
-    public void before(){
+    public void before() throws  Exception{
         mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
 
         initDB();

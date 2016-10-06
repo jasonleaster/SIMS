@@ -1,4 +1,4 @@
-package dao;
+package sims.dao;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import sims.dao.UserMapper;
+import sims.exception.DaoExceptionChecker;
 import sims.model.User;
 import sims.util.SupplementaryDataFactory;
 import sims.web.config.DataConfig;
@@ -22,7 +22,7 @@ import java.util.Map;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring.xml", "classpath:spring-mybatis-test.xml"})
-public class UserMapperTest extends  DaoExceptionChecker{
+public class UserMapperTest extends DaoExceptionChecker {
 
     @Autowired
     private DataSource dataSource;
@@ -73,7 +73,7 @@ public class UserMapperTest extends  DaoExceptionChecker{
         try{
             userMapper.insert(null);
         }catch (Exception ignore){
-            exceptionHappened = true;
+            this.setExceptionHappened(true);
         }
 
         exceptionHappenedChecker();
@@ -82,7 +82,7 @@ public class UserMapperTest extends  DaoExceptionChecker{
         try{
             userMapper.insert(userExisted);
         }catch (Exception e){
-            exceptionHappened = true;
+            this.setExceptionHappened(true);
         }
         exceptionHappenedChecker();
 

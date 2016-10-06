@@ -1,9 +1,9 @@
-package dao;
+package sims.exception;
 
 import org.junit.Assert;
 
 public class DaoExceptionChecker {
-    boolean exceptionHappened = false;
+    private boolean exceptionHappened = false;
 
     protected void exceptionHappenedChecker(){
         Assert.assertTrue(exceptionHappened);

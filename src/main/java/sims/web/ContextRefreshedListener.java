@@ -1,5 +1,7 @@
 package sims.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -9,6 +11,7 @@ import sims.Project;
 import sims.dao.BookMapper;
 import sims.dao.RecordMapper;
 import sims.dao.UserMapper;
+import sims.exception.DuplicatedPrimaryKeyException;
 import sims.model.Book;
 import sims.model.Record;
 import sims.model.User;
@@ -48,8 +51,11 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
     @Autowired
     private RecordMapper recordMapper;
 
+    @Autowired
+    private ObjectMapper objectMapper; // For json formatted (pretty indented) output
+
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(ContextRefreshedEvent event){
         ApplicationContext context = event.getApplicationContext();
 
         if(Project.UNIT_TEST){
@@ -62,37 +68,47 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
             User[] users = SupplementaryDataFactory.getUsers();
             Record[] records = SupplementaryDataFactory.getRecords();
 
-            for (int i = 0; i < books.length; i++){
-                bookService.add(books[i]);
+            try {
+                for (int i = 0; i < books.length; i++){
+                    bookService.add(books[i]);
+                }
+
+                for (int i = 0; i < users.length; i++){
+                    userService.add(users[i]);
+                }
+
+                for (int i = 0; i < records.length; i++){
+                    recordService.add(records[i]);
+                }
+            }catch (Exception ignore){
             }
 
-            for (int i = 0; i < users.length; i++){
-                userService.add(users[i]);
-            }
 
-            for (int i = 0; i < records.length; i++){
-                recordService.add(records[i]);
-            }
         }
 
-        if(Project.RELEASE){
-            /*
-             * Just image that, what if the website crashed for some reasons.
-             * You fix the bug quickly and restart the server to run this project.
-             * Some useful information about database are cached in memory.
-             * In this situation, the in-memory data lost and the variable @booksNumInDB
-             * reinitialized into zero.
-             *
-             * It's a good trick to put the database related meta-information code
-             * into the Spring Bean setter function. And the value of @booksNumInDB
-             * is correct.
-             * */
-            BookServiceImpl.setBooksNumInDB(bookMapper.countAll());
-            UserServiceImpl.setUsersNumInDB(userMapper.countAll());
-            RecordServiceImpl.setRecordsNumInDB(recordMapper.countAll());
-        }
 
-        userService.add(Project.ADMIN);
+        /*
+         * Just image that, what if the website crashed for some reasons.
+         * You fix the bug quickly and restart the server to run this project.
+         * Some useful information about database are cached in memory.
+         * In this situation, the in-memory data lost and the variable @booksNumInDB
+         * reinitialized into zero.
+         *
+         * It's a good trick to put the database related meta-information code
+         * into the Spring Bean setter function. And the value of @booksNumInDB
+         * is correct.
+         * */
+        bookService.init();
+        userService.init();
+        recordService.init();
+
+
+        try {
+            userService.add(Project.ADMIN);
+        }catch (Exception ignore){}
+
+
+        objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
         if(context.getParent() == null){
             System.out.println("Spring容器初始化完毕================================================");

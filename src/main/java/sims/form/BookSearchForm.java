@@ -1,6 +1,8 @@
 package sims.form;
 
 
+import java.lang.reflect.Field;
+
 public class BookSearchForm {
 
     private String isbn;
@@ -13,10 +15,28 @@ public class BookSearchForm {
 
     private Double priceUpBound;
 
-    private int booktype;
+    private Integer booktype;
 
     public BookSearchForm(){
+        priceLowBound = -1.;
+        priceUpBound  = -1.;
+    }
 
+    /*
+     * Set all empty String ("") into null for @BookSearchForm;
+     * */
+    public static BookSearchForm searchFormPreProcess(BookSearchForm form) throws Exception{
+        Field[] fields = form.getClass().getDeclaredFields();
+        for(Field field: fields){
+            if(field.getType().equals(String.class)){
+                field.setAccessible(true);
+                String string = (String) field.get(form);
+                if(string != null && string.length() == 0){
+                    field.set(form, null);
+                }
+            }
+        }
+        return form;
     }
 
     public String getIsbn() {

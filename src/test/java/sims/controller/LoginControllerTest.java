@@ -19,7 +19,7 @@
  *          2.2 获取当前Session信息的用户信息，并把当前用户从Session中删除
  *
  *****************************************************/
-package controller;
+package sims.controller;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +39,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import org.springframework.web.context.WebApplicationContext;
-import sims.controller.LoginController;
 import sims.web.filter.FormFilter;
 import sims.model.User;
 import sims.service.UserService;
@@ -79,7 +78,7 @@ public class LoginControllerTest {
     }
 
     @Before
-    public void before(){
+    public void before() throws Exception{
         mockMvc = MockMvcBuilders.webAppContextSetup(ctx).addFilters(filter).build();
 
         initDB();
@@ -112,7 +111,7 @@ public class LoginControllerTest {
         * */
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.LOGIN)
                         .param("username", userExisted.getUsername())
-                        .param("email", userExisted.getEmail())
+                        .param("sims/email", userExisted.getEmail())
                         .param("password", userExisted.getPassword())
                         .param("rememberMe", "1")
         )
@@ -123,7 +122,7 @@ public class LoginControllerTest {
         // User Not Exist
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.LOGIN)
                         .param("username", userNotExisted.getUsername())
-                        .param("email",    userNotExisted.getEmail())
+                        .param("sims/email",    userNotExisted.getEmail())
                         .param("password", userNotExisted.getPassword())
                         .param("rememberme", "0") )
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -133,7 +132,7 @@ public class LoginControllerTest {
         // User password error
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.LOGIN)
                 .param("username",  userExisted.getUsername())
-                .param("email",     userExisted.getEmail())
+                .param("sims/email",     userExisted.getEmail())
                 .param("password",  userNotExisted.getPassword())
                 .param("rememberme", "0"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -154,7 +153,7 @@ public class LoginControllerTest {
         // User already exist.
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.REGISTER)
                         .param("username",          userExisted.getUsername())
-                        .param("email",             userExisted.getEmail())
+                        .param("sims/email",             userExisted.getEmail())
                         .param("password",          userExisted.getPassword())
                         .param("confirmedPassword", userExisted.getPassword()) )
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -164,7 +163,7 @@ public class LoginControllerTest {
         // Password confirmed error.
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.REGISTER)
                 .param("username",  userNotExisted.getUsername())
-                .param("email",     userNotExisted.getEmail())
+                .param("sims/email",     userNotExisted.getEmail())
                 .param("password",  userNotExisted.getPassword())
                 .param("confirmedPassword", userNotExisted.getPassword() + "ErrChar") )
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -175,7 +174,7 @@ public class LoginControllerTest {
         // Register correctly
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.REGISTER)
                 .param("username",          userNotExisted.getUsername())
-                .param("email",             userNotExisted.getEmail())
+                .param("sims/email",             userNotExisted.getEmail())
                 .param("password",          userNotExisted.getPassword())
                 .param("confirmedPassword", userNotExisted.getPassword()) )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
@@ -189,7 +188,7 @@ public class LoginControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post(URLs.LOGIN)
                         .param("username", userExisted.getUsername())
-                        .param("email",    userExisted.getEmail())
+                        .param("sims/email",    userExisted.getEmail())
                         .param("password", userExisted.getPassword())
                         .param("rememberMe", "1") )
                 .andExpect(MockMvcResultMatchers.status().isOk())

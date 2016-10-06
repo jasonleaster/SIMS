@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import sims.exception.DuplicatedPrimaryKeyException;
 import sims.form.LoginForm;
 import sims.form.RegisterForm;
 import sims.model.Book;
@@ -119,7 +120,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = URLs.REGISTER, method = RequestMethod.POST)
-    public String registrationPost(RegisterForm form, Model model){
+    public String registrationPost(RegisterForm form, Model model) throws Exception{
 
         if(userService.getById(form.getEmail()) != null){
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "The User already exist!");
@@ -131,7 +132,13 @@ public class LoginController {
             return Views.REGISTER;
         }else{
             User user = form.toUser();
-            userService.add(user);
+            try {
+                userService.add(user);
+            }catch (DuplicatedPrimaryKeyException e){
+                model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, e.toString());
+                return Views.USER_CREATE;
+            }
+
             model.addAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER, user);
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, null);
             return "redirect:" + URLs.LOGIN;

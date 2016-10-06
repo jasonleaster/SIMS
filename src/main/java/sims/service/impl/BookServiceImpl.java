@@ -3,6 +3,7 @@ package sims.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sims.dao.BookMapper;
+import sims.exception.DuplicatedPrimaryKeyException;
 import sims.form.BookSearchForm;
 import sims.model.Book;
 import sims.service.BookService;
@@ -31,6 +32,11 @@ public class BookServiceImpl extends BaseDomain implements BookService {
     }
 
     @Override
+    public void init() {
+        booksNumInDB = bookMapper.countAll();
+    }
+
+    @Override
     public Book getById(String id) {
         Book book = null;
         try {
@@ -43,6 +49,14 @@ public class BookServiceImpl extends BaseDomain implements BookService {
     @Override
     public List<Book> pagedFuzzyQuery(BookSearchForm form, PageInfo pageInfo) throws Exception{
         List<Book> books = new ArrayList<>();
+
+        if(form == null){
+            form = new BookSearchForm(); // empty constraints with book.
+        }
+
+        if(pageInfo == null){
+            pageInfo = new PageInfo();
+        }
 
         if(form.getIsbn() != null){
             books.add(this.getById(form.getIsbn()));
@@ -71,15 +85,25 @@ public class BookServiceImpl extends BaseDomain implements BookService {
     }
 
     @Override
-    public void add(Book book) {
-        if(getById(book.getIsbn()) == null){
-            bookMapper.insert(book);
-            booksNumInDB++;
+    public void add(Book book) throws Exception{
+        if(book == null){
+            return;
         }
+
+        if(getById(book.getIsbn()) != null){
+            throw new DuplicatedPrimaryKeyException();
+        }
+
+        bookMapper.insert(book);
+        booksNumInDB++;
     }
 
     @Override
     public void delete(String id) {
+        if(id == null){
+            return;
+        }
+
         if(getById(id) != null){
             bookMapper.deleteByPrimaryKey(id);
             booksNumInDB--;
@@ -88,6 +112,10 @@ public class BookServiceImpl extends BaseDomain implements BookService {
 
     @Override
     public void modify(Book book) {
+        if(book == null){
+            return;
+        }
+
         if(getById(book.getIsbn()) != null) {
             bookMapper.updateByPrimaryKeySelective(book);
         }
@@ -95,6 +123,10 @@ public class BookServiceImpl extends BaseDomain implements BookService {
 
     @Override
     public List<Book> getPopularBook(long bookNum) {
+        if(bookNum <= 0){
+            return new ArrayList<>();
+        }
+
         if(bookNum > booksNumInDB){
             bookNum = booksNumInDB;
         }

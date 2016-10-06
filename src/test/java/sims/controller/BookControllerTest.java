@@ -3,7 +3,7 @@
  * Date     : 2016-08-15
  * Purpose  : Spring MVC Test Integration
  * */
-package controller;
+package sims.controller;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +50,7 @@ public class BookControllerTest {
     private static String ISBN_UNUSED = "978-7-5086-4363-2";
 
     @Before
-    public void before(){
+    public void before() throws Exception{
         mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
 
         DataConfig.initDB(dataSource);

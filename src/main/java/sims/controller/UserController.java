@@ -4,7 +4,7 @@
  * Date         : 2016.08.06
  *
  * Description  :
- *      This file implement a controller for business logic with
+ *      This file implement a sims.controller for business logic with
  * users.
  *****************************************************************/
 package sims.controller;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import sims.exception.DuplicatedPrimaryKeyException;
 import sims.form.RegisterForm;
 import sims.model.User;
 import sims.service.UserService;
@@ -59,7 +60,7 @@ public class UserController {
     }
 
     @RequestMapping(value = URLs.CREATE, method = RequestMethod.POST)
-    public String createPost(RegisterForm form, Model model, BindingResult bindingResult){
+    public String createPost(RegisterForm form, Model model, BindingResult bindingResult) throws Exception{
 
         if( bindingResult.hasErrors()){
             return Views.LOGIN;
@@ -79,7 +80,13 @@ public class UserController {
             return Views.USER_CREATE;
         }
 
-        userService.add(user);
+        try{
+            userService.add(user);
+        }catch (DuplicatedPrimaryKeyException e){
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, e.toString());
+            return Views.USER_CREATE;
+        }
+
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_USER, user);
         return Views.USER_SHOW;
     }
@@ -101,7 +108,7 @@ public class UserController {
     }
 
     /*
-    * In this function, the id in url is a string which is email.
+    * In this function, the id in url is a string which is sims.email.
     * @PathVariable will truncate when it meet dot in the string.
     * Eg:
     *   "Eric@gmail.com" will truncate into "Eric@gmail"
