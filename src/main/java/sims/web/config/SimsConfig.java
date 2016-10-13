@@ -1,6 +1,5 @@
 package sims.web.config;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import javax.xml.transform.Source;
 import java.util.List;
+
 
 @Configuration
 public class SimsConfig extends WebMvcConfigurerAdapter {
@@ -36,6 +36,7 @@ public class SimsConfig extends WebMvcConfigurerAdapter {
     public MappingJackson2HttpMessageConverter jackson2Converter() {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(objectMapper());
+        converter.setPrettyPrint(true);
         return converter;
     }
 

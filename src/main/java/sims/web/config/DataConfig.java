@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 
 
-@Component
+//@Component
 public class DataConfig {
 
     public static void initDB(DataSource dataSource){

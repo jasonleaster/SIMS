@@ -7,9 +7,12 @@ all the source code you will be able to learn that all.
 * MyBatis 
 * MySQL 
 * log4j
-* RESTful Service and Jackson
+* Spring RESTful Service and Jackson
+* JUnit4 -- Write helpful unit test and develop with TDD(Test driven development)
 * Tomcat -- A Java web application container
+<!-- * ActiveMQ -- Message Queue for email deliver -->
 * Maven for lib management
+* Webbench -- Test the performance of the web application.
 
 -------------
 
@@ -64,6 +67,7 @@ The detail of tables in database shown below there. (With the help of MySQLWorkb
 There are two `FOREIGN KEY` in the `record table` which store the primary key of the others
 two table.
 
+
 ### User `MyBatis` to generate the ORM(Object Relation Mapping) Java files.
 
 ![images](./images/layyerModel.png)
@@ -80,12 +84,15 @@ For a building on project, the default mapper files may not be suitable with the
 You can also learn how to write and modify the mapper files to generate the SQL statements which 
 you want.
 
+
 #### Mapper Interface
 
 MyBatis will generate java interface files and XML files for database tables.
 The XML mapper files will used to instance an java object which implement the java interface
  when the application is running. The user can use these java object with the interface to 
  manipulate the database and run the MySQL script statements. *The name of methods in mapper interface must be coincident with the statements id int XML files.*
+
+
 
 ### Service Layyer and Pagination Query
 
@@ -114,6 +121,8 @@ public class BookServiceImpl extends BaseDomain implements BookService {
 What is the one of the important thing to declare is that the service will also supply a method to get items in the database with *Pagination*, which means query with pagination that is very helpful for the performance and user friendly.
 
 
+
+
 ### URL entrance design
 
 For convenient, I put all URLs which can be accessed by user into java class ` sims.util.URLs`.
@@ -128,6 +137,7 @@ Back-end system should be responsible for mapping all bussiness logic with recor
 The others service like the same.
 
 I think it's important and helpful to build an management unit for URL in your system.
+
 
 
 ### Simple login validation with `OncePerRequestFilter`
@@ -153,3 +163,10 @@ Helpful Reference:
 
 [How to Pretty Print Your JSON With Spring and Jackson](http://springinpractice.com/2013/11/01/how-to-pretty-print-your-json-with-spring-and-jackson)
 
+[Message Queue](http://www.cnblogs.com/linjiqin/p/5720865.html)
+
+[Memcached for java](https://www.youtube.com/watch?v=0wnjcT2M6Ms)
+
+https://github.com/fsouza/java-memcached-example
+
+https://www.youtube.com/playlist?list=PLAwxTw4SYaPmKmNX-INgcxQWf30KuWa_A

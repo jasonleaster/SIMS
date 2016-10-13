@@ -28,16 +28,10 @@ public class RecordController {
     @Autowired
     private RecordService recordService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private BookService bookService;
-
     @RequestMapping(value = URLs.QUERY )
-    public String queryByUserId(Record recordForm,
-                                @RequestParam(value = "pageNum", required = false) Integer pageNum,
-                                Model model, HttpServletRequest request) throws Exception{
+    public String query(Record recordForm,
+                        @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                        Model model, HttpServletRequest request) throws Exception{
 
         HttpSession session = request.getSession();
         Record oldRecordForm = (Record)session.getAttribute( MsgAndContext.SESSION_ATTRIBUTES_RECORD_QUERY_FORM);
@@ -74,7 +68,6 @@ public class RecordController {
 
         List<Record> records = recordService.pagedFuzzyQuery(recordForm, pageInfo);
 
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_RECORDS, records);
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_RECORDS, records);
         model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_PAGEINFO, pageInfo);
 

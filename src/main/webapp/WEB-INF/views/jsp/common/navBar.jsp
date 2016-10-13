@@ -46,6 +46,12 @@
                 <li>
                     <a href="#">About</a>
                 </li>
+
+                <c:if test="${not empty user}">
+                    <li>
+                        <a href="/users/logout">LogOut</a>
+                    </li>
+                </c:if>
             </ul>
         </div>
         <!-- /.navbar-collapse -->

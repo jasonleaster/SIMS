@@ -42,18 +42,6 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
     @Autowired
     private RecordService recordService;
 
-    @Autowired
-    private BookMapper bookMapper;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private RecordMapper recordMapper;
-
-    @Autowired
-    private ObjectMapper objectMapper; // For json formatted (pretty indented) output
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event){
         ApplicationContext context = event.getApplicationContext();
@@ -107,8 +95,6 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
             userService.add(Project.ADMIN);
         }catch (Exception ignore){}
 
-
-        objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
         if(context.getParent() == null){
             System.out.println("Spring容器初始化完毕================================================");

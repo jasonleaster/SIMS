@@ -29,7 +29,7 @@ public class URLs {
     public final static String DOWNLOAD = "/download";
 
     // URL for RESTful API.
-    public final static String API = "/API";
+    public final static String API = "/api";
 
     // static resources
     public final static String PATH_STATIC  = "/static/";

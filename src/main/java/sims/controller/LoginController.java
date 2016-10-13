@@ -36,43 +36,40 @@ import java.util.List;
 @Controller
 public class LoginController {
 
+    @Autowired
     private UserService userService;
+
+    @Autowired
     private BookService bookService;
 
     private static final int BOOK_SHOW_IN_HOMEPAGE = 6;
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    @Autowired
-    public void setBookService(BookService bookService) {
-        this.bookService = bookService;
-    }
-
-
-    public BookService getBookService() {
-        return bookService;
-    }
-
 
     @RequestMapping(value = {URLs.LOGIN, URLs.ROOT}, method = RequestMethod.GET)
     public String loginGet(){
         return Views.LOGIN;
     }
 
+    /**
+     * Logic Control flow:
+     *
+     * 1. Query the user and determine whether the user in the system or not.
+     * 2. If the user is not in the system( not registered ), RETURN register view page.
+     * 3. If the user's password isn't correct, RETURN login view page.
+     * 4. Otherwise, login success.
+     *      4.1 Add the user into global session as "user" attribute.
+     *      4.2 If the user is administrator, add the user into the global session as "admin" attribute.
+     *      4.3 (Optional) Get the most popular books in the system and add them into
+     *          the view model as attribute in the returned view page.
+     *      4.4 RETURN home page or login success page.
+     *
+     * @param form      The login form
+     * @param model     The model which used to represent attributes in Spring MVC.
+     * @param request   The HttpServletRequest
+     * @param response  The HttpServletResponse
+     */
     @RequestMapping(value = {URLs.LOGIN, URLs.ROOT}, method = RequestMethod.POST)
-    public String loginPost(LoginForm form, BindingResult bindingResult, Model model,
+    public String loginPost(LoginForm form, Model model,
                             HttpServletRequest request, HttpServletResponse response){
-
-        if( bindingResult.hasErrors()){
-            return Views.LOGIN;
-        }
 
         User user = form.toUser();
         User userInDB = userService.getById(user.getEmail());
@@ -90,7 +87,6 @@ public class LoginController {
         }
 
         HttpSession session = request.getSession();
-        
         session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER, userInDB);
 
         if(userInDB.isAdministrator()){
@@ -106,7 +102,7 @@ public class LoginController {
         return Views.HOME;
     }
 
-    @RequestMapping(value = URLs.LOGOUT, method = RequestMethod.GET)
+    @RequestMapping(value = URLs.LOGOUT)
     public String logOut(HttpServletRequest request){
 
         request.getSession().invalidate();
@@ -119,8 +115,32 @@ public class LoginController {
         return Views.REGISTER;
     }
 
+
+    /**
+     * Logic Control Flow:
+     * 1.Determine whether the user already existed(registered) in the system.
+     *   If the user already in the system, return remind information to tell the user
+     *   the ID have been used for others and try another ID information.
+     *   In the implementation of this system, the ID information is email.
+     *   RETURN to the register view page.
+     *
+     * 2.Check the confirmed-password equals to the password or not.
+     *   If they does not equals to each other, RETURN and back to the register view page.
+     *
+     * 3.Otherwise, the user register successful.
+     *      3.1 Add the user into the system.
+     *      3.2 Redirect to login view page.
+     *
+     * @param form      The register form. All information of user will binding into #RegisterForm
+     * @param model     The model which used to represent attributes in Spring MVC.
+     */
     @RequestMapping(value = URLs.REGISTER, method = RequestMethod.POST)
     public String registrationPost(RegisterForm form, Model model) throws Exception{
+
+        if(form == null){
+            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "empty registration information");
+            return Views.REGISTER;
+        }
 
         if(userService.getById(form.getEmail()) != null){
             model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "The User already exist!");
@@ -136,7 +156,7 @@ public class LoginController {
                 userService.add(user);
             }catch (DuplicatedPrimaryKeyException e){
                 model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, e.toString());
-                return Views.USER_CREATE;
+                return Views.REGISTER;
             }
 
             model.addAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER, user);

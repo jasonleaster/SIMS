@@ -1,6 +1,7 @@
 package sims.controller.restful;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,14 +18,14 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequestMapping(value = URLs.API + URLs.BOOKS)
 @RestController
+@RequestMapping(value = URLs.API + URLs.BOOKS)
 public class RestfulBookController {
 
     @Autowired
     private BookService bookService;
 
-    @RequestMapping(value = URLs.QUERY, produces={"application/json; charset=UTF-8"})
+    @RequestMapping(value = URLs.QUERY, produces={"application/json;charset=UTF-8"})
     public @ResponseBody List<Book>
     query(BookSearchForm form,
          @RequestParam(value = "pageNum", required = false) Integer pageNum,
@@ -42,6 +43,7 @@ public class RestfulBookController {
         }
 
         if (form.getIsbn() != null) {
+            // Unfinished
             return null;
             //queryBookByISBN(form.getIsbn(), model);
         }
