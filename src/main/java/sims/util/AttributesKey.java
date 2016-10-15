@@ -1,9 +1,9 @@
 package sims.util;
 
 
-public class MsgAndContext {
+public class AttributesKey {
 
-    private MsgAndContext(){}
+    private AttributesKey(){}
 
     public final static String SESSION_ATTRIBUTES_USER    = "user";
     public final static String SESSION_ATTRIBUTES_ADMIN   = "admin";
@@ -19,9 +19,6 @@ public class MsgAndContext {
     public final static String MODEL_ATTRIBUTES_RECORDS_FORM = "recordsForm";
     public final static String MODEL_ATTRIBUTES_ERR_MSG = "errMsg";
     public final static String MODEL_ATTRIBUTES_PAGEINFO= "pageInfo";
-
-    public final static String RECORD_TYPE_RETURN = "return";
-    public final static String RECORD_TYPE_BORROW = "borrow";
 
 
 

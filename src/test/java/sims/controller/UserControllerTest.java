@@ -22,7 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import sims.model.User;
 import sims.service.UserService;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.URLs;
 import sims.util.Views;
 
@@ -76,7 +76,7 @@ public class UserControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                         .param("sims/email", userExisted.getEmail()))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_USER))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_USER))
                 .andExpect(MockMvcResultMatchers.view().name(Views.USER_SHOW))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -99,7 +99,7 @@ public class UserControllerTest {
                         .param("confirmedPassword", userNotExisted.getPassword() + "confirmed error")
         )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.USER_CREATE));
 
         // User already existed. Conflict
@@ -110,7 +110,7 @@ public class UserControllerTest {
                         .param("confirmedPassword", userNotExisted.getPassword() + "confirmed error")
         )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.USER_CREATE));
 
         // Create user correctly
@@ -130,7 +130,7 @@ public class UserControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_USER))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_USER))
                 .andExpect(MockMvcResultMatchers.view().name(Views.USER_MODIFY));
 
 
@@ -144,7 +144,7 @@ public class UserControllerTest {
                         .param("confirmedPassword", userExisted.getPassword())
         )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_USER))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_USER))
                 .andExpect(MockMvcResultMatchers.view().name(Views.USER_SHOW));
 
         User userAfterModify = userService.getById(userExisted.getEmail());
@@ -159,7 +159,7 @@ public class UserControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG));
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG));
 
         Assert.assertTrue( userService.getById(userExisted.getEmail()) == null);
     }

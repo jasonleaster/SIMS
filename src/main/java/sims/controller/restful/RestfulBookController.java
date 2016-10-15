@@ -1,7 +1,6 @@
 package sims.controller.restful;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sims.form.BookSearchForm;
 import sims.model.Book;
 import sims.service.BookService;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.PageInfo;
 import sims.util.URLs;
 
@@ -34,12 +33,12 @@ public class RestfulBookController {
         form = BookSearchForm.searchFormPreProcess(form);
 
         HttpSession session = request.getSession();
-        BookSearchForm oldForm = (BookSearchForm) session.getAttribute(MsgAndContext.SESSION_ATTRIBUTES_BOOK_QUERY_FORM);
+        BookSearchForm oldForm = (BookSearchForm) session.getAttribute(AttributesKey.SESSION_ATTRIBUTES_BOOK_QUERY_FORM);
 
         if (pageNum != null) {
             form = oldForm;
         } else {
-            session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_BOOK_QUERY_FORM, form);
+            session.setAttribute(AttributesKey.SESSION_ATTRIBUTES_BOOK_QUERY_FORM, form);
         }
 
         if (form.getIsbn() != null) {

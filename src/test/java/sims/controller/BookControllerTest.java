@@ -21,7 +21,7 @@ import org.springframework.web.context.WebApplicationContext;
 import sims.model.Book;
 import sims.service.BookService;
 import sims.util.SupplementaryDataFactory;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.URLs;
 import sims.util.Views;
 import sims.web.config.DataConfig;
@@ -101,7 +101,7 @@ public class BookControllerTest {
                 .param("isbn",      bookExisted.getIsbn())
                 .param("bookname", bookExisted.getBookname())
                 .param("author",    bookExisted.getAuthor()))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_CREATE))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -113,8 +113,8 @@ public class BookControllerTest {
                     .param("isbn",     bookNotExisted.getIsbn())
                     .param("bookname", bookNotExisted.getBookname())
                     .param("author",   bookNotExisted.getAuthor())  )
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_BOOK))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_PROFILE))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -128,25 +128,25 @@ public class BookControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                     .param("isbn", bookExisted.getIsbn()))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_BOOK))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_PROFILE));
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                 .param("isbn", bookNotExisted.getIsbn()))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SEARCH));
 
 
         url = URLs.BOOKS + URLs.QUERY + "/type/" + Book.BookType.OTHERS.ordinal();
         mockMvc.perform(MockMvcRequestBuilders.post(url))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOKS));
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_BOOKS));
 
 
         url = URLs.BOOKS + URLs.QUERY + "/type/" + Book.BookType.CS.ordinal();
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                 .param("pageNum", "2"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOKS))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_BOOKS))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_RESULT_TABLE));
 
     }
@@ -166,8 +166,8 @@ public class BookControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                 .param("isbn", bookExisted.getIsbn()))
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.MODEL_ATTRIBUTES_BOOK))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.HOME));
 
         url = URLs.BOOKS + URLs.QUERY;
@@ -177,7 +177,7 @@ public class BookControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                 .param("isbn", bookExisted.getIsbn()))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_SEARCH));
     }
 
@@ -190,8 +190,8 @@ public class BookControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
                 .param("isbn", bookExisted.getIsbn())  )
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_BOOK))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_MODIFY));
 
         url += URLs.UPDATE;
@@ -200,8 +200,8 @@ public class BookControllerTest {
                 .param("isbn",     bookExisted.getIsbn())
                 .param("bookname", "newBook")
                 .param("author",   "newAuthor") )
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_BOOK))
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_BOOK))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_PROFILE));
 
     }
@@ -215,7 +215,7 @@ public class BookControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_QUERY))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG));
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG));
 
         /**
          * ISBN对应的书籍在数据库中不存在
@@ -224,7 +224,7 @@ public class BookControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.view().name(Views.BOOK_QUERY))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG));
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG));
 
         /**
          * ISBN对应的书籍存在于数据库中
@@ -233,7 +233,7 @@ public class BookControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.view().name(Views.HOME))
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG));
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG));
     }
 
 }

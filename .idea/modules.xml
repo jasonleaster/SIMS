@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/IntegratingWithMyBatis.iml" filepath="$PROJECT_DIR$/IntegratingWithMyBatis.iml" />
-      <module fileurl="file://E:/BaiduYunDownload/SpringMvc+Spring+Mybatis+Maven整合示例源码/testmybatis/testmybatis.iml" filepath="E:/BaiduYunDownload/SpringMvc+Spring+Mybatis+Maven整合示例源码/testmybatis/testmybatis.iml" />
-    </modules>
-  </component>
-</project>

@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import sims.model.Record;
 import sims.model.User;
-import sims.service.BookService;
 import sims.service.RecordService;
-import sims.service.UserService;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.PageInfo;
 import sims.util.URLs;
 import sims.util.Views;
@@ -34,19 +32,19 @@ public class RecordController {
                         Model model, HttpServletRequest request) throws Exception{
 
         HttpSession session = request.getSession();
-        Record oldRecordForm = (Record)session.getAttribute( MsgAndContext.SESSION_ATTRIBUTES_RECORD_QUERY_FORM);
+        Record oldRecordForm = (Record)session.getAttribute( AttributesKey.SESSION_ATTRIBUTES_RECORD_QUERY_FORM);
 
         if(pageNum != null){
             recordForm = oldRecordForm;
         }else{
-            session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_RECORD_QUERY_FORM, recordForm);
+            session.setAttribute(AttributesKey.SESSION_ATTRIBUTES_RECORD_QUERY_FORM, recordForm);
         }
 
         /*
         * Normal user can't access others record information
         * */
         if(recordForm != null && recordForm.getUserId() != null){
-            User userLoggedIn = (User)session.getAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER);
+            User userLoggedIn = (User)session.getAttribute(AttributesKey.SESSION_ATTRIBUTES_USER);
             if( userLoggedIn != null && userLoggedIn.isAdministrator() == false &&
                     ! userLoggedIn.getEmail().equals(recordForm.getUserId())
                     )
@@ -68,8 +66,8 @@ public class RecordController {
 
         List<Record> records = recordService.pagedFuzzyQuery(recordForm, pageInfo);
 
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_RECORDS, records);
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_PAGEINFO, pageInfo);
+        model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_RECORDS, records);
+        model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_PAGEINFO, pageInfo);
 
         return Views.RECORD_RESULT_TABLE;
     }

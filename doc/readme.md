@@ -1,20 +1,6 @@
-## SIMS (BookOcean, which is a project for learning Java Web Development)
+## Project Description
 
-In this project, I used there teachnology which also means that if you read 
-all the source code you will be able to learn that all.
-
-* Spring MVC 
-* MyBatis 
-* MySQL 
-* log4j
-* Spring RESTful Service and Jackson
-* JUnit4 -- Write helpful unit test and develop with TDD(Test driven development)
-* Tomcat -- A Java web application container
-<!-- * ActiveMQ -- Message Queue for email deliver -->
-* Maven for lib management
-* Webbench -- Test the performance of the web application.
-
--------------
+[TOC]
 
 ### Demand analysis -- Design first and code later.
 
@@ -50,8 +36,6 @@ This system will include different main module.
 
   Only open to administrator to create and delete
 
-
--------
 
 ### Design database table with MySQL script
 
@@ -142,15 +126,77 @@ I think it's important and helpful to build an management unit for URL in your s
 
 ### Simple login validation with `OncePerRequestFilter`
 
+Some website have a login module for validating the user who want to access the system. Only user who logged in the system will have the permission to access the resouces in the system.
+
+eg:
+A traveler who have not login yet are trying to send a request to the system with URL `/api/users/query/`. The system should redirect the request to login module and remind the traveler to login or register before accessing the resouces.
+
+In Spring Web MVC, there is a filter `OncePerRequestFilter`. Filter base class that aims to guarantee a single execution per request dispatch, on any servlet container. We can put the validation logic code into this part.
+
+
 ### File upload and Download
+
+In many web application, user may want to upload and download files.
+
+In the back-end, Java code is response for receiving the data from the front-end and transform it into local file with the `transferTo` method of Java class `CommonsMultipartFile`.
+
+``` java
+
+  /* The demo code of how to upload a pdf file. */
+  ... ... 
+
+        //Authorized user will download the file
+        String dataDirectory = request.getServletContext().getRealPath("/WEB-INF/static/books/pdf/");
+
+        String path  = dataDirectory + book.getIsbn() + ".pdf";
+
+        book.setPdfFilePath(path);
+
+        if(book.getPdfFile() != null){
+            File newFilePdf = new File(path);
+            newFilePdf.createNewFile();
+            book.getPdfFile().transferTo(newFilePdf);
+        }
+
+   ... ...
+
+```
 
 ### Spring MVC
 
-Data binding and HTTP request dispather.
+A classical model for the interactive between HTTP request and Spring MVC.
 
+![images](/images/RequestWithSpringMVC.png)
+
+I will recommend you to read all about the `5.1.1 Following the life of a request`  in the book `Spring In Action 4th edition` (page 132). It will help you a lot to understand how Spring process and response the HTTP request.
 
 
 ### Add object and attributes into model and session
+
+In the front-end of the web system, there may need some variables in the back-end system to represent in the front-end views. Spring supply the class `Model` and developer can add attributes into the model with "Key-Value" pattern.
+
+For the concision and consistence of the code, I put all "key" of the model into a individual class `sims.util.AttributesKey` with privilege __public static final__ 
+
+``` java
+
+package sims.util;
+
+
+public class AttributesKey {
+
+    private AttributesKey(){}
+
+    public final static String SESSION_ATTRIBUTES_USER    = "user";
+    public final static String SESSION_ATTRIBUTES_ADMIN   = "admin";
+
+    ... ...
+}
+
+```
+
+Every time we want to use a plain string as the key in model, we should not write it as plain text.
+It's a good habbits to use a final static reference to use it in implementation.
+
 
 ### Developer friendly.
 
@@ -159,9 +205,29 @@ Data binding and HTTP request dispather.
 2. Website integerated test data injection.
 
 
+### Release and deploy the web application.
+
+Environment: Ubuntu/Linux (Version), Java JDK8 JRE8, Tomcat (Version)
+
+* Java Web Container -- Tomcat
+  If you have a server which is belong to yourself, you can deploy the application on your own server.
+
+* Google App Engine
+  Instead of using Tomcat as the application container, we could also use Google App Engine to deploy our application.
+
+* Spring Boot
+
+### Performance test and optimization
+
+Environment: Ubuntu/Linux (Version), Java JDK8 JRE8, Tomcat (Version), Maven(Version)
+
+
+
 Helpful Reference:
 
 [How to Pretty Print Your JSON With Spring and Jackson](http://springinpractice.com/2013/11/01/how-to-pretty-print-your-json-with-spring-and-jackson)
+
+https://spring.io/blog/2013/06/03/content-negotiation-using-views
 
 [Message Queue](http://www.cnblogs.com/linjiqin/p/5720865.html)
 

@@ -12,7 +12,6 @@ package sims.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import sims.exception.DuplicatedPrimaryKeyException;
@@ -22,7 +21,7 @@ import sims.model.Book;
 import sims.model.User;
 import sims.service.BookService;
 import sims.service.UserService;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.URLs;
 import sims.util.Views;
 import sims.util.WebCookie;
@@ -75,10 +74,10 @@ public class LoginController {
         User userInDB = userService.getById(user.getEmail());
 
         if (userInDB == null){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "The user does not exist.");
+            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "The user does not exist.");
             return Views.REGISTER;
         }else if (! userInDB.getPassword().equals(user.getPassword())){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "The password is not correct! Please try again!");
+            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "The password is not correct! Please try again!");
             return Views.LOGIN;
         }
 
@@ -87,17 +86,17 @@ public class LoginController {
         }
 
         HttpSession session = request.getSession();
-        session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER, userInDB);
+        session.setAttribute(AttributesKey.SESSION_ATTRIBUTES_USER, userInDB);
 
         if(userInDB.isAdministrator()){
-            session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_ADMIN, userInDB);
+            session.setAttribute(AttributesKey.SESSION_ATTRIBUTES_ADMIN, userInDB);
         }else{
-            session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_ADMIN, null);
+            session.setAttribute(AttributesKey.SESSION_ATTRIBUTES_ADMIN, null);
         }
 
         List<Book> books = bookService.getPopularBook(BOOK_SHOW_IN_HOMEPAGE);
 
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, books);
+        model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_BOOKS, books);
 
         return Views.HOME;
     }
@@ -138,29 +137,29 @@ public class LoginController {
     public String registrationPost(RegisterForm form, Model model) throws Exception{
 
         if(form == null){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "empty registration information");
+            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "empty registration information");
             return Views.REGISTER;
         }
 
         if(userService.getById(form.getEmail()) != null){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "The User already exist!");
+            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "The User already exist!");
             return Views.REGISTER;
         }
 
         if( ! form.getConfirmedPassword().equals(form.getPassword()) ){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "Password confirmed error!");
+            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "Password confirmed error!");
             return Views.REGISTER;
         }else{
             User user = form.toUser();
             try {
                 userService.add(user);
             }catch (DuplicatedPrimaryKeyException e){
-                model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, e.toString());
+                model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, e.toString());
                 return Views.REGISTER;
             }
 
-            model.addAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER, user);
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, null);
+            model.addAttribute(AttributesKey.SESSION_ATTRIBUTES_USER, user);
+            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, null);
             return "redirect:" + URLs.LOGIN;
         }
     }
@@ -170,7 +169,7 @@ public class LoginController {
 
         List<Book> books = bookService.getPopularBook(BOOK_SHOW_IN_HOMEPAGE);
 
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_BOOKS, books);
+        model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_BOOKS, books);
         return Views.HOME;
     }
 }

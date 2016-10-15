@@ -42,7 +42,7 @@ import org.springframework.web.context.WebApplicationContext;
 import sims.web.filter.FormFilter;
 import sims.model.User;
 import sims.service.UserService;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.URLs;
 import sims.util.Views;
 
@@ -116,7 +116,7 @@ public class LoginControllerTest {
                         .param("rememberMe", "1")
         )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_USER))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_USER))
                 .andExpect(MockMvcResultMatchers.view().name(Views.HOME));
 
         // User Not Exist
@@ -126,7 +126,7 @@ public class LoginControllerTest {
                         .param("password", userNotExisted.getPassword())
                         .param("rememberme", "0") )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.LOGIN));
 
         // User password error
@@ -136,7 +136,7 @@ public class LoginControllerTest {
                 .param("password",  userNotExisted.getPassword())
                 .param("rememberme", "0"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.LOGIN));
     }
 
@@ -157,7 +157,7 @@ public class LoginControllerTest {
                         .param("password",          userExisted.getPassword())
                         .param("confirmedPassword", userExisted.getPassword()) )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.REGISTER));
 
         // Password confirmed error.
@@ -167,7 +167,7 @@ public class LoginControllerTest {
                 .param("password",  userNotExisted.getPassword())
                 .param("confirmedPassword", userNotExisted.getPassword() + "ErrChar") )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.view().name(Views.REGISTER));
 
 
@@ -178,8 +178,8 @@ public class LoginControllerTest {
                 .param("password",          userNotExisted.getPassword())
                 .param("confirmedPassword", userNotExisted.getPassword()) )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_USER))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_USER))
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/" + Views.LOGIN));
     }
 
@@ -192,12 +192,12 @@ public class LoginControllerTest {
                         .param("password", userExisted.getPassword())
                         .param("rememberMe", "1") )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_USER))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_USER))
                 .andExpect(MockMvcResultMatchers.view().name(Views.HOME));
 
         mockMvc.perform(MockMvcRequestBuilders.get(URLs.LOGOUT))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.SESSION_ATTRIBUTES_USER));
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.SESSION_ATTRIBUTES_USER));
     }
 
 }

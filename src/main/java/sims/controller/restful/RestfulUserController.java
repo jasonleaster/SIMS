@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import sims.model.User;
 import sims.service.UserService;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.PageInfo;
 import sims.util.URLs;
 
@@ -36,11 +36,11 @@ public class RestfulUserController {
         }
 
         HttpSession session = request.getSession();
-        User oldForm = (User) session.getAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER_QUERY_FORM);
+        User oldForm = (User) session.getAttribute(AttributesKey.SESSION_ATTRIBUTES_USER_QUERY_FORM);
         if (pageNum != null) {
             form = oldForm;
         } else {
-            session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER_QUERY_FORM, form);
+            session.setAttribute(AttributesKey.SESSION_ATTRIBUTES_USER_QUERY_FORM, form);
         }
 
         PageInfo pageInfo;

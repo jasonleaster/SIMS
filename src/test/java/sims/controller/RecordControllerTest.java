@@ -24,7 +24,7 @@ import sims.model.User;
 import sims.service.BookService;
 import sims.service.RecordService;
 import sims.service.UserService;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.URLs;
 import sims.util.Views;
 
@@ -110,8 +110,8 @@ public class RecordControllerTest {
         String url = URLs.RECORDS + URLs.QUERY + "?userId=" + userExisted.getEmail();
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.model().attributeExists(MsgAndContext.MODEL_ATTRIBUTES_RECORDS))
-                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG))
+                .andExpect(MockMvcResultMatchers.model().attributeExists(AttributesKey.MODEL_ATTRIBUTES_RECORDS))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name(Views.RECORD_RESULT_TABLE));
 
@@ -120,7 +120,7 @@ public class RecordControllerTest {
         * All the records belongs to the user and the number of
         * the records is RECORDS_NUM.
         * */
-        List records = (List) ctx.getBean(MsgAndContext.MODEL_ATTRIBUTES_RECORDS);
+        List records = (List) ctx.getBean(AttributesKey.MODEL_ATTRIBUTES_RECORDS);
         Assert.assertTrue(records.size() == RECORDS_NUM);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import sims.model.Record;
 import sims.service.RecordService;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.PageInfo;
 import sims.util.URLs;
 
@@ -36,11 +36,11 @@ public class RestfulRecordController {
         }
 
         HttpSession session = request.getSession();
-        Record oldForm = (Record) session.getAttribute(MsgAndContext.SESSION_ATTRIBUTES_RECORD_QUERY_FORM);
+        Record oldForm = (Record) session.getAttribute(AttributesKey.SESSION_ATTRIBUTES_RECORD_QUERY_FORM);
         if (pageNum != null) {
             form = oldForm;
         } else {
-            session.setAttribute(MsgAndContext.SESSION_ATTRIBUTES_RECORD_QUERY_FORM, form);
+            session.setAttribute(AttributesKey.SESSION_ATTRIBUTES_RECORD_QUERY_FORM, form);
         }
 
         if (form.getId() != null) {

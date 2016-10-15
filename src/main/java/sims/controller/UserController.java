@@ -21,7 +21,7 @@ import sims.exception.DuplicatedPrimaryKeyException;
 import sims.form.RegisterForm;
 import sims.model.User;
 import sims.service.UserService;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.URLs;
 import sims.util.Views;
 
@@ -43,7 +43,7 @@ public class UserController {
     @RequestMapping(value = URLs.SEARCH, method = RequestMethod.POST)
     public String searchPost(User user, Model model){
         User userInDB = userService.getById(user.getEmail());
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_USER, userInDB);
+        model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_USER, userInDB);
         return Views.USER_SHOW;
     }
 
@@ -70,31 +70,31 @@ public class UserController {
         String userID = user.getEmail();
         // User already registered.
         if(userService.getById(userID) != null){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "User already existed!");
+            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "User already existed!");
             return Views.USER_CREATE;
         }
         // The password is not coincident
         if(! form.getConfirmedPassword().equals(
                 form.getPassword())){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "password confirmed error!");
+            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "password confirmed error!");
             return Views.USER_CREATE;
         }
 
         try{
             userService.add(user);
         }catch (DuplicatedPrimaryKeyException e){
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, e.toString());
+            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, e.toString());
             return Views.USER_CREATE;
         }
 
-        model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_USER, user);
+        model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_USER, user);
         return Views.USER_SHOW;
     }
 
     @RequestMapping(value = URLs.MODIFY + "/{userID:.+}", method = RequestMethod.GET)
      public String modify(@PathVariable("userID") String userID, Model modrel){
         User userInDB = userService.getById(userID);
-        modrel.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_USER, userInDB);
+        modrel.addAttribute(AttributesKey.MODEL_ATTRIBUTES_USER, userInDB);
         return Views.USER_MODIFY;
     }
 
@@ -120,7 +120,7 @@ public class UserController {
         if(userService.getById(id) != null){
             userService.delete(id);
         }else {
-            model.addAttribute(MsgAndContext.MODEL_ATTRIBUTES_ERR_MSG, "User does not exist");
+            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "User does not exist");
         }
         return Views.HOME;
     }

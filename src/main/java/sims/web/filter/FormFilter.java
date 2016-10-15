@@ -11,7 +11,7 @@ package sims.web.filter;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 import sims.model.User;
-import sims.util.MsgAndContext;
+import sims.util.AttributesKey;
 import sims.util.URLs;
 
 import javax.servlet.FilterChain;
@@ -26,7 +26,7 @@ public class FormFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        User user = (User) request.getSession().getAttribute(MsgAndContext.SESSION_ATTRIBUTES_USER);
+        User user = (User) request.getSession().getAttribute(AttributesKey.SESSION_ATTRIBUTES_USER);
 
         if(user == null && ! isLoginURL(request.getRequestURL().toString(), request)){
             request.getRequestDispatcher(URLs.LOGIN).forward(request, response);
