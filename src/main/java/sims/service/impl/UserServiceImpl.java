@@ -18,6 +18,7 @@ import java.util.List;
  * This annotation will help to sign a business logic component
  */
 
+@SuppressWarnings("serial")
 @Service("userService")
 public class UserServiceImpl extends BaseDomain implements UserService {
 
@@ -65,7 +66,8 @@ public class UserServiceImpl extends BaseDomain implements UserService {
         }
     }
 
-    @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
     public List<User> pagedFuzzyQuery(User user, PageInfo pageInfo) throws Exception {
         List<User> users = new ArrayList<>();
 

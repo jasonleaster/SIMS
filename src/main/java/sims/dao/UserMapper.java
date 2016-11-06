@@ -5,6 +5,7 @@ import sims.model.User;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("rawtypes")
 public interface UserMapper {
 
     int insert(User user);

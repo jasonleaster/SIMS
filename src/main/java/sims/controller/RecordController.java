@@ -57,9 +57,9 @@ public class RecordController {
 
         int pageSize = 1;
         if(pageNum == null){
-            pageInfo = new PageInfo(0, pageSize, new ArrayList());
+            pageInfo = new PageInfo(0, pageSize, new ArrayList<Record>());
         }else{
-            pageInfo = new PageInfo((pageNum.intValue() - 1) * pageSize, pageSize, new ArrayList());
+            pageInfo = new PageInfo((pageNum.intValue() - 1) * pageSize, pageSize, new ArrayList<Record>());
         }
 
         pageInfo.setURL(request.getRequestURI());

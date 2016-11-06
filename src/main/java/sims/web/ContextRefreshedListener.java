@@ -1,29 +1,19 @@
 package sims.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import sims.Project;
-import sims.dao.BookMapper;
-import sims.dao.RecordMapper;
-import sims.dao.UserMapper;
-import sims.exception.DuplicatedPrimaryKeyException;
 import sims.model.Book;
 import sims.model.Record;
 import sims.model.User;
 import sims.service.BookService;
 import sims.service.RecordService;
 import sims.service.UserService;
-import sims.service.impl.BookServiceImpl;
-import sims.service.impl.RecordServiceImpl;
-import sims.service.impl.UserServiceImpl;
 import sims.util.SupplementaryDataFactory;
 import sims.web.config.DataConfig;
-
 import javax.sql.DataSource;
 
 

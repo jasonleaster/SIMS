@@ -5,6 +5,7 @@ import sims.model.Book;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("rawtypes")
 public interface BookMapper {
 
     int insert(Book book);
@@ -24,7 +25,7 @@ public interface BookMapper {
      * @Param: Map map.
      *      The caller of #selectFuzzy will put constraint attributes into the map.
      * * */
-    List<Book> selectFuzzy(Map map);
+	List<Book> selectFuzzy(Map map);
 
     /**
      * With the constraints, return the total count of the query result.

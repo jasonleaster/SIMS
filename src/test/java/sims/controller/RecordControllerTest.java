@@ -31,6 +31,7 @@ import sims.util.Views;
 import java.util.Date;
 import java.util.List;
 
+@SuppressWarnings({"rawtypes", "unused"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring.xml", "classpath:spring-mybatis-test.xml"})

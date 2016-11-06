@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring.xml", "classpath:spring-mybatis-test.xml"})
@@ -163,7 +164,7 @@ public class BookMapperTest extends DaoExceptionChecker {
         Assert.assertTrue(author.equals(bookInDB.getAuthor()));
     }
 
-    @Test
+	@Test
     public void selectAllTest(){
 
         List<Book> booksInDB = bookMapper.selectAll();

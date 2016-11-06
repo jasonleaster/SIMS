@@ -5,6 +5,7 @@ import sims.model.Record;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("rawtypes")
 public interface RecordMapper {
 
     int insert(Record record);

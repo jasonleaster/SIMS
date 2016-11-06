@@ -7,7 +7,8 @@ import javax.servlet.ServletContextListener;
 
 public class SimsContextLoaderListener implements ServletContextListener{
 
-    @Override
+    @SuppressWarnings("unused")
+	@Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext ctx = sce.getServletContext();
         System.out.println("XXXXXXXXXXX----Context loaded----XXXXXXXXXXXXXX");

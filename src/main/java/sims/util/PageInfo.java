@@ -3,14 +3,15 @@ package sims.util;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"unused", "rawtypes"})
 public class PageInfo {
     public static final int DEFAULT_PAGE_SIZE = 20;
 
     private int pageSize = DEFAULT_PAGE_SIZE;
 
-    private long start; //The offset of the first data item in this page.
+	private long start; //The offset of the first data item in this page.
 
-    private List data; // We put the data in this page into the list @data
+	private List data; // We put the data in this page into the list @data
 
     private long totalCount; // The total item in the database table
 

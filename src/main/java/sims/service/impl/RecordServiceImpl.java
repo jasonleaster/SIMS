@@ -3,19 +3,17 @@ package sims.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sims.dao.RecordMapper;
-import sims.model.Book;
 import sims.model.Record;
 import sims.service.RecordService;
 import sims.util.PageInfo;
 import sims.web.BaseDomain;
-
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
+@SuppressWarnings("serial")
 @Service("recordService")
 public class RecordServiceImpl extends BaseDomain implements RecordService {
 
@@ -64,7 +62,8 @@ public class RecordServiceImpl extends BaseDomain implements RecordService {
     }
 
 
-    @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
     public List<Record> pagedFuzzyQuery(Record record, PageInfo pageInfo) throws Exception{
         List<Record> records = new ArrayList<>();
 

@@ -126,7 +126,8 @@ public class BookController {
     }
 
 
-    @RequestMapping(value = URLs.QUERY)//, method = RequestMethod.POST)
+    @SuppressWarnings("rawtypes")
+	@RequestMapping(value = URLs.QUERY)//, method = RequestMethod.POST)
     public String queryBookPost(BookSearchForm form, Model model,
                                 @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                 HttpServletRequest request) throws Exception{

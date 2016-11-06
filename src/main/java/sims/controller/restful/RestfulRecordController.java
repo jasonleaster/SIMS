@@ -53,14 +53,15 @@ public class RestfulRecordController {
 
         int pageSize = 4;
         if (pageNum == null) {
-            pageInfo = new PageInfo(0, pageSize, new ArrayList());
+            pageInfo = new PageInfo(0, pageSize, new ArrayList<>());
         } else {
-            pageInfo = new PageInfo((pageNum.intValue() - 1) * pageSize, pageSize, new ArrayList());
+            pageInfo = new PageInfo((pageNum.intValue() - 1) * pageSize, pageSize, new ArrayList<>());
         }
 
         pageInfo.setURL(request.getRequestURI());
 
-        List<Record> recordsInDB = null;
+        @SuppressWarnings("unused")
+		List<Record> recordsInDB = null;
         try {
             recordsInDB = recordService.pagedFuzzyQuery(form, pageInfo);
         }catch (Exception e){

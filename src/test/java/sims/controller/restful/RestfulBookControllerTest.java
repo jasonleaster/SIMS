@@ -13,6 +13,7 @@ import org.springframework.web.context.WebApplicationContext;
 import sims.model.Book;
 import sims.service.BookService;
 
+@SuppressWarnings({"unused"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring.xml", "classpath:spring-mybatis-test.xml"})

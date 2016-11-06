@@ -24,7 +24,7 @@
 
   <!-- 日期选择的插件 CSS和JS -->
   <script src="/static/bootstrap/js/bootstrap-datepicker.js"></script>
-  <script src="/static/bootstrap/css/bootstrap-datepicker.css" rel="stylesheet"></script>
+  <link href="/static/bootstrap/css/bootstrap-datepicker.css" rel="stylesheet">
   <style>
     body {padding-top: 70px;}
   </style>

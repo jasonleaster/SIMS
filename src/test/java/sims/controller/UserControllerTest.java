@@ -26,6 +26,7 @@ import sims.util.AttributesKey;
 import sims.util.URLs;
 import sims.util.Views;
 
+@SuppressWarnings({"unused"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring.xml", "classpath:spring-mybatis-test.xml"})

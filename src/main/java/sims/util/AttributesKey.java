@@ -20,6 +20,4 @@ public class AttributesKey {
     public final static String MODEL_ATTRIBUTES_ERR_MSG = "errMsg";
     public final static String MODEL_ATTRIBUTES_PAGEINFO= "pageInfo";
 
-
-
 }

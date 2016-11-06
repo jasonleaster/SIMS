@@ -15,10 +15,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("serial")
 @Service("bookService")
 public class BookServiceImpl extends BaseDomain implements BookService {
 
-    static private BookMapper bookMapper;
+    private BookMapper bookMapper;
 
     static private long booksNumInDB;
 
@@ -46,7 +47,8 @@ public class BookServiceImpl extends BaseDomain implements BookService {
         return book;
     }
 
-    @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
     public List<Book> pagedFuzzyQuery(BookSearchForm form, PageInfo pageInfo) throws Exception{
         List<Book> books = new ArrayList<>();
 

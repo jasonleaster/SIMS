@@ -47,9 +47,9 @@ public class RestfulUserController {
 
         int pageSize = 4;
         if (pageNum == null) {
-            pageInfo = new PageInfo(0, pageSize, new ArrayList());
+            pageInfo = new PageInfo(0, pageSize, new ArrayList<>());
         } else {
-            pageInfo = new PageInfo((pageNum.intValue() - 1) * pageSize, pageSize, new ArrayList());
+            pageInfo = new PageInfo((pageNum.intValue() - 1) * pageSize, pageSize, new ArrayList<>());
         }
 
         pageInfo.setURL(request.getRequestURI());
