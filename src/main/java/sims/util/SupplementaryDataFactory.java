@@ -92,7 +92,6 @@ public class SupplementaryDataFactory {
         return records;
     }
 
-
     public static List<User> getHugeNumberOfUsersForTesting(int limit){
         LinkedList<User> users = new LinkedList<>();
 
@@ -102,5 +101,4 @@ public class SupplementaryDataFactory {
 
         return users;
     }
-
 }

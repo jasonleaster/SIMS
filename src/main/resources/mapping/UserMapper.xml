@@ -13,12 +13,13 @@
 
     <!-- Custom defined SQL statements  -->
 
+
     <!-- Bad practice -->
+
     <insert id="insert" parameterType="sims.model.User" >
     insert into users (email, username, password, userType)
     values (#{email,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{userType, jdbcType=INTEGER})
     </insert>
-
 
     <!-- Good practice
         Proposal 1:

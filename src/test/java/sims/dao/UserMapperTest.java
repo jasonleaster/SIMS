@@ -95,7 +95,6 @@ public class UserMapperTest extends DaoExceptionChecker {
             usersList.add(user);
         }
         userMapper.insertUsers(usersList);
-
     }
 
     @Test
@@ -214,5 +213,4 @@ public class UserMapperTest extends DaoExceptionChecker {
         System.out.println("Solution Two cost time: " + (end - start));
 
     }
-
 }
