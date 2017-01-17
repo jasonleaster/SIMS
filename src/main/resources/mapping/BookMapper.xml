@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="sims.dao.BookMapper" >
+    <resultMap id="BaseResultMap" type="sims.model.Book" >
+        <id column="ISBN" property="isbn" jdbcType="VARCHAR" />
+        <result column="bookName" property="bookname" jdbcType="VARCHAR" />
+        <result column="author" property="author" jdbcType="VARCHAR" />
+        <result column="publisher" property="publisher" jdbcType="VARCHAR" />
+        <result column="publishedDate" property="publisheddate" jdbcType="TIMESTAMP" />
+        <result column="bookType" property="booktype" jdbcType="INTEGER" />
+        <result column="codeInLib" property="codeinlib" jdbcType="VARCHAR" />
+        <result column="locationInLib" property="locationinlib" jdbcType="VARCHAR" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="price" property="price" jdbcType="DOUBLE" />
+        <result column="downloadTimes" property="downloadTimes" jdbcType="INTEGER" />
+        <result column="viewTimes"     property="viewTimes" jdbcType="INTEGER" />
+        <result column="prefacePath" property="prefacePath" jdbcType="VARCHAR" />
+        <result column="pdfFilePath" property="pdfFilePath" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+    ISBN, bookName, author, publisher, publishedDate,
+    bookType, codeInLib, locationInLib,
+    description, price, downloadTimes, viewTimes, prefacePath, pdfFilePath
+    </sql>
+
+    <!-- Custom defined SQL statements  -->
+    <insert id="insert" parameterType="sims.model.Book" >
+        INSERT INTO books (  <include refid="Base_Column_List" /> )
+        values (#{isbn,jdbcType=VARCHAR},       #{bookname,jdbcType=VARCHAR},        #{author,jdbcType=VARCHAR},
+        #{publisher,jdbcType=VARCHAR},   #{publisheddate,jdbcType=TIMESTAMP}, #{booktype,jdbcType=INTEGER},
+        #{codeinlib,jdbcType=VARCHAR},   #{locationinlib,jdbcType=VARCHAR},   #{description,jdbcType=VARCHAR},
+        #{price,jdbcType=DOUBLE},        #{downloadTimes,jdbcType=INTEGER},   #{viewTimes,jdbcType=INTEGER},
+        #{prefacePath,jdbcType=VARCHAR}, #{pdfFilePath,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertBooks">
+        INSERT INTO books (  <include refid="Base_Column_List" /> )
+        values
+        <foreach collection="list" item="element" index="index" open="(" separator="),("  close=")">
+            #{isbn.isbn,jdbcType=VARCHAR},
+            #{isbn.bookname,jdbcType=VARCHAR},
+            #{isbn.author,jdbcType=VARCHAR},
+            #{isbn.publisher,jdbcType=VARCHAR},
+            #{isbn.publisheddate,jdbcType=TIMESTAMP},
+            #{isbn.booktype,jdbcType=INTEGER},
+            #{isbn.codeinlib,jdbcType=VARCHAR},
+            #{isbn.locationinlib,jdbcType=VARCHAR},
+            #{isbn.description,jdbcType=VARCHAR},
+            #{isbn.price,jdbcType=DOUBLE},
+            #{isbn.downloadTimes,jdbcType=INTEGER},
+            #{isbn.viewTimes,jdbcType=INTEGER},
+            #{isbn.prefacePath,jdbcType=VARCHAR},
+            #{isbn.pdfFilePath,jdbcType=VARCHAR}
+        </foreach>
+
+    </insert>
+
+    <insert id="insertSelective" parameterType="sims.model.Book" >
+        insert into books
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="isbn != null" >
+                ISBN,
+            </if>
+            <if test="bookname != null" >
+                bookName,
+            </if>
+            <if test="author != null" >
+                author,
+            </if>
+            <if test="publisher != null" >
+                publisher,
+            </if>
+            <if test="publisheddate != null" >
+                publishedDate,
+            </if>
+            <if test="booktype != null" >
+                bookType,
+            </if>
+            <if test="codeinlib != null" >
+                codeInLib,
+            </if>
+            <if test="locationinlib != null" >
+                locationInLib,
+            </if>
+            <if test="description != null" >
+                description,
+            </if>
+            <if test="price != null" >
+                price,
+            </if>
+            <if test="downloadTimes != null">
+                downloadTimes,
+            </if>
+            <if test="viewTimes != null">
+                viewTimes,
+            </if>
+            <if test="prefacePath != null">
+                prefacePath,
+            </if>
+            <if test="pdfFilePath != null">
+                pdfFilePath
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="isbn != null" >
+                #{isbn,jdbcType=VARCHAR},
+            </if>
+            <if test="bookname != null" >
+                #{bookname,jdbcType=VARCHAR},
+            </if>
+            <if test="author != null" >
+                #{author,jdbcType=VARCHAR},
+            </if>
+            <if test="publisher != null" >
+                #{publisher,jdbcType=VARCHAR},
+            </if>
+            <if test="publisheddate != null" >
+                #{publisheddate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="booktype != null" >
+                #{booktype,jdbcType=INTEGER},
+            </if>
+            <if test="codeinlib != null" >
+                #{codeinlib,jdbcType=VARCHAR},
+            </if>
+            <if test="locationinlib != null" >
+                #{locationinlib,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null" >
+                #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="downloadTimes != null">
+                #{downloadTimes, jdbcType=INTEGER},
+            </if>
+            <if test="viewTimes != null">
+                #{viewTimes, jdbcType=INTEGER},
+            </if>
+            <if test="prefacePath != null">
+                #{prefacePath, jdbcType=INTEGER},
+            </if>
+            <if test="pdfFilePath != null">
+                #{pdfFilePath,jdbcType=INTEGER}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from books
+        where ISBN = #{isbn,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="updateByPrimaryKeySelective" parameterType="sims.model.Book" >
+        update books
+        <set >
+            <if test="bookname != null" >
+                bookName = #{bookname,jdbcType=VARCHAR},
+            </if>
+            <if test="author != null" >
+                author = #{author,jdbcType=VARCHAR},
+            </if>
+            <if test="publisher != null" >
+                publisher = #{publisher,jdbcType=VARCHAR},
+            </if>
+            <if test="publisheddate != null" >
+                publishedDate = #{publisheddate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="booktype != null" >
+                bookType = #{booktype,jdbcType=INTEGER},
+            </if>
+            <if test="codeinlib != null" >
+                codeInLib = #{codeinlib,jdbcType=VARCHAR},
+            </if>
+            <if test="locationinlib != null" >
+                locationInLib = #{locationinlib,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null" >
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null" >
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="downloadTimes != null">
+                downloadTimes = #{downloadTimes, jdbcType=INTEGER},
+            </if>
+            <if test="viewTimes != null">
+                viewTimes = #{viewTimes, jdbcType=INTEGER},
+            </if>
+            <if test="prefacePath != null">
+                prefacePath = #{prefacePath, jdbcType=INTEGER},
+            </if>
+            <if test="pdfFilePath != null">
+                pdfFilePath = #{pdfFilePath,jdbcType=INTEGER}
+            </if>
+        </set>
+        where ISBN = #{isbn,jdbcType=VARCHAR}
+    </update>
+
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from books
+        where ISBN = #{isbn,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectPopularBooks" resultMap="BaseResultMap" parameterType="int">
+        select
+        <include refid="Base_Column_List" />
+        from books
+        ORDER BY downloadTimes DESC limit #{topNum,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectFuzzy"  resultMap="BaseResultMap" parameterType="java.util.Map">
+        select <include refid="Base_Column_List" />
+        from books
+        where TRUE
+        <if test="isbn != null" >
+            AND books.isbn = #{isbn}
+        </if>
+        <if test="bookname != null" >
+            AND books.bookname = #{bookname}
+        </if>
+        <if test="author != null" >
+            AND books.author = #{author}
+        </if>
+        <if test="booktype != null" >
+            AND books.booktype = #{booktype}
+        </if>
+        <if test="priceLowBound != null and priceLowBound > 0" >
+            <![CDATA[ AND books.price >= #{priceLowBound} ]]>
+        </if>
+        <if test="priceUpBound != null and priceLowBound > 0" >
+            <![CDATA[ AND books.price <= #{priceUpBound} ]]>
+        </if>
+        <if test="pageSize != null" >
+            limit #{pageSize}
+        </if>
+        <if test="start != null" >
+            offset #{start}
+        </if>
+    </select>
+
+    <select id="selectItemCount" resultType="int" parameterType="java.util.Map">
+        SELECT COUNT(*) AS total
+        FROM (
+            select <include refid="Base_Column_List" />
+            from books
+            where TRUE
+            <if test="isbn != null" >
+                AND books.isbn = #{isbn}
+            </if>
+            <if test="bookname != null" >
+                AND books.bookname = #{bookname}
+            </if>
+            <if test="author != null" >
+                AND books.author = #{author}
+
+            </if>
+            <if test="booktype != null" >
+                AND books.booktype = #{booktype}
+            </if>
+            <if test="priceLowBound != null" >
+                <![CDATA[ AND books.price >= #{priceLowBound} ]]>
+            </if>
+            <if test="priceUpBound != null" >
+                <![CDATA[ AND books.price <= #{priceUpBound} ]]>
+            </if>
+        ) AS totalResult;
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from books;
+    </select>
+
+    <select id="countAll" resultType="int">
+        select COUNT(*) as total from books;
+    </select>
+
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="sims.dao.UserMapper" >
+    <resultMap id="BaseResultMap" type="sims.model.User" >
+        <id column="email" property="email" jdbcType="VARCHAR" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="usertype" property="userType" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    email, username, password, userType
+    </sql>
+
+    <!-- Custom defined SQL statements  -->
+
+    <!-- Bad practice -->
+    <insert id="insert" parameterType="sims.model.User" >
+    insert into users (email, username, password, userType)
+    values (#{email,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{userType, jdbcType=INTEGER})
+    </insert>
+
+
+    <!-- Good practice
+        Proposal 1:
+        Use INSERT IGNORE rather than INSERT. If a record doesn't duplicate an existing record,
+        MySQL inserts it as usual. If the record is a duplicate, the IGNORE keyword tells MySQL
+        to discard it silently without generating an error.
+
+        Proposal 2:
+        Use REPLACE rather than INSERT. If the record is new, it's inserted just as with INSERT.
+        If it's a duplicate, the new record replaces the old one
+    -->
+    <insert id="insertUsers">
+        insert ignore into users (email, username, password, userType)
+        values
+        <foreach collection="users" item="element" index="index" open="(" separator="),("  close=")">
+            #{element.email,jdbcType=VARCHAR},
+            #{element.username,jdbcType=VARCHAR},
+            #{element.password,jdbcType=VARCHAR},
+            #{element.userType, jdbcType=INTEGER}
+        </foreach>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from users
+    where email = #{email,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="updateByPrimaryKey" parameterType="sims.model.User" >
+    update users
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR}
+    where email = #{email,jdbcType=VARCHAR}
+  </update>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from users;
+    </select>
+
+    <select id="countAll" resultType="int">
+        select COUNT(*) as total from users;
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from users
+        where email = #{email,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectFuzzy" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select <include refid="Base_Column_List" />
+        from users
+        where TRUE
+        <if test="username != null" >
+            AND users.username = #{username, jdbcType=VARCHAR}
+        </if>
+        <if test="email != null" >
+            AND users.email = #{email, jdbcType=VARCHAR}
+        </if>
+        <if test="password != null" >
+            AND users.password = #{password, jdbcType=VARCHAR}
+        </if>
+        <if test="userType != null" >
+            AND users.userType = #{userType, jdbcType=INTEGER}
+        </if>
+        <if test="pageSize != null" >
+            limit #{pageSize}
+        </if>
+        <if test="start != null" >
+            offset #{start}
+        </if>
+    </select>
+
+
+    <select id="selectItemCount" resultType="int" parameterType="java.util.Map">
+        SELECT COUNT(*) AS total
+        FROM (
+        select <include refid="Base_Column_List" />
+        from users
+        where TRUE
+        <if test="username != null" >
+            AND users.username = #{username, jdbcType=VARCHAR}
+        </if>
+        <if test="email != null" >
+            AND users.email = #{email, jdbcType=VARCHAR}
+        </if>
+        <if test="password != null" >
+            AND users.password = #{password,jdbcType=VARCHAR}
+        </if>
+        <if test="userType != null" >
+            AND users.userType = #{userType, jdbcType=INTEGER}
+        </if>
+        ) AS totalResult;
+    </select>
+
+
+</mapper>

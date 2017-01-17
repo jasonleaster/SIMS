@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 引入属性文件 -->
+    <context:property-placeholder location="classpath:config.properties" />
+
+    <!-- 自动扫描(自动注入) -->
+    <context:component-scan base-package="sims.web" />
+    <context:component-scan base-package="sims.controller" />
+    <context:component-scan base-package="sims.service" />
+    <context:component-scan base-package="sims.model" />
+
+    <!--&lt;!&ndash; Make this available across all of Spring MVC &ndash;&gt;-->
+    <!--<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" />-->
+
+    <!--Setup a handler for servering static content -->
+    <!-- DEMO <mvc:resources mapping="/resources/**" location="/resources/"/>-->
+    <!--<mvc:resources mapping="/css/**"          location="/WEB-INF/css/"/>-->
+    <!--<mvc:resources mapping="/js/**"           location="/WEB-INF/js/"/>-->
+    <!--<mvc:resources mapping="/images/**"       location="/WEB-INF/images/"/>-->
+    <!--<mvc:resources mapping="/fonts/**"        location="/WEB-INF/fonts/"/>-->
+    <!--<mvc:resources mapping="/books/pdf/**"    location="/WEB-INF/books/pdf/"/>-->
+    <mvc:resources mapping="/static/**"       location="/WEB-INF/static/"/>
+
+    <!-- For uploading files -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="maxInMemorySize" value="5400000"/>
+        <property name="uploadTempDir"  value="/WEB-INF/books/pdf"/>
+    </bean>
+
+
+    <!-- For Sending Email -->
+    <!-- My Account bookocean@yeah.net  password :sims123456 authorized code: sims123456789-->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <!-- 服务器 -->
+        <property name="host" value="smtp.yeah.net" />
+        <!-- 端口号 -->
+        <property name="port" value="25" />
+        <!-- 用户名 -->
+        <property name="username" value="bookocean@yeah.net" />
+        <!--  密码   -->
+        <property name="password" value="sims123456789" />
+        <!-- SMTP服务器验证 -->
+        <property name="javaMailProperties">
+            <props>
+                <!-- 验证身份 -->
+                <prop key="mail.smtp.auth">true</prop>
+            </props>
+        </property>
+    </bean>
+    <!--
+       目前我用过的EMAIL账号都是网易的,下面列出网易的SMTP服务器名和端口号:
+        网易邮箱          SMTP服务器     SMTP端口     POP3服务器       POP3端口
+        @126.com     smtp.126.com      25          pop3.126.com      110
+        @163.com     smtp.163.com      25          pop3.163.com      110
+        @yeah.net    smtp.yeah.net      25          pop3.yeah.net     110
+    -->
+
+    <bean id="simpleMailMessage" class="org.springframework.mail.SimpleMailMessage">
+        <!-- 发件人email -->
+        <property name="from" value="bookocean@yeah.net" />
+        <!--
+         收件人email
+        <property name="to" value="to@yeah.net" />
+        email主题(标题)
+        <property name="subject" value="Subject" />
+        email主题内容
+        <property name="text">
+          <value>ContentText</value>
+        </property>
+        -->
+    </bean>
+
+    <bean id="simpleMail" class="sims.email.Email">
+        <property name="mailSender" ref="mailSender" />
+        <property name="simpleMailMessage" ref="simpleMailMessage" />
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+
+        <property name="order" value="0"/>
+
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" >
+                    <property name="prettyPrint" value="true"/>
+                </bean>
+            </list>
+        </property>
+
+        <property name="contentNegotiationManager">
+            <!-- Total customization - see below for explanation. -->
+            <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+                <property name="favorPathExtension" value="false" />
+                <property name="favorParameter" value="true" />
+                <property name="parameterName" value="mediaType" />
+                <property name="ignoreAcceptHeader" value="true"/>
+                <property name="useJaf" value="false"/>
+                <property name="defaultContentType" value="text/html" />
+
+                <property name="mediaTypes">
+                    <map>
+                        <entry key="json" value="text/html;charset=UTF-8" />
+                        <entry key="json" value="application/json;charset=UTF-8" />
+                        <entry key="xml"  value="application/xml;charset=UTF-8" />
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- If no extension matched, use JSP view -->
+    <bean name="resolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+        <property name="order" value="10"/>
+
+        <property name="prefix" value="/WEB-INF/views/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+        <!--
+            Bydefaul the View object that InternalResourceViewResolver create is an
+            instance of InternalResourceView, which simply dispatches the request to
+            the JSP for rendering. But since demo.jsp use some JSTL tags, we may choose
+            to replace InternalResourceView with JstlView by setting the viewClass
+            property as follows
+         -->
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+    </bean>
+
+
+</beans>
