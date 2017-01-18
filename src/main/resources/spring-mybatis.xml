@@ -8,12 +8,40 @@ http://www.springframework.org/schema/aop
 http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
 	<!-- Datasource bean for production -->
+
+    <!--
+        Although these data sources(#DrivermanagerDataSource, #SimpleDriverDataSource and #SingleConnectionDataSource)
+        are great for small applications and running in development, you should seriously consider
+        the implications of using them in a production application. Because #SingleConnectionDataSource has
+        one and only one database connection to work with, it doesn’t work well in multithreaded applications
+        and is best limited to use in testing. At the same time, even though DriverDataSource and
+        SimpleDriverDataSource are both capable of supporting multiple threads, they incur a performance
+        cost for creating a new connection each time a connection is requested.
+
+        ****Because of these limitations, I strongly recommend using pooled data sources. ****
+
+        You can use another datasource like APache Commons DBCP, C3P0 and BoneCP as the pooled data source.
+        In this configuration, I choosed #PooledDataSource as the datasource in MyBatis.
+    -->
+    <!-- Bad Practice
 	<bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="url" value="${jdbc_url}" />
 		<property name="username" value="${jdbc_username}" />
 		<property name="password" value="${jdbc_password}" />
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 	</bean>
+	 -->
+
+    <!-- Recommended Way to configure a datasource -->
+    <bean name="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+        <property name="url" value="${jdbc_url}" />
+        <property name="username" value="${jdbc_username}" />
+        <property name="password" value="${jdbc_password}" />
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="poolMaximumActiveConnections" value="20"/>
+        <property name="poolMaximumIdleConnections"   value="5"/>
+    </bean>
+
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
