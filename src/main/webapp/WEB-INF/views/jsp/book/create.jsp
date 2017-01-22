@@ -9,7 +9,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@page isELIgnored="false" %> <!--Don't for get This !! Otherwise, you can use the extention language in JSP ! -->
+
+<!--Don't forget This !! Otherwise, you can't use the extension language in JSP with web-app_2_3.dtd! -->
+<%@page isELIgnored="false" %>
+
 <html>
 <head>
     <!-- Bootstrap Core CSS -->

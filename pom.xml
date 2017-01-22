@@ -102,22 +102,51 @@
             <!--<version>${activemq.version}</version>-->
         <!--</dependency>-->
 
+        <!-- Spring 核心和bean相关依赖-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring-framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${spring-framework.version}</version>
+        </dependency>
+
+        <!-- Spring web 相关依赖 -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${spring-framework.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring-framework.version}</version>
         </dependency>
 
+        <!-- Spring 数据库相关依赖 -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <version>${spring-framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring-framework.version}</version>
+        </dependency>
+
+        <!--
+            数据库连接池 这个可以作为可选项，
+            可以用MyBatis的PooledDataSource实现的数据库连接池
+            也可以使用C3P0这个库实现的数据库连接池
+            -->
+        <dependency>
+            <groupId>c3p0</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.1.2</version>
         </dependency>
 
         <dependency>
@@ -126,12 +155,7 @@
             <version>5.1.38</version>
         </dependency>
 
-        <!-- Spring and Transactions -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${spring-framework.version}</version>
-        </dependency>
+
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -153,7 +177,7 @@
         </dependency>
 
 
-        <!-- Other Web dependencies -->
+        <!-- Servlet dependencies -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
@@ -173,18 +197,24 @@
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+        <!-- MyBatis 依赖 -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <version>3.3.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
+        <!-- MyBatis 与 Spring 整合 -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
             <version>1.3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis.caches</groupId>
+            <artifactId>mybatis-ehcache</artifactId>
+            <version>1.1.0</version>
         </dependency>
 
         <dependency>
