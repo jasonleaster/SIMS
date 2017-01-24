@@ -109,7 +109,7 @@ What is the one of the important thing to declare is that the service will also 
 
 ### URL entrance design
 
-For convenient, I put all URLs which can be accessed by user into java class ` sims.util.URLs`.
+For convenient, I put all URLs which can be accessed by user into java class ` org.sims.util.URLs`.
 
 The URL construct with different level like:  "/first level/second level/third level/ ... "
 
@@ -175,11 +175,11 @@ I will recommend you to read all about the `5.1.1 Following the life of a reques
 
 In the front-end of the web system, there may need some variables in the back-end system to represent in the front-end views. Spring supply the class `Model` and developer can add attributes into the model with "Key-Value" pattern.
 
-For the concision and consistence of the code, I put all "key" of the model into a individual class `sims.util.AttributesKey` with privilege __public static final__ 
+For the concision and consistence of the code, I put all "key" of the model into a individual class `org.sims.util.AttributesKey` with privilege __public static final__ 
 
 ``` java
 
-package sims.util;
+package org.sims.util;
 
 
 public class AttributesKey {

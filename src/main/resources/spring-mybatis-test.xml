@@ -22,7 +22,7 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="sims.dao" />
+        <property name="basePackage" value="org.sims.dao" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
     </bean>
 

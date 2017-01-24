@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="sims.dao.BookMapper" >
-    <resultMap id="BaseResultMap" type="sims.model.Book" >
+<mapper namespace="org.sims.dao.BookMapper" >
+    <resultMap id="BaseResultMap" type="org.sims.model.Book" >
         <id column="ISBN" property="isbn" jdbcType="VARCHAR" />
         <result column="bookName" property="bookname" jdbcType="VARCHAR" />
         <result column="author" property="author" jdbcType="VARCHAR" />
@@ -25,7 +25,7 @@
     </sql>
 
     <!-- Custom defined SQL statements  -->
-    <insert id="insert" parameterType="sims.model.Book" >
+    <insert id="insert" parameterType="org.sims.model.Book" >
         INSERT INTO books (  <include refid="Base_Column_List" /> )
         values (#{isbn,jdbcType=VARCHAR},       #{bookname,jdbcType=VARCHAR},        #{author,jdbcType=VARCHAR},
         #{publisher,jdbcType=VARCHAR},   #{publisheddate,jdbcType=TIMESTAMP}, #{booktype,jdbcType=INTEGER},
@@ -56,7 +56,7 @@
 
     </insert>
     
-    <insert id="insertSelective" parameterType="sims.model.Book" >
+    <insert id="insertSelective" parameterType="org.sims.model.Book" >
         insert into books
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="isbn != null" >
@@ -153,7 +153,7 @@
         where ISBN = #{isbn,jdbcType=VARCHAR}
     </delete>
 
-    <update id="updateByPrimaryKeySelective" parameterType="sims.model.Book" >
+    <update id="updateByPrimaryKeySelective" parameterType="org.sims.model.Book" >
         update books
         <set >
             <if test="bookname != null" >

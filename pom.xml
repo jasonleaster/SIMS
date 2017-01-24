@@ -33,11 +33,11 @@
             </plugin>
 
             <!--   Attention !!
-            Whether or not to fail the build if the sims.web.xml file is missing.
-            Set to false if you want you WAR built without a sims.web.xml file.
-            This may be useful if you are building an overlay that has no sims.web.xml file.
+            Whether or not to fail the build if the org.sims.web.xml file is missing.
+            Set to false if you want you WAR built without a org.sims.web.xml file.
+            This may be useful if you are building an overlay that has no org.sims.web.xml file.
             Default value is: true
-            sims.User property is: failOnMissingWebXml-->
+            org.sims.User property is: failOnMissingWebXml-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
