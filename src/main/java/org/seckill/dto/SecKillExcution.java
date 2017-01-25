@@ -1,6 +1,6 @@
 package org.seckill.dto;
 
-import org.seckill.entity.SuccessKilled;
+import org.seckill.model.SuccessKilled;
 import org.seckill.enums.SeckillStateEnum;
 /**
  * Author: Administrator
