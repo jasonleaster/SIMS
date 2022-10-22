@@ -21,7 +21,7 @@ public class BookServiceImpl extends BaseDomain implements BookService {
 
     private BookMapper bookMapper;
 
-    static private long booksNumInDB;
+    private static long booksNumInDB;
 
     public BookMapper getBookMapper() {
         return bookMapper;

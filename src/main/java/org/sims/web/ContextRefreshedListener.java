@@ -14,11 +14,12 @@ import org.sims.service.RecordService;
 import org.sims.service.UserService;
 import org.sims.util.SupplementaryDataFactory;
 import org.sims.web.config.DataConfig;
+
 import javax.sql.DataSource;
 
 
 @Component
-public class ContextRefreshedListener implements ApplicationListener<ContextRefreshedEvent>{
+public class ContextRefreshedListener implements ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired
     private DataSource dataSource;
@@ -33,32 +34,32 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
     private RecordService recordService;
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event){
+    public void onApplicationEvent(ContextRefreshedEvent event) {
         ApplicationContext context = event.getApplicationContext();
 
-        if(Project.UNIT_TEST){
+        if (Project.UNIT_TEST) {
             return;
         }
 
-        if(Project.WEB_INTEGRATED_DEBUG){
+        if (Project.WEB_INTEGRATED_DEBUG) {
             DataConfig.initDB(dataSource);
             Book[] books = SupplementaryDataFactory.getBooks();
             User[] users = SupplementaryDataFactory.getUsers();
             Record[] records = SupplementaryDataFactory.getRecords();
 
             try {
-                for (int i = 0; i < books.length; i++){
+                for (int i = 0; i < books.length; i++) {
                     bookService.add(books[i]);
                 }
 
-                for (int i = 0; i < users.length; i++){
+                for (int i = 0; i < users.length; i++) {
                     userService.add(users[i]);
                 }
 
-                for (int i = 0; i < records.length; i++){
+                for (int i = 0; i < records.length; i++) {
                     recordService.add(records[i]);
                 }
-            }catch (Exception ignore){
+            } catch (Exception ignore) {
             }
 
 
@@ -83,10 +84,11 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 
         try {
             userService.add(Project.ADMIN);
-        }catch (Exception ignore){}
+        } catch (Exception ignore) {
+        }
 
 
-        if(context.getParent() == null){
+        if (context.getParent() == null) {
             System.out.println("Spring容器初始化完毕================================================");
             System.out.println("ContextRefreshedListener is invoked");
         }
