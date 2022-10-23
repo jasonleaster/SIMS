@@ -1,16 +1,23 @@
 package org.sims.model;
 
+import io.mybatis.provider.Entity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+@Entity.Table("users")
 public class User {
+
+    @Entity.Column(value = "email", remark = "邮箱")
     private String email;
 
+    @Entity.Column(value = "username", remark = "用户名")
     private String username;
 
+    @Entity.Column(value = "password", remark = "密码")
     private String password;
 
+    @Entity.Column(value = "userType", remark = "用户类型")
     private Integer userType;
 
     public enum UserType{

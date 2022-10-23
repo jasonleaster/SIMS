@@ -1,32 +1,41 @@
 package org.sims.model;
 
+import io.mybatis.provider.Entity;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@Entity.Table("books")
 public class Book {
-    @NotNull
+
+    @Entity.Column(id = true, remark = "主键", updatable = false, insertable = false)
     private String isbn;
 
-    @NotNull
+    @Entity.Column(value = "bookname", remark = "书籍名称")
     private String bookname;
 
-    @NotNull
+    @Entity.Column(value = "author", remark = "作者")
     private String author;
 
+    @Entity.Column(value = "price", remark = "价格")
     private Double price;
 
+    @Entity.Column(value = "publisher", remark = "发布者")
     private String publisher;
 
+    @Entity.Column(value = "publisheddate", remark = "发行日期")
     private Date   publisheddate;
 
+    @Entity.Column(value = "booktype", remark = "书籍类型")
     private int booktype;
 
+    @Entity.Column(value = "codeinlib", remark = "编码")
     private String codeinlib;
 
+    @Entity.Column(value = "locationinlib", remark = "地址")
     private String locationinlib;
 
+    @Entity.Column(value = "locationinlib", remark = "描述")
     private String description;
 
     private CommonsMultipartFile preface; // A image file for the preface of the book
