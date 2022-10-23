@@ -1,4 +1,4 @@
-package org.sims.model;
+package org.sims.domain;
 
 import io.mybatis.provider.Entity;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;

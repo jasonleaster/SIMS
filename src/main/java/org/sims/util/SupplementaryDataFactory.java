@@ -1,8 +1,8 @@
 package org.sims.util;
 
-import org.sims.model.Book;
-import org.sims.model.Record;
-import org.sims.model.User;
+import org.sims.domain.Book;
+import org.sims.domain.Record;
+import org.sims.domain.User;
 
 import java.util.Date;
 import java.util.LinkedList;

@@ -7,12 +7,10 @@
  *      This file implement a org.sims.controller for business logic with
  * users.
  *****************************************************************/
-package org.sims.controller;
+package org.sims.adapter;
 
-import io.mybatis.service.AbstractService;
-import org.sims.dao.UserMapper;
 import org.sims.form.RegisterForm;
-import org.sims.model.User;
+import org.sims.domain.User;
 import org.sims.service.impl.UserServiceImpl;
 import org.sims.util.AttributesKey;
 import org.sims.util.URLs;

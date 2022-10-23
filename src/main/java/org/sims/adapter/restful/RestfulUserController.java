@@ -1,6 +1,6 @@
-package org.sims.controller.restful;
+package org.sims.adapter.restful;
 
-import org.sims.model.User;
+import org.sims.domain.User;
 import org.sims.util.AttributesKey;
 import org.sims.util.PageInfo;
 import org.sims.util.URLs;

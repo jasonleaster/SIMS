@@ -10,7 +10,7 @@
 package org.sims.web.filter;
 
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.sims.model.User;
+import org.sims.domain.User;
 import org.sims.util.AttributesKey;
 import org.sims.util.URLs;
 

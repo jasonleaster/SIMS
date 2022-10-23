@@ -1,9 +1,9 @@
-package org.sims.controller;
+package org.sims.adapter;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.sims.form.RegisterForm;
-import org.sims.model.User;
+import org.sims.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;

@@ -1,6 +1,6 @@
 package org.sims.form;
 
-import org.sims.model.User;
+import org.sims.domain.User;
 
 public class RegisterForm extends User {
 

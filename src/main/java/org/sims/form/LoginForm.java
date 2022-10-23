@@ -1,6 +1,6 @@
 package org.sims.form;
 
-import org.sims.model.User;
+import org.sims.domain.User;
 
 public class LoginForm extends User {
     private boolean rememberMe;

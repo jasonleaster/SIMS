@@ -3,16 +3,12 @@ package org.sims.dao;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.sims.model.User;
-import org.sims.util.SupplementaryDataFactory;
+import org.sims.domain.User;
+import org.sims.infrastructure.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 
 @SpringBootTest
