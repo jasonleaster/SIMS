@@ -2,11 +2,8 @@ package org.sims.form;
 
 import org.sims.model.User;
 
-import javax.validation.constraints.NotNull;
-
 public class RegisterForm extends User {
 
-    @NotNull
     private String confirmedPassword;
 
     public RegisterForm(){}

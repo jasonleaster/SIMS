@@ -1,17 +1,12 @@
 package org.sims.dao;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.sims.exception.DaoExceptionChecker;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sims.model.User;
 import org.sims.util.SupplementaryDataFactory;
-import org.sims.web.config.DataConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -19,11 +14,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration(locations = {"classpath:spring.xml", "classpath:spring-mybatis-test.xml"})
-public class UserMapperTest extends DaoExceptionChecker {
+
+@SpringBootTest
+public class UserMapperTest {
+
+    @Autowired
+    private TestUserMapper testUserMapper;
 
     @Autowired
     private DataSource dataSource;
@@ -39,33 +35,11 @@ public class UserMapperTest extends DaoExceptionChecker {
     private User[] users;
     private String duplicatedName = "jack";
 
-    @Before
+    @BeforeEach
     public void before(){
 
-        Assert.assertTrue(dataSource != null);
-        Assert.assertTrue(userMapper != null);
-
-        DataConfig.initDB(dataSource);
-
-        users          = SupplementaryDataFactory.getUsers();
-        userNotExisted = users[0];
-        userExisted    = users[1];
-
-        /*
-        * Make sure there are only two same name in the user database table.
-        * */
-
-        users[1].setUsername(duplicatedName);
-        users[2].setUsername(duplicatedName);
-
-        users[3].setUsername(duplicatedName + "A");
-        users[4].setUsername(duplicatedName + "B");
-
-
-        for (int i = 1; i < users.length; i++){
-            userMapper.insert(users[i]);
-        }
-        usersCountInDB = users.length - 1;
+        Assertions.assertTrue(dataSource != null);
+        Assertions.assertTrue(userMapper != null);
     }
 
     @Test
@@ -74,18 +48,18 @@ public class UserMapperTest extends DaoExceptionChecker {
         try{
             userMapper.insert(null);
         }catch (Exception ignore){
-            this.setExceptionHappened(true);
+//            this.setExceptionHappened(true);
         }
 
-        exceptionHappenedChecker();
+//        exceptionHappenedChecker();
 
         // Can't insert an user with duplicated primary key
         try{
             userMapper.insert(userExisted);
         }catch (Exception e){
-            this.setExceptionHappened(true);
+//            this.setExceptionHappened(true);
         }
-        exceptionHappenedChecker();
+//        exceptionHappenedChecker();
 
         // Should work correctly.
         userMapper.insert(userNotExisted);
@@ -116,8 +90,8 @@ public class UserMapperTest extends DaoExceptionChecker {
 
         User userInDB = userMapper.selectByPrimaryKey(userExisted.getEmail());
 
-        Assert.assertTrue( userInDB.getUsername().equals(newname) );
-        Assert.assertTrue(userInDB.getPassword().equals(newPassword));
+        Assertions.assertTrue( userInDB.getUsername().equals(newname) );
+        Assertions.assertTrue(userInDB.getPassword().equals(newPassword));
 
         userMapper.updateByPrimaryKey(null);
     }
@@ -127,11 +101,11 @@ public class UserMapperTest extends DaoExceptionChecker {
 
         User userInDB = userMapper.selectByPrimaryKey(userExisted.getEmail());
 
-        Assert.assertTrue(userInDB != null);
+        Assertions.assertTrue(userInDB != null);
 
         userInDB      = userMapper.selectByPrimaryKey(userNotExisted.getEmail());
 
-        Assert.assertTrue(userInDB == null);
+        Assertions.assertTrue(userInDB == null);
     }
 
     @Test
@@ -140,25 +114,25 @@ public class UserMapperTest extends DaoExceptionChecker {
 
         List<User> users = userMapper.selectFuzzy(null);
 
-        Assert.assertTrue(users.size() == usersCountInDB);
+        Assertions.assertTrue(users.size() == usersCountInDB);
 
         selectKeyWords.put("userType", User.UserType.NORMAL_USER.ordinal());
 
         users = userMapper.selectFuzzy(selectKeyWords);
 
         for (User user: users){
-            Assert.assertTrue(user.getUserType() == User.UserType.NORMAL_USER.ordinal());
+            Assertions.assertTrue(user.getUserType() == User.UserType.NORMAL_USER.ordinal());
         }
 
         int counts = userMapper.selectItemCount(selectKeyWords);
-        Assert.assertTrue( counts == usersCountInDB);
+        Assertions.assertTrue( counts == usersCountInDB);
     }
 
     @Test
     public void selectItemCountTest(){
         int counts = userMapper.selectItemCount(null);
 
-        Assert.assertTrue( counts == this.usersCountInDB);
+        Assertions.assertTrue( counts == this.usersCountInDB);
 
         Map selectKeyWords = new HashMap();
 
@@ -166,7 +140,7 @@ public class UserMapperTest extends DaoExceptionChecker {
 
         counts = userMapper.selectItemCount(selectKeyWords);
 
-        Assert.assertTrue(counts == 1);
+        Assertions.assertTrue(counts == 1);
 
         selectKeyWords.clear();
 
@@ -174,19 +148,19 @@ public class UserMapperTest extends DaoExceptionChecker {
 
         counts = userMapper.selectItemCount(selectKeyWords);
 
-        Assert.assertTrue(counts == 2);
+        Assertions.assertTrue(counts == 2);
     }
 
     @Test
     public void countAllTest(){
         int counts = userMapper.countAll();
 
-        Assert.assertTrue( counts == usersCountInDB);
+        Assertions.assertTrue( counts == usersCountInDB);
     }
 
     @Test
     public void performanceCompare() {
-        DataConfig.initDB(dataSource);
+//        DataConfig.initDB(dataSource);
 
         List<User> users = SupplementaryDataFactory.getHugeNumberOfUsersForTesting(100);
 
@@ -204,7 +178,7 @@ public class UserMapperTest extends DaoExceptionChecker {
 
         System.out.println("Solution One cost time: " + (end - start));
 
-        DataConfig.initDB(dataSource);
+//        DataConfig.initDB(dataSource);
 
         start = System.currentTimeMillis();
         userMapper.insertUsers(users);
@@ -212,5 +186,16 @@ public class UserMapperTest extends DaoExceptionChecker {
 
         System.out.println("Solution Two cost time: " + (end - start));
 
+    }
+
+    @Test
+    public void testMyBatisMapper() {
+        User user = new User();
+        user.setUsername("张三");
+        user.setUserType(1);
+        user.setPassword("123");
+        user.setEmail("jasonleaster@gmail.com");
+
+        testUserMapper.insert(user);
     }
 }

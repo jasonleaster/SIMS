@@ -22,7 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -219,7 +218,7 @@ public class BookController {
     }
 
     @RequestMapping(value = URLs.MODIFY + URLs.UPDATE, method = RequestMethod.POST)
-    public String modifyBookUpdatePost(@Valid Book book, BindingResult bindingResult, Model model, HttpServletRequest request) throws IOException{
+    public String modifyBookUpdatePost(Book book, BindingResult bindingResult, Model model, HttpServletRequest request) throws IOException{
 
         if(bindingResult.hasErrors()){
             model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "binding error");
