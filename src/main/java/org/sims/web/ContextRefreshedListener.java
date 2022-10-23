@@ -1,8 +1,5 @@
 package org.sims.web;
 
-import org.sims.service.BookService;
-import org.sims.service.RecordService;
-import org.sims.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -18,14 +15,6 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
     @Autowired
     private DataSource dataSource;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private BookService bookService;
-
-    @Autowired
-    private RecordService recordService;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {

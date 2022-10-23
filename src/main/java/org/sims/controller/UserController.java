@@ -9,7 +9,16 @@
  *****************************************************************/
 package org.sims.controller;
 
+import io.mybatis.service.AbstractService;
+import org.sims.dao.UserMapper;
+import org.sims.form.RegisterForm;
+import org.sims.model.User;
+import org.sims.service.impl.UserServiceImpl;
+import org.sims.util.AttributesKey;
+import org.sims.util.URLs;
+import org.sims.util.Views;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,13 +26,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.sims.exception.DuplicatedPrimaryKeyException;
-import org.sims.form.RegisterForm;
-import org.sims.model.User;
-import org.sims.service.UserService;
-import org.sims.util.AttributesKey;
-import org.sims.util.URLs;
-import org.sims.util.Views;
 
 @EnableWebMvc
 @Controller
@@ -31,7 +33,8 @@ import org.sims.util.Views;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    @Qualifier("userService")
+    private UserServiceImpl userService;
 
 
     @RequestMapping(value = URLs.SEARCH, method = RequestMethod.GET)
@@ -42,7 +45,9 @@ public class UserController {
     //http://stackoverflow.com/questions/26615416/406-spring-mvc-json-not-acceptable-according-to-the-request-accept-headers
     @RequestMapping(value = URLs.SEARCH, method = RequestMethod.POST)
     public String searchPost(User user, Model model){
-        User userInDB = userService.getById(user.getEmail());
+        User filter = new User();
+        filter.setEmail(user.getEmail());
+        User userInDB = userService.findOne(filter);
         model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_USER, userInDB);
         return Views.USER_SHOW;
     }
@@ -69,7 +74,7 @@ public class UserController {
         User user = form.toUser();
         String userID = user.getEmail();
         // User already registered.
-        if(userService.getById(userID) != null){
+        if(userService.findOne(user) != null){
             model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "User already existed!");
             return Views.USER_CREATE;
         }
@@ -80,12 +85,8 @@ public class UserController {
             return Views.USER_CREATE;
         }
 
-        try{
-            userService.add(user);
-        }catch (DuplicatedPrimaryKeyException e){
-            model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, e.toString());
-            return Views.USER_CREATE;
-        }
+        userService.save(user);
+
 
         model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_USER, user);
         return Views.USER_SHOW;
@@ -93,7 +94,9 @@ public class UserController {
 
     @RequestMapping(value = URLs.MODIFY + "/{userID:.+}", method = RequestMethod.GET)
      public String modify(@PathVariable("userID") String userID, Model modrel){
-        User userInDB = userService.getById(userID);
+        User filter = new User();
+        filter.setEmail(userID);
+        User userInDB = userService.findOne(filter);
         modrel.addAttribute(AttributesKey.MODEL_ATTRIBUTES_USER, userInDB);
         return Views.USER_MODIFY;
     }
@@ -103,7 +106,7 @@ public class UserController {
         if(bindingResult.hasErrors()){
             return  Views.USER_MODIFY;
         }
-        userService.modify(user);
+        userService.update(user);
         return Views.USER_SHOW;
     }
 
@@ -117,8 +120,10 @@ public class UserController {
     * */
     @RequestMapping(value = URLs.DELETE + "/{id:.+}", method = RequestMethod.POST)
     public String delete(@PathVariable("id") String id, Model model){
-        if(userService.getById(id) != null){
-            userService.delete(id);
+        User filter = new User();
+        filter.setEmail(id);
+        if(userService.findOne(filter) != null){
+            userService.delete(filter);
         }else {
             model.addAttribute(AttributesKey.MODEL_ATTRIBUTES_ERR_MSG, "User does not exist");
         }

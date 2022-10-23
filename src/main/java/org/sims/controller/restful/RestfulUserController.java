@@ -1,15 +1,13 @@
 package org.sims.controller.restful;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.sims.model.User;
+import org.sims.util.AttributesKey;
+import org.sims.util.PageInfo;
+import org.sims.util.URLs;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.sims.model.User;
-import org.sims.service.UserService;
-import org.sims.util.AttributesKey;
-import org.sims.util.PageInfo;
-import org.sims.util.URLs;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,8 +18,8 @@ import java.util.List;
 @RequestMapping(value = URLs.API + URLs.USERS)
 public class RestfulUserController {
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
 
     @RequestMapping(value = URLs.QUERY, produces={"application/json; charset=UTF-8"})
     public @ResponseBody List<User>
@@ -54,7 +52,7 @@ public class RestfulUserController {
 
         pageInfo.setURL(request.getRequestURI());
 
-        searchResults = userService.pagedFuzzyQuery(form, pageInfo);
+//        searchResults = userService.pagedFuzzyQuery(form, pageInfo);
 
         return searchResults;
     }
