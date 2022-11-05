@@ -18,6 +18,9 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Restful 数据接口
+ */
 @RestController
 @RequestMapping(value = URLs.API + URLs.USERS)
 public class RestfulUserController {
