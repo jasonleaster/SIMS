@@ -1,6 +1,7 @@
-## SIMS (BookOcean, which is a project for learning Java Web Development)
+## SIMS (Tool project for learning Java BackEnd Development)
 
 Author :   EOF (Jason Leaster)
+
 License:   MIT license
 
 

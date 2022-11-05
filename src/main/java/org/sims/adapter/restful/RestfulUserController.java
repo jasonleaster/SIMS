@@ -1,9 +1,13 @@
 package org.sims.adapter.restful;
 
+import com.github.pagehelper.PageHelper;
+import io.mybatis.mapper.example.Example;
+import io.mybatis.service.AbstractService;
 import org.sims.domain.User;
 import org.sims.util.AttributesKey;
-import org.sims.util.PageInfo;
 import org.sims.util.URLs;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,8 +22,9 @@ import java.util.List;
 @RequestMapping(value = URLs.API + URLs.USERS)
 public class RestfulUserController {
 
-//    @Autowired
-//    private UserService userService;
+    @Autowired
+    @Qualifier("userService")
+    private AbstractService userService;
 
     @RequestMapping(value = URLs.QUERY, produces={"application/json; charset=UTF-8"})
     public @ResponseBody List<User>
@@ -41,18 +46,13 @@ public class RestfulUserController {
             session.setAttribute(AttributesKey.SESSION_ATTRIBUTES_USER_QUERY_FORM, form);
         }
 
-        PageInfo pageInfo;
+        Example<User> example = new Example<>();
+        example.createCriteria()
+                .andEqualTo(User::getUserType, 1);
 
-        int pageSize = 4;
-        if (pageNum == null) {
-            pageInfo = new PageInfo(0, pageSize, new ArrayList<>());
-        } else {
-            pageInfo = new PageInfo((pageNum.intValue() - 1) * pageSize, pageSize, new ArrayList<>());
-        }
+        PageHelper.startPage(pageNum, 2);
 
-        pageInfo.setURL(request.getRequestURI());
-
-//        searchResults = userService.pagedFuzzyQuery(form, pageInfo);
+        searchResults = userService.findList(example);
 
         return searchResults;
     }
